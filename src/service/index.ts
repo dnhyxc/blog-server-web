@@ -4,6 +4,7 @@ import commentsService from "./comments.service";
 import likeService from "./like.service";
 import likeArticleService from "./likeArticle.service";
 import classifyService from "./classify.service";
+import userInfoServer from "./userInfo.service";
 
 const { findOneUser, findUserById, createUserServer, updateUser } = userService;
 const {
@@ -31,6 +32,8 @@ const { checkLikeArticle } = likeArticleService;
 
 const { getClassifyList, getTagList, getTimelineList } = classifyService;
 
+const { getMyArticleList, getLikeArticleList } = userInfoServer;
+
 export {
   findOneUser,
   findUserById,
@@ -54,4 +57,6 @@ export {
   getTimelineList,
   checkLikeStatus,
   getArticleListWithTotal,
+  getMyArticleList,
+  getLikeArticleList,
 };

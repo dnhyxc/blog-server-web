@@ -45,7 +45,7 @@ class classifyServer {
     const list = await Article.aggregate([
       {
         $match: {
-          isDelete: { $nin: [true] },
+          $and: [{ isDelete: { $nin: [true] }, authorId: userId }],
         },
       },
       {
