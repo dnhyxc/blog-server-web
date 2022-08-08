@@ -23,7 +23,7 @@ router.post(
 // 登录接口
 router.post("/login", userValidator, verifyLogin, loginCtr);
 
-// 修改密码接口
+// 修改用户信息接口
 router.put(
   "/updateInfo",
   auth,

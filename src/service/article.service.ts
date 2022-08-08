@@ -57,6 +57,7 @@ class articleServer {
         },
       }
     );
+    return likes;
   }
 
   // 获取文章列表同时返回文章总条数
@@ -89,7 +90,6 @@ class articleServer {
         },
       },
     ]);
-
     if (list?.length) {
       const { total, data } = list[0];
       return {

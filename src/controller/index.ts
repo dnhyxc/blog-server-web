@@ -5,7 +5,7 @@ import commentsController from "./comments.controller";
 import classifyController from "./classify.controller";
 import userInfoController from "./userInfo.controller";
 
-const { registerCtr, loginCtr, updateInfoCtr } = userController;
+const { registerCtr, loginCtr, updateInfoCtr, getUserInfoCtr } = userController;
 
 const {
   createArticleCtr,
@@ -31,6 +31,7 @@ export {
   registerCtr,
   loginCtr,
   updateInfoCtr,
+  getUserInfoCtr,
   uploadFileCtr,
   createArticleCtr,
   getArticleListCtr,

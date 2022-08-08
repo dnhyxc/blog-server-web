@@ -35,8 +35,8 @@ class UserServer {
   }
 
   // 修改用户信息
-  async updateUser(filter: FilterParams, newUserInfo: newUserInfo) {
-    const id = { _id: filter.id };
+  async updateUser(userId: string, newUserInfo) {
+    const id = { _id: userId };
     try {
       const res: any = await User.updateOne(id, {
         $set: newUserInfo,

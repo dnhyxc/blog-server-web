@@ -1,5 +1,10 @@
 import jwt from "jsonwebtoken";
-import { createUserServer, findOneUser, updateUser } from "../service";
+import {
+  createUserServer,
+  findOneUser,
+  updateUser,
+  findUserById,
+} from "../service";
 import { databaseError } from "../constant";
 
 import { JWT_SECRET } from "../config";
@@ -44,20 +49,30 @@ class UserController {
     }
   }
 
-  async updateInfoCtr(ctx, next) {
-    const { username, password } = ctx.request.body;
-    const { id } = ctx.state.user;
+  // 获取用户信息
+  async getUserInfoCtr(ctx, next) {
+    const { userId } = ctx.request.body;
     try {
-      const res = await updateUser({ id }, { username, password });
-      if (res) {
+      const res = await findUserById(userId);
+      ctx.body = res;
+    } catch (error) {
+      console.error("getUserInfo", error);
+      ctx.app.emit("error", databaseError, ctx);
+    }
+  }
+
+  // 更新用户信息
+  async updateInfoCtr(ctx, next) {
+    const { userId, ...params } = ctx.request.body;
+    try {
+      await updateUser(userId, params);
+      const userInfo = await findUserById(userId);
+      if (userInfo) {
         ctx.body = {
           code: 200,
           success: true,
           message: "修改成功",
-          data: {
-            id,
-            username,
-          },
+          data: userInfo,
         };
       }
     } catch (error) {
