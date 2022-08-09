@@ -5,7 +5,7 @@ import {
   updateUser,
   findUserById,
 } from "../service";
-import { databaseError } from "../constant";
+import { databaseError, fieldFormateError } from "../constant";
 
 import { JWT_SECRET } from "../config";
 
@@ -54,7 +54,12 @@ class UserController {
     const { userId } = ctx.request.body;
     try {
       const res = await findUserById(userId);
-      ctx.body = res;
+      ctx.body = {
+        code: 200,
+        success: true,
+        message: "获取用户信息成功",
+        data: res,
+      };
     } catch (error) {
       console.error("getUserInfo", error);
       ctx.app.emit("error", databaseError, ctx);
@@ -64,6 +69,10 @@ class UserController {
   // 更新用户信息
   async updateInfoCtr(ctx, next) {
     const { userId, ...params } = ctx.request.body;
+    if (!userId) {
+      ctx.app.emit("error", fieldFormateError, ctx);
+    }
+    console.log(params, "params");
     try {
       await updateUser(userId, params);
       const userInfo = await findUserById(userId);

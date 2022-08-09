@@ -1,5 +1,10 @@
 import Router from "koa-router";
-import { registerCtr, loginCtr, updateInfoCtr } from "../controller";
+import {
+  registerCtr,
+  loginCtr,
+  updateInfoCtr,
+  getUserInfoCtr,
+} from "../controller";
 import {
   userValidator,
   verifyUser,
@@ -23,13 +28,16 @@ router.post(
 // 登录接口
 router.post("/login", userValidator, verifyLogin, loginCtr);
 
+// 获取用户信息
+router.post("/getUserInfo", auth, getUserInfoCtr);
+
 // 修改用户信息接口
 router.put(
   "/updateInfo",
   auth,
-  verifyUser,
-  verifyUpdateInfo,
-  bcryptPassword,
+  // verifyUser,
+  // verifyUpdateInfo,
+  // bcryptPassword,
   updateInfoCtr
 );
 

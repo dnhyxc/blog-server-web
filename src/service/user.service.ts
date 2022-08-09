@@ -26,7 +26,19 @@ class UserServer {
   // 根据id查找用户
   async findUserById(id: string) {
     try {
-      const user: any = await User.findById(id);
+      const user: any = await User.findById(id, {
+        userId: "$_id",
+        _id: 0,
+        username: 1,
+        job: 1,
+        motto: 1,
+        headUrl: 1,
+        introduce: 1,
+        github: 1,
+        juejin: 1,
+        zhihu: 1,
+        blog: 1,
+      });
       return user;
     } catch (error) {
       console.error("findUserById", error);

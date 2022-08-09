@@ -16,7 +16,7 @@ const userFormateError = {
 const fieldFormateError = {
   code: "10001",
   success: false,
-  message: "传参错误",
+  message: "参数异常",
   data: "",
 };
 
