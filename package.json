@@ -6,9 +6,9 @@
   "author": "dengnh <2640559435@qq.com>",
   "license": "MIT",
   "scripts": {
-    "start": "cross-env NODE_ENV=prod nodemon -e ts,tsx --exec ts-node ./src/main.ts",
-    "dev": "cross-env NODE_ENV=dev nodemon -e ts,tsx --exec ts-node ./src/main.ts",
-    "build:dev": "nodemon -e js ./dist/main.js",
+    "start": "cross-env NODE_ENV=prod nodemon ./src/main.js",
+    "dev": "cross-env NODE_ENV=dev nodemon  ./src/main.js",
+    "start:build": "nodemon -e js ./dist/main.js",
     "build": "rimraf ./dist && tsc"
   },
   "dependencies": {
