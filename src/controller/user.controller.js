@@ -30,15 +30,13 @@ class UserController {
     // 1. 获取用户信息（在token的playload中，记录id，username）
     try {
       const { password, ...props } = (await findOneUser({ username })) || {};
-      const { _id: id, username: user_name, is_admin } = props._doc || {};
+      delete props?._doc.password;
       ctx.body = {
         code: 201,
         success: true,
         message: "登录成功",
         data: {
-          isAdmin: is_admin,
-          id,
-          username: user_name,
+          ...props?._doc,
           token: jwt.sign(props, JWT_SECRET, { expiresIn: "1d" }),
         },
       };
@@ -53,7 +51,12 @@ class UserController {
     const { userId } = ctx.request.body;
     try {
       const res = await findUserById(userId);
-      ctx.body = res;
+      ctx.body = {
+        code: 200,
+        success: true,
+        message: "获取用户信息成功",
+        data: res,
+      };
     } catch (error) {
       console.error("getUserInfo", error);
       ctx.app.emit("error", databaseError, ctx);
@@ -63,6 +66,9 @@ class UserController {
   // 更新用户信息
   async updateInfoCtr(ctx, next) {
     const { userId, ...params } = ctx.request.body;
+    if (!userId) {
+      ctx.app.emit("error", fieldFormateError, ctx);
+    }
     try {
       await updateUser(userId, params);
       const userInfo = await findUserById(userId);

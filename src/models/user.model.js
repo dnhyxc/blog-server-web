@@ -7,6 +7,7 @@ const userSchema = new mongoose.Schema({
   job: String,
   motto: String,
   headUrl: String,
+  introduce: String,
   github: String,
   juejin: String,
   zhihu: String,

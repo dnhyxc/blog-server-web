@@ -1,5 +1,10 @@
 const Router = require("koa-router");
-const { registerCtr, loginCtr, updateInfoCtr } = require("../controller");
+const {
+  registerCtr,
+  loginCtr,
+  updateInfoCtr,
+  getUserInfoCtr,
+} = require("../controller");
 const {
   userValidator,
   verifyUser,
@@ -23,13 +28,16 @@ router.post(
 // 登录接口
 router.post("/login", userValidator, verifyLogin, loginCtr);
 
+// 获取用户信息
+router.post("/getUserInfo", auth, getUserInfoCtr);
+
 // 修改用户信息接口
 router.put(
   "/updateInfo",
   auth,
-  verifyUser,
-  verifyUpdateInfo,
-  bcryptPassword,
+  // verifyUser,
+  // verifyUpdateInfo,
+  // bcryptPassword,
   updateInfoCtr
 );
 
