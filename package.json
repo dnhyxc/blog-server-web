@@ -6,12 +6,14 @@
   "author": "dengnh <2640559435@qq.com>",
   "license": "MIT",
   "scripts": {
-    "start": "nodemon -e ts,tsx --exec ts-node ./src/main.ts",
-    "dev": "nodemon -e js ./dist/main.js",
+    "start": "cross-env NODE_ENV=prod nodemon -e ts,tsx --exec ts-node ./src/main.ts",
+    "dev": "cross-env NODE_ENV=dev nodemon -e ts,tsx --exec ts-node ./src/main.ts",
+    "build:dev": "nodemon -e js ./dist/main.js",
     "build": "rimraf ./dist && tsc"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "cross-env": "^7.0.3",
     "jsonwebtoken": "^8.5.1",
     "koa": "^2.13.4",
     "koa-body": "^5.0.0",
