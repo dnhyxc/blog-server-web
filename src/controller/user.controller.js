@@ -1,13 +1,12 @@
 const jwt = require("jsonwebtoken");
+const { databaseError } = require("../constant");
+const { JWT_SECRET } = require("../config");
 const {
   createUserServer,
   findOneUser,
   updateUser,
   findUserById,
 } = require("../service");
-const { databaseError } = require("../constant");
-
-const { JWT_SECRET } = require("../config");
 
 class UserController {
   async registerCtr(ctx, next) {
@@ -82,4 +81,4 @@ class UserController {
   }
 }
 
-module.exports =  new UserController();
+module.exports = new UserController();
