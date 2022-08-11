@@ -135,16 +135,11 @@ class ArticleController {
       const { id } = ctx.request.body;
       const res = await findArticleById(id);
       if (res) {
-        const detail = { ...res._doc };
-        detail.id = detail._id;
-        delete detail._id;
-        delete detail.__v;
-
         ctx.body = {
           code: 200,
           success: true,
           message: "获取文章详情成功",
-          data: detail,
+          data: res,
         };
       }
     } catch (error) {

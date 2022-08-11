@@ -1,9 +1,15 @@
 const { Article, LikeArticle } = require("../models");
+const { findUserById } = require("./user.service");
 
 class articleServer {
   // 创建文章
   async createArticle({ ...params }) {
-    return await Article.create({ ...params, likeCount: 0 });
+    const userInfo = await findUserById(params.authorId);
+    return await Article.create({
+      ...params,
+      likeCount: 0,
+      authorName: userInfo.username,
+    });
   }
 
   // 根据文章id查找文章详情
@@ -119,8 +125,24 @@ class articleServer {
 
   // 根据文章id查找文章详情
   async findArticleById(id) {
-    const article = await Article.findById(id);
-    return article;
+    const article = await Article.findById(id, {
+      id: "$_id",
+      _id: 0,
+      title: 1,
+      content: 1,
+      classify: 1,
+      tag: 1,
+      abstract: 1,
+      createTime: 1,
+      authorId: 1,
+      likeCount: 1,
+      isLike: 1,
+    });
+    const userInfo = article && (await findUserById(article.authorId));
+    return {
+      ...article._doc,
+      authorName: userInfo.username,
+    };
   }
 
   // 根据文章id查找文章详情
