@@ -10,6 +10,7 @@ class UploadController {
       ctx.body = {
         code: 200,
         message: "文件上传成功",
+        success: true,
         data: {
           filePath: `${ctx.origin}/${basename}`,
         },
@@ -20,4 +21,4 @@ class UploadController {
   }
 }
 
-module.exports =  new UploadController();
+module.exports = new UploadController();
