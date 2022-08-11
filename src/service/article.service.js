@@ -141,7 +141,8 @@ class articleServer {
     const userInfo = article && (await findUserById(article.authorId));
     return {
       ...article._doc,
-      authorName: userInfo.username,
+      authorName: userInfo?.username,
+      headUrl: userInfo?.headUrl,
     };
   }
 
