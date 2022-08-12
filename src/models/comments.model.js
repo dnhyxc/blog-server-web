@@ -12,6 +12,7 @@ const CommentsSchema = new mongoose.Schema({
   replyCount: Number,
   isLike: Boolean,
   isDelete: Boolean,
+  headUrl: String,
   replyList: [
     {
       userId: String,
@@ -27,6 +28,7 @@ const CommentsSchema = new mongoose.Schema({
       replyCount: Number,
       fromCommentId: String,
       isDelete: Boolean,
+      headUrl: String,
     },
   ],
 });

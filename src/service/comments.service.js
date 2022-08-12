@@ -1,10 +1,13 @@
 const { Comments, Like } = require("../models");
+const { findUserById } = require("./user.service");
 
 class commentServer {
   // 创建评论
   async createComments({ params }) {
+    const userInfo = await findUserById(params.userId);
     const comment = await Comments.create({
       ...params,
+      headUrl: userInfo?.headUrl || "",
     });
     return comment;
   }
@@ -95,6 +98,8 @@ class commentServer {
   async updateComments(commentId, params) {
     const { fromCommentId } = params;
 
+    const userInfo = await findUserById(params.userId);
+
     const filter = fromCommentId
       ? {
           articleId: params.articleId,
@@ -112,7 +117,7 @@ class commentServer {
         $push: {
           replyList: {
             // ...params, // 不适用$each包一下sort不会生效
-            $each: [{ ...params }], // $each 向replyList插入多条
+            $each: [{ ...params, headUrl: userInfo?.headUrl || "" }], // $each 向replyList插入多条
             // $sort: { date: 1 }, // 正序排列
           },
         },
@@ -122,6 +127,7 @@ class commentServer {
           "replyList.$.fromUserId": params.fromUserId,
           "replyList.$.fromUsername": params.fromUsername,
           "replyList.$.formContent": params.formContent,
+          "replyList.$.headUrl": userInfo?.headUrl || "",
         },
       }
     );
