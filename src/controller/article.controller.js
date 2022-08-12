@@ -106,7 +106,6 @@ class ArticleController {
         ctx.app.emit("error", fieldFormateError, ctx);
         return;
       }
-      // 操作数据库
       const res = await findArticles({
         pageNo,
         pageSize,

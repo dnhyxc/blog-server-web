@@ -4,10 +4,15 @@ const { databaseError } = require("../constant");
 class userInfoController {
   // 获取我的文章
   async getMyArticleListCtr(ctx, next) {
-    const { pageNo, pageSize, userId } = ctx.request.body;
+    const { pageNo, pageSize, userId, accessUserId } = ctx.request.body;
     try {
-      // 操作数据库
-      const res = await getMyArticleList({ pageNo, pageSize, userId });
+      // accessUserId有值，说明是访问别人的主页，需要通过accessUserId去获取点赞状态
+      const res = await getMyArticleList({
+        pageNo,
+        pageSize,
+        userId,
+        accessUserId,
+      });
       // 返回结果
       ctx.body = {
         code: 200,
