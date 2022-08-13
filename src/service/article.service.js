@@ -134,6 +134,7 @@ class articleServer {
       tag: 1,
       abstract: 1,
       createTime: 1,
+      coverImage: 1,
       authorId: 1,
       likeCount: 1,
       isLike: 1,
