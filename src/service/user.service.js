@@ -34,6 +34,7 @@ class UserServer {
       juejin: 1,
       zhihu: 1,
       blog: 1,
+      mainCover: 1,
     });
     return user;
   }

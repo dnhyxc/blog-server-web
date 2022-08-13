@@ -12,6 +12,7 @@ const userSchema = new mongoose.Schema({
   juejin: String,
   zhihu: String,
   blog: String,
+  mainCover: String,
 });
 
 const User = mongoose.model("users", userSchema);
