@@ -18,12 +18,16 @@ const errorHandler = (err, ctx) => {
       break;
     case "10006":
       status = 409;
+      break;
+    case "10009":
+      status = 406;
+      break;
     case "10101":
       status = 401;
+      break;
     case "10102":
       status = 409;
       break;
-
     default:
       status = 500;
       break;
@@ -32,4 +36,4 @@ const errorHandler = (err, ctx) => {
   ctx.body = err;
 };
 
-module.exports =  errorHandler;
+module.exports = errorHandler;

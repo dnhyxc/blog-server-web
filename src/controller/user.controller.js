@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const { databaseError } = require("../constant");
+const { databaseError, userNotExist } = require("../constant");
 const { JWT_SECRET } = require("../config");
 const {
   createUserServer,
@@ -51,6 +51,10 @@ class UserController {
     const { userId } = ctx.request.body;
     try {
       const res = await findUserById(userId);
+      if (!res) {
+        ctx.app.emit("error", userNotExist, ctx);
+        return;
+      }
       ctx.body = {
         code: 200,
         success: true,

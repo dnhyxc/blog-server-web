@@ -29,7 +29,7 @@ router.post(
 router.post("/login", userValidator, verifyLogin, loginCtr);
 
 // 获取用户信息
-router.post("/getUserInfo", auth, getUserInfoCtr);
+router.post("/getUserInfo", getUserInfoCtr);
 
 // 修改用户信息接口
 router.put(

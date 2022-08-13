@@ -62,6 +62,13 @@ const pwdNotChange = {
   data: "",
 };
 
+const userNotExist = {
+  code: "10009",
+  success: false,
+  message: "该用户已奔赴星辰大海",
+  data: "",
+};
+
 const TokenExpiredError = {
   code: "10101",
   success: false,
@@ -96,4 +103,5 @@ module.exports = {
   JsonWebTokenError,
   fileUploadError,
   fieldFormateError,
+  userNotExist,
 };
