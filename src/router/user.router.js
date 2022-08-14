@@ -12,6 +12,7 @@ const {
   verifyLogin,
   auth,
   verifyUpdateInfo,
+  verifyUserExists,
 } = require("../middleware");
 
 const router = new Router({ prefix: "/api" });
@@ -35,9 +36,18 @@ router.post("/getUserInfo", getUserInfoCtr);
 router.put(
   "/updateInfo",
   auth,
-  // verifyUser,
+  verifyUserExists,
   // verifyUpdateInfo,
-  // bcryptPassword,
+  updateInfoCtr
+);
+
+// 修改用户信息接口
+router.put(
+  "/updatePassword",
+  auth,
+  verifyUserExists,
+  // verifyUpdateInfo,
+  bcryptPassword,
   updateInfoCtr
 );
 

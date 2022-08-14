@@ -56,6 +56,10 @@ class ArticleController {
   async deleteArticleCtr(ctx, next) {
     try {
       const { articleId } = ctx.request.body;
+      if (!articleId) {
+        ctx.app.emit("error", fieldFormateError, ctx);
+        return;
+      }
       // 操作数据库
       await deleteArticles({ articleId });
       // 返回结果

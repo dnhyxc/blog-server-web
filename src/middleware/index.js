@@ -4,6 +4,7 @@ const {
   bcryptPassword,
   verifyLogin,
   verifyUpdateInfo,
+  verifyUserExists,
 } = require("./user.middleware");
 
 const { auth } = require("./auth.middleware");
@@ -15,4 +16,5 @@ module.exports = {
   verifyLogin,
   auth,
   verifyUpdateInfo,
+  verifyUserExists,
 };

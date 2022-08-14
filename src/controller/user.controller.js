@@ -72,6 +72,7 @@ class UserController {
     const { userId, ...params } = ctx.request.body;
     if (!userId) {
       ctx.app.emit("error", fieldFormateError, ctx);
+      return;
     }
     try {
       await updateUser(userId, params);

@@ -65,7 +65,7 @@ const pwdNotChange = {
 const userNotExist = {
   code: "10009",
   success: false,
-  message: "该用户已奔赴星辰大海",
+  message: "该用户已奔赴星辰大海，再难寻回",
   data: "",
 };
 
