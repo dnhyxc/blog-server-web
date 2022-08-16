@@ -75,7 +75,7 @@ class articleServer {
                 createTime: "$createTime",
               },
             },
-            { $sort: { createTime: -1 } },
+            { $sort: { createTime: -1, likeCount: -1 } },
             { $skip: (pageNo - 1) * pageSize },
             { $limit: pageSize },
           ],
@@ -178,6 +178,7 @@ class articleServer {
           createTime: "$createTime",
         },
       },
+      { $sort: { createTime: -1, likeCount: -1 } },
     ]);
     return res;
   }
