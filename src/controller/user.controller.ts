@@ -1,13 +1,12 @@
-import jwt from "jsonwebtoken";
-import {
+const jwt = require("jsonwebtoken");
+const { databaseError, userNotExist } = require("../constant");
+const { JWT_SECRET } = require("../config");
+const {
   createUserServer,
   findOneUser,
   updateUser,
   findUserById,
-} from "../service";
-import { databaseError, fieldFormateError } from "../constant";
-
-import { JWT_SECRET } from "../config";
+} = require("../service");
 
 class UserController {
   async registerCtr(ctx, next) {
@@ -31,15 +30,13 @@ class UserController {
     // 1. 获取用户信息（在token的playload中，记录id，username）
     try {
       const { password, ...props } = (await findOneUser({ username })) || {};
-      const { _id: id, username: user_name, is_admin } = props._doc || {};
+      delete props?._doc.password;
       ctx.body = {
         code: 201,
         success: true,
         message: "登录成功",
         data: {
-          isAdmin: is_admin,
-          id,
-          username: user_name,
+          ...props?._doc,
           token: jwt.sign(props, JWT_SECRET, { expiresIn: "1d" }),
         },
       };
@@ -54,6 +51,10 @@ class UserController {
     const { userId } = ctx.request.body;
     try {
       const res = await findUserById(userId);
+      if (!res) {
+        ctx.app.emit("error", userNotExist, ctx);
+        return;
+      }
       ctx.body = {
         code: 200,
         success: true,
@@ -71,8 +72,8 @@ class UserController {
     const { userId, ...params } = ctx.request.body;
     if (!userId) {
       ctx.app.emit("error", fieldFormateError, ctx);
+      return;
     }
-    console.log(params, "params");
     try {
       await updateUser(userId, params);
       const userInfo = await findUserById(userId);
@@ -91,4 +92,4 @@ class UserController {
   }
 }
 
-export default new UserController();
+module.exports = new UserController();

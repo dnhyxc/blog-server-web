@@ -1,18 +1,19 @@
-import Router from "koa-router";
-import {
+const Router = require("koa-router");
+const {
   registerCtr,
   loginCtr,
   updateInfoCtr,
   getUserInfoCtr,
-} from "../controller";
-import {
+} = require("../controller");
+const {
   userValidator,
   verifyUser,
   bcryptPassword,
   verifyLogin,
   auth,
   verifyUpdateInfo,
-} from "../middleware";
+  verifyUserExists,
+} = require("../middleware");
 
 const router = new Router({ prefix: "/api" });
 
@@ -29,15 +30,24 @@ router.post(
 router.post("/login", userValidator, verifyLogin, loginCtr);
 
 // 获取用户信息
-router.post("/getUserInfo", auth, getUserInfoCtr);
+router.post("/getUserInfo", getUserInfoCtr);
 
 // 修改用户信息接口
 router.put(
   "/updateInfo",
   auth,
-  // verifyUser,
+  verifyUserExists,
   // verifyUpdateInfo,
-  // bcryptPassword,
+  updateInfoCtr
+);
+
+// 修改用户信息接口
+router.put(
+  "/updatePassword",
+  auth,
+  verifyUserExists,
+  // verifyUpdateInfo,
+  bcryptPassword,
   updateInfoCtr
 );
 

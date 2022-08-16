@@ -1,5 +1,8 @@
-import Router from "koa-router";
-import { getMyArticleListCtr, getLikeArticleListCtr } from "../controller";
+const Router = require("koa-router");
+const {
+  getMyArticleListCtr,
+  getLikeArticleListCtr,
+} = require("../controller");
 
 const router = new Router({ prefix: "/api" });
 

@@ -1,5 +1,5 @@
-import Router from "koa-router";
-import {
+const Router = require("koa-router");
+const {
   getArticleListCtr,
   createArticleCtr,
   getArticleByIdCtr,
@@ -7,8 +7,10 @@ import {
   likeArticleCtr,
   updateArticleCtr,
   searchArticleCtr,
-} from "../controller";
-import { auth } from "../middleware";
+  getArticleByRandomCtr,
+} = require("../controller");
+
+const { auth } = require("../middleware");
 
 const router = new Router({ prefix: "/api" });
 
@@ -32,5 +34,8 @@ router.post("/searchArticle", searchArticleCtr);
 
 // 获取文章详情
 router.post("/articleDetail", getArticleByIdCtr);
+
+// 随机获取文章
+router.post("/getArticleByRandom", getArticleByRandomCtr);
 
 module.exports = router;

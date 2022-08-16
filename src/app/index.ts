@@ -1,12 +1,12 @@
-import Koa, { DefaultContext, DefaultState } from "Koa";
-import koaBody from "koa-body";
-import koaStatic from "koa-static";
-import router from "../router";
-import connectMongodb from "../db";
-import errorHandler from "../utils";
-import path from "path";
+const Koa = require("koa");
+const koaBody = require("koa-body");
+const koaStatic = require("koa-static");
+const path = require("path");
+const router = require("../router");
+const connectMongodb = require("../db");
+const errorHandler = require("../utils");
 
-const app: Koa<DefaultState, DefaultContext> = new Koa();
+const app = new Koa();
 
 // 链接数据库
 connectMongodb();
@@ -33,4 +33,4 @@ app.use(router.routes()).use(router.allowedMethods());
 
 app.on("error", errorHandler);
 
-export default app;
+module.exports = app;

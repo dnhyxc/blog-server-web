@@ -1,12 +1,12 @@
-import {
+const {
   createComments,
   updateComments,
   findCommentById,
   giveLike,
   createLike,
   deleteComment,
-} from "../service";
-import { databaseError } from "../constant";
+} = require("../service");
+const { databaseError } = require("../constant");
 
 class CommentsController {
   // 创建评论
@@ -108,4 +108,4 @@ class CommentsController {
   }
 }
 
-export default new CommentsController();
+module.exports = new CommentsController();

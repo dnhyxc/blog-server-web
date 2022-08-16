@@ -1,18 +1,20 @@
-import {
+const {
   userValidator,
   verifyUser,
   bcryptPassword,
   verifyLogin,
   verifyUpdateInfo,
-} from "./user.middleware";
+  verifyUserExists,
+} = require("./user.middleware");
 
-import { auth } from "./auth.middleware";
+const { auth } = require("./auth.middleware");
 
-export {
+module.exports = {
   userValidator,
   verifyUser,
   bcryptPassword,
   verifyLogin,
   auth,
   verifyUpdateInfo,
+  verifyUserExists,
 };

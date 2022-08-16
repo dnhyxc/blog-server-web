@@ -1,11 +1,11 @@
-import Router from "koa-router";
-import {
+const Router = require("koa-router");
+const {
   createCommentsCtr,
   findCommentsById,
   giveLikeCtr,
   deleteCommentCtr,
-} from "../controller";
-import { auth } from "../middleware";
+} = require("../controller");
+const { auth } = require("../middleware");
 
 const router = new Router({ prefix: "/api" });
 

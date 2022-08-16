@@ -1,5 +1,11 @@
-export const PORT = 9112;
+const PORT = 9112;
 
-export const APP_PORT = 9112;
+const APP_PORT = 9112;
 
-export const JWT_SECRET = "dnhyxc";
+const JWT_SECRET = "dnhyxc";
+
+module.exports = {
+  PORT,
+  APP_PORT,
+  JWT_SECRET,
+};

@@ -1,5 +1,5 @@
-import path from "path";
-import { fileUploadError } from "../constant";
+const path = require("path");
+const { fileUploadError } = require("../constant");
 
 class UploadController {
   // 创建文章
@@ -10,6 +10,7 @@ class UploadController {
       ctx.body = {
         code: 200,
         message: "文件上传成功",
+        success: true,
         data: {
           filePath: `${ctx.origin}/${basename}`,
         },
@@ -20,4 +21,4 @@ class UploadController {
   }
 }
 
-export default new UploadController();
+module.exports = new UploadController();

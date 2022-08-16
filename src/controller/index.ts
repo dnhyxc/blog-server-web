@@ -1,9 +1,9 @@
-import userController from "./user.controller";
-import articleController from "./article.controller";
-import uploadController from "./upload.controller";
-import commentsController from "./comments.controller";
-import classifyController from "./classify.controller";
-import userInfoController from "./userInfo.controller";
+const userController = require("./user.controller");
+const articleController = require("./article.controller");
+const uploadController = require("./upload.controller");
+const commentsController = require("./comments.controller");
+const classifyController = require("./classify.controller");
+const userInfoController = require("./userInfo.controller");
 
 const { registerCtr, loginCtr, updateInfoCtr, getUserInfoCtr } = userController;
 
@@ -15,6 +15,7 @@ const {
   likeArticleCtr,
   updateArticleCtr,
   searchArticleCtr,
+  getArticleByRandomCtr,
 } = articleController;
 
 const { uploadFileCtr } = uploadController;
@@ -27,7 +28,7 @@ const { getClassifyListCtr, getTagListCtr, getTimelineListCtr } =
 
 const { getMyArticleListCtr, getLikeArticleListCtr } = userInfoController;
 
-export {
+module.exports = {
   registerCtr,
   loginCtr,
   updateInfoCtr,
@@ -49,4 +50,5 @@ export {
   getTimelineListCtr,
   getMyArticleListCtr,
   getLikeArticleListCtr,
+  getArticleByRandomCtr,
 };

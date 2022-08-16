@@ -1,17 +1,15 @@
-import { Comments, Like } from "../models";
+const { Comments, Like } = require("../models");
+const { findUserById } = require("./user.service");
 
 class commentServer {
   // 创建评论
   async createComments({ params }) {
-    try {
-      const comment: any = await Comments.create({
-        ...params,
-      });
-      return comment;
-    } catch (error) {
-      console.error("createComments", error);
-      throw new Error(error as any);
-    }
+    const userInfo = await findUserById(params.userId);
+    const comment = await Comments.create({
+      ...params,
+      headUrl: userInfo?.headUrl || "",
+    });
+    return comment;
   }
 
   // 根据userId更新里层点赞状态
@@ -32,11 +30,11 @@ class commentServer {
 
     const likeFilter = likes.map((i) => i.likeCommentId);
 
-    const filterIn: any = await Comments.find({
+    const filterIn = await Comments.find({
       "replyList._id": { $in: likeFilter },
     });
 
-    const filterNin: any = await Comments.find({
+    const filterNin = await Comments.find({
       "replyList._id": { $nin: likeFilter },
     });
 
@@ -92,51 +90,49 @@ class commentServer {
   // 根据文章id查找评论
   async findCommentById(articleId, userId) {
     await commentServer.checkLikeStatus(userId, articleId);
-    const comment: any = await Comments.find({ articleId });
+    const comment = await Comments.find({ articleId });
     return comment;
   }
 
   // 回复评论
   async updateComments(commentId, params) {
-    try {
-      const { fromCommentId } = params;
+    const { fromCommentId } = params;
 
-      const filter = fromCommentId
-        ? {
-            articleId: params.articleId,
-            "replyList._id": fromCommentId,
-          }
-        : { _id: commentId, articleId: params.articleId };
+    const userInfo = await findUserById(params.userId);
 
-      const comment: any = await Comments.updateOne(
-        {
-          $and: [filter],
-        },
-        // 向查找到的document中的replyList数组中插入一条评论
-        // 注意：如果要使用排序，$sort必须与$each一起使用才会生效
-        {
-          $push: {
-            replyList: {
-              // ...params, // 不适用$each包一下sort不会生效
-              $each: [{ ...params }], // $each 向replyList插入多条
-              // $sort: { date: 1 }, // 正序排列
-            },
-          },
-        },
-        {
-          $set: {
-            "replyList.$.fromUserId": params.fromUserId,
-            "replyList.$.fromUsername": params.fromUsername,
-            "replyList.$.formContent": params.formContent,
-          },
+    const filter = fromCommentId
+      ? {
+          articleId: params.articleId,
+          "replyList._id": fromCommentId,
         }
-      );
+      : { _id: commentId, articleId: params.articleId };
 
-      return comment;
-    } catch (error) {
-      console.error("createComments", error);
-      throw new Error(error as any);
-    }
+    const comment = await Comments.updateOne(
+      {
+        $and: [filter],
+      },
+      // 向查找到的document中的replyList数组中插入一条评论
+      // 注意：如果要使用排序，$sort必须与$each一起使用才会生效
+      {
+        $push: {
+          replyList: {
+            // ...params, // 不适用$each包一下sort不会生效
+            $each: [{ ...params, headUrl: userInfo?.headUrl || "" }], // $each 向replyList插入多条
+            // $sort: { date: 1 }, // 正序排列
+          },
+        },
+      },
+      {
+        $set: {
+          "replyList.$.fromUserId": params.fromUserId,
+          "replyList.$.fromUsername": params.fromUsername,
+          "replyList.$.formContent": params.formContent,
+          "replyList.$.headUrl": userInfo?.headUrl || "",
+        },
+      }
+    );
+
+    return comment;
   }
   // 点赞
   async giveLike(commentId, fromCommentId, status) {
@@ -146,7 +142,7 @@ class commentServer {
         }
       : { _id: commentId };
 
-    const comment: any = await Comments.updateOne(
+    const comment = await Comments.updateOne(
       {
         $and: [filter],
       },
@@ -177,7 +173,7 @@ class commentServer {
         }
       : { _id: commentId };
 
-    const comment: any = await Comments.updateOne(
+    const comment = await Comments.updateOne(
       {
         $and: [filter],
       },
@@ -197,4 +193,4 @@ class commentServer {
   }
 }
 
-export default new commentServer();
+module.exports = new commentServer();

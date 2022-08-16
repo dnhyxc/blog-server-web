@@ -1,9 +1,9 @@
-import Router from "koa-router";
-import {
+const Router = require("koa-router");
+const {
   getClassifyListCtr,
   getTagListCtr,
   getTimelineListCtr,
-} from "../controller";
+} = require("../controller");
 
 const router = new Router({ prefix: "/api" });
 

@@ -1,4 +1,4 @@
-import {
+const {
   findArticles,
   createArticle,
   findArticleById,
@@ -6,8 +6,9 @@ import {
   likeArticle,
   checkLikeArticle,
   updateArticle,
-} from "../service";
-import { databaseError, fieldFormateError } from "../constant";
+  getArticleByRandom,
+} = require("../service");
+const { databaseError, fieldFormateError } = require("../constant");
 
 class ArticleController {
   // 创建文章
@@ -56,6 +57,10 @@ class ArticleController {
   async deleteArticleCtr(ctx, next) {
     try {
       const { articleId } = ctx.request.body;
+      if (!articleId) {
+        ctx.app.emit("error", fieldFormateError, ctx);
+        return;
+      }
       // 操作数据库
       await deleteArticles({ articleId });
       // 返回结果
@@ -76,7 +81,7 @@ class ArticleController {
     try {
       const { pageNo, pageSize, filter, userId } = ctx.request.body;
       // 操作数据库
-      const res: any = await findArticles({
+      const res = await findArticles({
         pageNo,
         pageSize,
         userId,
@@ -106,8 +111,7 @@ class ArticleController {
         ctx.app.emit("error", fieldFormateError, ctx);
         return;
       }
-      // 操作数据库
-      const res: any = await findArticles({
+      const res = await findArticles({
         pageNo,
         pageSize,
         userId,
@@ -135,16 +139,11 @@ class ArticleController {
       const { id } = ctx.request.body;
       const res = await findArticleById(id);
       if (res) {
-        const detail = { ...res._doc };
-        detail.id = detail._id;
-        delete detail._id;
-        delete detail.__v;
-
         ctx.body = {
           code: 200,
           success: true,
           message: "获取文章详情成功",
-          data: detail,
+          data: res,
         };
       }
     } catch (error) {
@@ -155,19 +154,41 @@ class ArticleController {
 
   // 文章点赞
   async likeArticleCtr(ctx, next) {
-    const { id, userId } = ctx.request.body;
-    const likeStatus = await checkLikeArticle(id, userId);
-    const res = await likeArticle({ id, likeStatus });
-    ctx.body = {
-      code: 200,
-      success: true,
-      message: "为文章点赞成功",
-      data: {
-        id,
-        isLike: res,
-      },
-    };
+    try {
+      const { id, userId } = ctx.request.body;
+      const likeStatus = await checkLikeArticle(id, userId);
+      const res = await likeArticle({ id, likeStatus });
+      ctx.body = {
+        code: 200,
+        success: true,
+        message: "为文章点赞成功",
+        data: {
+          id,
+          isLike: res,
+        },
+      };
+    } catch (error) {
+      console.error("likeArticleCtr", error);
+      ctx.app.emit("error", databaseError, ctx);
+    }
+  }
+
+  // 随机获取文章
+  async getArticleByRandomCtr(ctx, next) {
+    try {
+      const { userId } = ctx.request.body;
+      const res = await getArticleByRandom(userId);
+      ctx.body = {
+        code: 200,
+        success: true,
+        message: "为文章点赞成功",
+        data: res,
+      };
+    } catch (error) {
+      console.error("getArticleByRandomCtr", error);
+      ctx.app.emit("error", databaseError, ctx);
+    }
   }
 }
 
-export default new ArticleController();
+module.exports = new ArticleController();

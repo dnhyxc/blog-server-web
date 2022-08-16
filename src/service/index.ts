@@ -1,12 +1,10 @@
-import userService from "./user.service";
-import articleService from "./article.service";
-import commentsService from "./comments.service";
-import likeService from "./like.service";
-import likeArticleService from "./likeArticle.service";
-import classifyService from "./classify.service";
-import userInfoServer from "./userInfo.service";
+const {
+  findOneUser,
+  findUserById,
+  createUserServer,
+  updateUser,
+} = require("./user.service");
 
-const { findOneUser, findUserById, createUserServer, updateUser } = userService;
 const {
   createArticle,
   findArticles,
@@ -16,7 +14,8 @@ const {
   likeArticle,
   checkLikeStatus,
   getArticleListWithTotal,
-} = articleService;
+  getArticleByRandom,
+} = require("./article.service");
 
 const {
   createComments,
@@ -24,17 +23,19 @@ const {
   updateComments,
   giveLike,
   deleteComment,
-} = commentsService;
+} = require("./comments.service");
 
-const { createLike } = likeService;
+const { createLike } = require("./like.service");
 
-const { checkLikeArticle } = likeArticleService;
+const { checkLikeArticle } = require("./likeArticle.service");
+const {
+  getClassifyList,
+  getTagList,
+  getTimelineList,
+} = require("./classify.service");
+const { getMyArticleList, getLikeArticleList } = require("./userInfo.service");
 
-const { getClassifyList, getTagList, getTimelineList } = classifyService;
-
-const { getMyArticleList, getLikeArticleList } = userInfoServer;
-
-export {
+module.exports = {
   findOneUser,
   findUserById,
   updateUser,
@@ -59,4 +60,5 @@ export {
   getArticleListWithTotal,
   getMyArticleList,
   getLikeArticleList,
+  getArticleByRandom,
 };

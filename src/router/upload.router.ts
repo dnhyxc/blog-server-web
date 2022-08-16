@@ -1,6 +1,6 @@
-import Router from "koa-router";
-import { uploadFileCtr } from "../controller";
-import { auth } from "../middleware";
+const Router = require( "koa-router");
+const { uploadFileCtr } = require( "../controller");
+const { auth } = require( "../middleware");
 
 const router = new Router({ prefix: "/api" });
 

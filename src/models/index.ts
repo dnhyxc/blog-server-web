@@ -1,7 +1,7 @@
-import User from "./user.model";
-import Article from "./article.model";
-import Comments from "./comments.model";
-import Like from "./like.model";
-import LikeArticle from "./likeArticle.model";
+const User = require("./user.model");
+const Article = require("./article.model");
+const Comments = require("./comments.model");
+const Like = require("./like.model");
+const LikeArticle = require("./likeArticle.model");
 
-export { User, Article, Comments, Like, LikeArticle };
+module.exports = { User, Article, Comments, Like, LikeArticle };

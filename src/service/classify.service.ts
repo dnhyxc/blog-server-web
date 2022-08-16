@@ -1,5 +1,8 @@
-import { Article } from "../models";
-import { checkLikeStatus, getArticleListWithTotal } from "../service";
+const { Article } = require("../models");
+const {
+  checkLikeStatus,
+  getArticleListWithTotal,
+} = require("./article.service");
 
 class classifyServer {
   // 获取文章分类
@@ -102,4 +105,4 @@ class classifyServer {
   }
 }
 
-export default new classifyServer();
+module.exports = new classifyServer();

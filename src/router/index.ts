@@ -1,14 +1,14 @@
-import Router from "koa-router";
-import fs from "fs";
+const Router = require("koa-router");
+const fs = require("fs");
 
 const router = new Router();
 
 // 自动导入路由
 fs.readdirSync(__dirname).forEach((file) => {
-  if (file !== "index.ts") {
+  if (file !== "index.js") {
     let route = require("./" + file);
     router.use(route.routes());
   }
 });
 
-export default router;
+module.exports = router;

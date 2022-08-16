@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
 const likeArticleSchema = new mongoose.Schema({
   userId: String,
@@ -7,4 +7,4 @@ const likeArticleSchema = new mongoose.Schema({
 
 const LikeArticle = mongoose.model("likeArticles", likeArticleSchema);
 
-export default LikeArticle;
+module.exports =  LikeArticle;

@@ -11,4 +11,4 @@ const connectMongodb = () => {
     });
 };
 
-export default connectMongodb;
+module.exports = connectMongodb;

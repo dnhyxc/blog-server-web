@@ -1,5 +1,5 @@
-import { getClassifyList, getTagList, getTimelineList } from "../service";
-import { databaseError, userFormateError } from "../constant";
+const { getClassifyList, getTagList, getTimelineList } = require("../service");
+const { databaseError, userFormateError } = require("../constant");
 
 class classifyController {
   // 创建文章
@@ -61,4 +61,4 @@ class classifyController {
   }
 }
 
-export default new classifyController();
+module.exports = new classifyController();

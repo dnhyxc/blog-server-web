@@ -1,40 +1,32 @@
-import { Article, LikeArticle } from "../models";
+const { Article, LikeArticle } = require("../models");
+const { findUserById } = require("./user.service");
+
 class articleServer {
   // 创建文章
   async createArticle({ ...params }) {
-    try {
-      return await Article.create({ ...params, likeCount: 0 });
-    } catch (error) {
-      console.error("createArticle", error);
-      throw new Error(error as any);
-    }
+    const userInfo = await findUserById(params.authorId);
+    return await Article.create({
+      ...params,
+      likeCount: 0,
+      authorName: userInfo.username,
+    });
   }
 
   // 根据文章id查找文章详情
   async updateArticle({ articleId: _id, ...params }) {
-    try {
-      await Article.updateOne({ _id }, { $set: params });
-    } catch (error) {
-      console.error("updateArticle", error);
-      throw new Error(error as any);
-    }
+    await Article.updateOne({ _id }, { $set: params });
   }
 
   // 删除文章
   async deleteArticles({ articleId }) {
-    try {
-      return await Article.updateOne(
-        { _id: articleId },
-        {
-          $set: {
-            isDelete: true,
-          },
-        }
-      );
-    } catch (error) {
-      console.error("createArticle", error);
-      throw new Error(error as any);
-    }
+    return await Article.updateOne(
+      { _id: articleId },
+      {
+        $set: {
+          isDelete: true,
+        },
+      }
+    );
   }
 
   // 查询用户是否点赞
@@ -83,7 +75,7 @@ class articleServer {
                 createTime: "$createTime",
               },
             },
-            { $sort: { createTime: -1 } },
+            { $sort: { createTime: -1, likeCount: -1 } },
             { $skip: (pageNo - 1) * pageSize },
             { $limit: pageSize },
           ],
@@ -105,19 +97,7 @@ class articleServer {
   }
 
   // 获取文章列表
-  async findArticles({
-    pageNo = 1,
-    pageSize = 20,
-    filter,
-    userId,
-    tagName,
-  }: {
-    pageNo: number;
-    pageSize: number;
-    userId: string;
-    filter: string;
-    tagName?: string;
-  }) {
+  async findArticles({ pageNo = 1, pageSize = 20, filter, userId, tagName }) {
     // 获取文章列表时，需要先根据userId判断文章点赞状态
     await new articleServer().checkLikeStatus(userId);
     let filterKey;
@@ -145,33 +125,63 @@ class articleServer {
 
   // 根据文章id查找文章详情
   async findArticleById(id) {
-    try {
-      const article: any = await Article.findById(id);
-      return article;
-    } catch (error) {
-      console.error("findArticleById", error);
-      throw new Error(error as any);
-    }
+    const article = await Article.findById(id, {
+      id: "$_id",
+      _id: 0,
+      title: 1,
+      content: 1,
+      classify: 1,
+      tag: 1,
+      abstract: 1,
+      createTime: 1,
+      coverImage: 1,
+      authorId: 1,
+      likeCount: 1,
+      isLike: 1,
+    });
+    const userInfo = article && (await findUserById(article.authorId));
+    return {
+      ...article._doc,
+      authorName: userInfo?.username,
+      headUrl: userInfo?.headUrl,
+    };
   }
 
   // 根据文章id查找文章详情
   async likeArticle({ id: _id, likeStatus }) {
-    try {
-      await Article.updateOne(
-        { _id },
-        {
-          $inc: { likeCount: likeStatus ? -1 : 1 },
-          $set: {
-            isLike: likeStatus ? false : true,
-          },
-        }
-      );
-      return likeStatus ? false : true;
-    } catch (error) {
-      console.error("likeArticle", error);
-      throw new Error(error as any);
-    }
+    await Article.updateOne(
+      { _id },
+      {
+        $inc: { likeCount: likeStatus ? -1 : 1 },
+        $set: {
+          isLike: likeStatus ? false : true,
+        },
+      }
+    );
+    return likeStatus ? false : true;
+  }
+
+  // 随机获取文章
+  async getArticleByRandom(userId) {
+    // 获取文章列表时，需要先根据userId判断文章点赞状态
+    await new articleServer().checkLikeStatus(userId);
+    const res = await Article.aggregate([
+      { $sample: { size: 5 } },
+      {
+        $project: {
+          _id: 0, // 默认情况下_id是包含的，将_id设置为0|false，则选择不包含_id，其他字段也可以这样选择是否显示。
+          id: "$_id", // 将_id更名为classify
+          title: "$title",
+          abstract: "$abstract",
+          authorId: "$authorId",
+          likeCount: "$likeCount",
+          createTime: "$createTime",
+        },
+      },
+      { $sort: { createTime: -1, likeCount: -1 } },
+    ]);
+    return res;
   }
 }
 
-export default new articleServer();
+module.exports = new articleServer();

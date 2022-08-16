@@ -1,4 +1,4 @@
-import { Like } from "../models";
+const { Like } = require("../models");
 
 class likeServer {
   // 创建评论
@@ -28,4 +28,4 @@ class likeServer {
   }
 }
 
-export default new likeServer();
+module.exports = new likeServer();

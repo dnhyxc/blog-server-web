@@ -1,6 +1,6 @@
-import jwt from "jsonwebtoken";
-import { JWT_SECRET } from "../config";
-import { TokenExpiredError, JsonWebTokenError } from "../constant";
+const jwt = require("jsonwebtoken");
+const { JWT_SECRET } = require("../config");
+const { TokenExpiredError, JsonWebTokenError } = require("../constant");
 
 const auth = async (ctx, next) => {
   try {
@@ -14,7 +14,7 @@ const auth = async (ctx, next) => {
       password,
     };
     ctx.state.user = user;
-  } catch (error: any) {
+  } catch (error) {
     switch (error.name) {
       case "TokenExpiredError":
         // console.error("token已过期", error);
@@ -30,4 +30,4 @@ const auth = async (ctx, next) => {
   await next();
 };
 
-export { auth };
+module.exports = { auth };

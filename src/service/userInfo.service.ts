@@ -1,11 +1,14 @@
-import mongoose from "mongoose";
-import { checkLikeStatus, getArticleListWithTotal } from "../service";
+const mongoose = require("mongoose");
+const {
+  checkLikeStatus,
+  getArticleListWithTotal,
+} = require("./article.service");
 
 class userInfoServer {
   // 获取我的文章
-  async getMyArticleList({ pageNo = 1, pageSize = 20, userId }) {
+  async getMyArticleList({ pageNo = 1, pageSize = 20, userId, accessUserId }) {
     // 返回文章列表前，首先根据userId检测点赞状态
-    await checkLikeStatus(userId);
+    await checkLikeStatus(accessUserId || userId);
     const filterKey = {
       $and: [{ isDelete: { $nin: [true] }, authorId: userId }],
     };
@@ -28,4 +31,4 @@ class userInfoServer {
   }
 }
 
-export default new userInfoServer();
+module.exports = new userInfoServer();

@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
 const ArticleSchema = new mongoose.Schema({
   title: {
@@ -20,8 +20,8 @@ const ArticleSchema = new mongoose.Schema({
   coverImage: String,
   abstract: String,
   createTime: Number,
-  createUserId: String,
   authorId: String,
+  authorName: String,
   isDelete: Boolean,
   isLike: Boolean,
   likeCount: Number,
@@ -29,4 +29,4 @@ const ArticleSchema = new mongoose.Schema({
 
 const Article = mongoose.model("articles", ArticleSchema);
 
-export default Article;
+module.exports = Article;
