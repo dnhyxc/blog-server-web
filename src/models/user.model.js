@@ -13,6 +13,8 @@ const userSchema = new mongoose.Schema({
   zhihu: String,
   blog: String,
   mainCover: String,
+  auth: String,
+  logout: String,
 });
 
 const User = mongoose.model("users", userSchema);
