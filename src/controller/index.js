@@ -15,6 +15,7 @@ const {
   likeArticleCtr,
   updateArticleCtr,
   searchArticleCtr,
+  getArticleByRandomCtr,
 } = articleController;
 
 const { uploadFileCtr } = uploadController;
@@ -25,8 +26,7 @@ const { createCommentsCtr, findCommentsById, giveLikeCtr, deleteCommentCtr } =
 const { getClassifyListCtr, getTagListCtr, getTimelineListCtr } =
   classifyController;
 
-const { getMyArticleListCtr, getLikeArticleListCtr, testCtr } =
-  userInfoController;
+const { getMyArticleListCtr, getLikeArticleListCtr } = userInfoController;
 
 module.exports = {
   registerCtr,
@@ -50,5 +50,5 @@ module.exports = {
   getTimelineListCtr,
   getMyArticleListCtr,
   getLikeArticleListCtr,
-  testCtr,
+  getArticleByRandomCtr,
 };

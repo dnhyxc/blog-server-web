@@ -7,6 +7,7 @@ const {
   likeArticleCtr,
   updateArticleCtr,
   searchArticleCtr,
+  getArticleByRandomCtr,
 } = require("../controller");
 
 const { auth } = require("../middleware");
@@ -33,5 +34,8 @@ router.post("/searchArticle", searchArticleCtr);
 
 // 获取文章详情
 router.post("/articleDetail", getArticleByIdCtr);
+
+// 随机获取文章
+router.post("/getArticleByRandom", getArticleByRandomCtr);
 
 module.exports = router;

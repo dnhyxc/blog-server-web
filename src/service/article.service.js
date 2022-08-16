@@ -160,6 +160,27 @@ class articleServer {
     );
     return likeStatus ? false : true;
   }
+
+  // 随机获取文章
+  async getArticleByRandom(userId) {
+    // 获取文章列表时，需要先根据userId判断文章点赞状态
+    await new articleServer().checkLikeStatus(userId);
+    const res = await Article.aggregate([
+      { $sample: { size: 5 } },
+      {
+        $project: {
+          _id: 0, // 默认情况下_id是包含的，将_id设置为0|false，则选择不包含_id，其他字段也可以这样选择是否显示。
+          id: "$_id", // 将_id更名为classify
+          title: "$title",
+          abstract: "$abstract",
+          authorId: "$authorId",
+          likeCount: "$likeCount",
+          createTime: "$createTime",
+        },
+      },
+    ]);
+    return res;
+  }
 }
 
 module.exports = new articleServer();

@@ -44,19 +44,6 @@ class userInfoController {
       ctx.app.emit("error", databaseError, ctx);
     }
   }
-
-  // 数据库测试接口
-  async testCtr(ctx, next) {
-    ctx.body = {
-      code: 200,
-      success: true,
-      message: "获取分类列表成功",
-      data: {
-        name: "test",
-        id: "902209",
-      },
-    };
-  }
 }
 
 module.exports = new userInfoController();

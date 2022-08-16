@@ -6,6 +6,7 @@ const {
   likeArticle,
   checkLikeArticle,
   updateArticle,
+  getArticleByRandom,
 } = require("../service");
 const { databaseError, fieldFormateError } = require("../constant");
 
@@ -153,18 +154,40 @@ class ArticleController {
 
   // 文章点赞
   async likeArticleCtr(ctx, next) {
-    const { id, userId } = ctx.request.body;
-    const likeStatus = await checkLikeArticle(id, userId);
-    const res = await likeArticle({ id, likeStatus });
-    ctx.body = {
-      code: 200,
-      success: true,
-      message: "为文章点赞成功",
-      data: {
-        id,
-        isLike: res,
-      },
-    };
+    try {
+      const { id, userId } = ctx.request.body;
+      const likeStatus = await checkLikeArticle(id, userId);
+      const res = await likeArticle({ id, likeStatus });
+      ctx.body = {
+        code: 200,
+        success: true,
+        message: "为文章点赞成功",
+        data: {
+          id,
+          isLike: res,
+        },
+      };
+    } catch (error) {
+      console.error("likeArticleCtr", error);
+      ctx.app.emit("error", databaseError, ctx);
+    }
+  }
+
+  // 随机获取文章
+  async getArticleByRandomCtr(ctx, next) {
+    try {
+      const { userId } = ctx.request.body;
+      const res = await getArticleByRandom(userId);
+      ctx.body = {
+        code: 200,
+        success: true,
+        message: "为文章点赞成功",
+        data: res,
+      };
+    } catch (error) {
+      console.error("getArticleByRandomCtr", error);
+      ctx.app.emit("error", databaseError, ctx);
+    }
   }
 }
 

@@ -14,6 +14,7 @@ const {
   likeArticle,
   checkLikeStatus,
   getArticleListWithTotal,
+  getArticleByRandom,
 } = require("./article.service");
 
 const {
@@ -33,34 +34,6 @@ const {
   getTimelineList,
 } = require("./classify.service");
 const { getMyArticleList, getLikeArticleList } = require("./userInfo.service");
-
-// const { findOneUser, findUserById, createUserServer, updateUser } = userService;
-// const {
-//   createArticle,
-//   findArticles,
-//   findArticleById,
-//   updateArticle,
-//   deleteArticles,
-//   likeArticle,
-//   checkLikeStatus,
-//   getArticleListWithTotal,
-// } = articleService;
-
-// const {
-//   createComments,
-//   findCommentById,
-//   updateComments,
-//   giveLike,
-//   deleteComment,
-// } = commentsService;
-
-// const { createLike } = likeService;
-
-// const { checkLikeArticle } = likeArticleService;
-
-// const { getClassifyList, getTagList, getTimelineList } = classifyService;
-
-// const { getMyArticleList, getLikeArticleList } = userInfoServer;
 
 module.exports = {
   findOneUser,
@@ -87,4 +60,5 @@ module.exports = {
   getArticleListWithTotal,
   getMyArticleList,
   getLikeArticleList,
+  getArticleByRandom,
 };
