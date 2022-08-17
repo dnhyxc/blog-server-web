@@ -13,7 +13,7 @@ const userSchema = new mongoose.Schema({
   zhihu: String,
   blog: String,
   mainCover: String,
-  auth: String,
+  auth: Number,
   logout: String,
 });
 
