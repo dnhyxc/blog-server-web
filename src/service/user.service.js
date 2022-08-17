@@ -17,6 +17,7 @@ class UserServer {
       zhihu: 1,
       blog: 1,
       mainCover: 1,
+      auth: 1,
     });
     return user;
   }
