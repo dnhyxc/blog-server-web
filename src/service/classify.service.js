@@ -42,9 +42,8 @@ class classifyServer {
   }
 
   // 获取时间轴文章列表
-  async getTimelineList({ pageNo = 1, pageSize = 20, userId }) {
+  async getTimelineList({ userId }) {
     // 返回文章前，首先根据userId检测点赞状态
-    await checkLikeStatus(userId);
     const list = await Article.aggregate([
       {
         $match: {

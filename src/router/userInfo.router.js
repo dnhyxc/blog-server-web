@@ -4,6 +4,7 @@ const {
   getLikeArticleListCtr,
   getAuthorArticleListCtr,
   getAuthorLikeArticlesCtr,
+  getAuthorTimelineCtr,
 } = require("../controller");
 
 const router = new Router({ prefix: "/api" });
@@ -19,5 +20,8 @@ router.post("/getAuthorArticleList", getAuthorArticleListCtr);
 
 // 获取博主点赞的文章列表
 router.post("/getAuthorLikeArticles", getAuthorLikeArticlesCtr);
+
+// 获取博主时间轴
+router.post("/getAuthorTimeline", getAuthorTimelineCtr);
 
 module.exports = router;

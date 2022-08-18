@@ -1,4 +1,9 @@
-const { getClassifyList, getTagList, getTimelineList } = require("../service");
+const {
+  getClassifyList,
+  getTagList,
+  getTimelineList,
+  checkLikeStatus,
+} = require("../service");
 const { databaseError, userFormateError } = require("../constant");
 
 class classifyController {
@@ -43,8 +48,9 @@ class classifyController {
   }
   // 获取文章时间轴
   async getTimelineListCtr(ctx, next) {
-    const { pageNo, pageSize, userId } = ctx.request.body;
     try {
+      const { pageNo, pageSize, userId } = ctx.request.body;
+      await checkLikeStatus(userId);
       // 操作数据库
       const res = await getTimelineList({ pageNo, pageSize, userId });
       // 返回结果

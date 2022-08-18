@@ -29,6 +29,11 @@ class articleServer {
     );
   }
 
+  async getLikeArticles(userId) {
+    const likes = await LikeArticle.find({ userId });
+    return likes;
+  }
+
   // 查询用户是否点赞
   async checkLikeStatus(userId) {
     const likes = await LikeArticle.find({ userId });

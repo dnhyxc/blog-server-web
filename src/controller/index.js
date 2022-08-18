@@ -31,6 +31,7 @@ const {
   getLikeArticleListCtr,
   getAuthorArticleListCtr,
   getAuthorLikeArticlesCtr,
+  getAuthorTimelineCtr,
 } = userInfoController;
 
 module.exports = {
@@ -58,4 +59,5 @@ module.exports = {
   getArticleByRandomCtr,
   getAuthorArticleListCtr,
   getAuthorLikeArticlesCtr,
+  getAuthorTimelineCtr,
 };
