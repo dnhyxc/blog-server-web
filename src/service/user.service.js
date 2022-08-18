@@ -4,8 +4,8 @@ class UserServer {
   // 用户登录
   async findOneUser(filter) {
     const user = await User.findOne(filter, {
-      userId: "$_id",
-      _id: 0,
+      userId: `${"$_id".toString()}`,
+      _id: 1,
       password: 1,
       username: 1,
       job: 1,

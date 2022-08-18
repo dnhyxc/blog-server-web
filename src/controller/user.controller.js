@@ -31,6 +31,7 @@ class UserController {
     try {
       const { password, ...props } = (await findOneUser({ username })) || {};
       delete props?._doc.password;
+      delete props?._doc._id;
       ctx.body = {
         code: 201,
         success: true,

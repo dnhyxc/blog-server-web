@@ -26,7 +26,12 @@ const { createCommentsCtr, findCommentsById, giveLikeCtr, deleteCommentCtr } =
 const { getClassifyListCtr, getTagListCtr, getTimelineListCtr } =
   classifyController;
 
-const { getMyArticleListCtr, getLikeArticleListCtr } = userInfoController;
+const {
+  getMyArticleListCtr,
+  getLikeArticleListCtr,
+  getAuthorArticleListCtr,
+  getAuthorLikeArticlesCtr,
+} = userInfoController;
 
 module.exports = {
   registerCtr,
@@ -51,4 +56,6 @@ module.exports = {
   getMyArticleListCtr,
   getLikeArticleListCtr,
   getArticleByRandomCtr,
+  getAuthorArticleListCtr,
+  getAuthorLikeArticlesCtr,
 };
