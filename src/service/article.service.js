@@ -78,6 +78,7 @@ class articleServer {
                 isLike: "$isLike",
                 likeCount: "$likeCount",
                 createTime: "$createTime",
+                authorName: "$authorName",
               },
             },
             { $sort: { createTime: -1, likeCount: -1 } },
@@ -143,6 +144,7 @@ class articleServer {
       authorId: 1,
       likeCount: 1,
       isLike: 1,
+      authorName: 1,
     });
     const userInfo = article && (await findUserById(article.authorId));
     return {
@@ -180,6 +182,7 @@ class articleServer {
           title: "$title",
           abstract: "$abstract",
           authorId: "$authorId",
+          authorName: "$authorName",
           likeCount: "$likeCount",
           createTime: "$createTime",
         },

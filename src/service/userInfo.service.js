@@ -6,7 +6,7 @@ const {
 
 class userInfoServer {
   // 获取我的文章
-  async getMyArticleList({ pageNo = 1, pageSize = 20, userId, accessUserId }) {
+  async getMyArticleList({ pageNo = 1, pageSize = 20, userId }) {
     // 返回文章列表前，首先根据userId检测点赞状态
     const filterKey = {
       $and: [{ isDelete: { $nin: [true] }, authorId: userId }],
@@ -20,7 +20,6 @@ class userInfoServer {
     pageNo = 1,
     pageSize = 20,
     userId,
-    accessUserId,
   }) {
     // 返回文章列表前，首先根据userId检测点赞状态
     const likes = await getLikeArticles(userId);
