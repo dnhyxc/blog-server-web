@@ -7,6 +7,7 @@ const {
   checkLikeArticle,
   updateArticle,
   getArticleByRandom,
+  delAllArticle,
 } = require("../service");
 const { databaseError, fieldFormateError } = require("../constant");
 
@@ -183,6 +184,22 @@ class ArticleController {
         success: true,
         message: "为文章点赞成功",
         data: res,
+      };
+    } catch (error) {
+      console.error("getArticleByRandomCtr", error);
+      ctx.app.emit("error", databaseError, ctx);
+    }
+  }
+
+  // 随机获取文章
+  async delAllArticleCtr(ctx, next) {
+    try {
+      await delAllArticle();
+      ctx.body = {
+        code: 200,
+        success: true,
+        message: "清空成功",
+        data: [],
       };
     } catch (error) {
       console.error("getArticleByRandomCtr", error);

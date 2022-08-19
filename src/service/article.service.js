@@ -187,6 +187,11 @@ class articleServer {
     ]);
     return res;
   }
+
+  // 清空所有文章
+  async delAllArticle() {
+    await Article.deleteMany({});
+  }
 }
 
 module.exports = new articleServer();

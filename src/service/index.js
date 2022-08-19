@@ -16,6 +16,7 @@ const {
   checkLikeStatus,
   getArticleListWithTotal,
   getArticleByRandom,
+  delAllArticle,
 } = require("./article.service");
 
 const {
@@ -43,6 +44,7 @@ module.exports = {
   createUserServer,
   createArticle,
   findArticles,
+  delAllArticle,
   getLikeArticles,
   findArticleById,
   updateArticle,

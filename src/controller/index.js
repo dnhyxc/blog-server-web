@@ -16,6 +16,7 @@ const {
   updateArticleCtr,
   searchArticleCtr,
   getArticleByRandomCtr,
+  delAllArticleCtr,
 } = articleController;
 
 const { uploadFileCtr } = uploadController;
@@ -43,6 +44,7 @@ module.exports = {
   createArticleCtr,
   getArticleListCtr,
   getArticleByIdCtr,
+  delAllArticleCtr,
   createCommentsCtr,
   findCommentsById,
   giveLikeCtr,

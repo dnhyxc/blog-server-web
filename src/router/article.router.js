@@ -8,6 +8,7 @@ const {
   updateArticleCtr,
   searchArticleCtr,
   getArticleByRandomCtr,
+  delAllArticleCtr,
 } = require("../controller");
 
 const { auth } = require("../middleware");
@@ -37,5 +38,8 @@ router.post("/articleDetail", getArticleByIdCtr);
 
 // 随机获取文章
 router.post("/getArticleByRandom", getArticleByRandomCtr);
+
+// 删除所有文章
+router.del("/delAllArticle", delAllArticleCtr);
 
 module.exports = router;
