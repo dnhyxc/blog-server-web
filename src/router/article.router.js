@@ -40,6 +40,6 @@ router.post("/articleDetail", getArticleByIdCtr);
 router.post("/getArticleByRandom", getArticleByRandomCtr);
 
 // 删除所有文章
-router.del("/delAllArticle", delAllArticleCtr);
+// router.del("/delAllArticle", delAllArticleCtr);
 
 module.exports = router;
