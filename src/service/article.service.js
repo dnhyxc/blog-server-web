@@ -171,6 +171,7 @@ class articleServer {
     // 获取文章列表时，需要先根据userId判断文章点赞状态
     await new articleServer().checkLikeStatus(userId);
     const res = await Article.aggregate([
+      { $match: { isDelete: { $nin: [true] } } },
       { $sample: { size: 5 } },
       {
         $project: {

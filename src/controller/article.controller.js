@@ -191,7 +191,7 @@ class ArticleController {
     }
   }
 
-  // 随机获取文章
+  // 清空数据库文章
   async delAllArticleCtr(ctx, next) {
     try {
       await delAllArticle();
