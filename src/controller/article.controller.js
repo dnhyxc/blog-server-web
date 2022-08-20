@@ -212,8 +212,8 @@ class ArticleController {
   // 获取上一篇文章
   async getPrevArticleCtr(ctx, next) {
     try {
-      const { id, classify } = ctx.request.body;
-      const res = await getPrevArticle(id, classify);
+      const { id, ...props } = ctx.request.body;
+      const res = await getPrevArticle(id, props);
       ctx.body = {
         code: 200,
         success: true,
@@ -229,8 +229,8 @@ class ArticleController {
   // 获取下一篇文章
   async getNextArticleCtr(ctx, next) {
     try {
-      const { id, classify } = ctx.request.body;
-      const res = await getNextArticle(id, classify);
+      const { id, ...props } = ctx.request.body;
+      const res = await getNextArticle(id, props);
       ctx.body = {
         code: 200,
         success: true,

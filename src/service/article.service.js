@@ -198,9 +198,30 @@ class articleServer {
   }
 
   // 获取上一篇文章
-  async getPrevArticle(id) {
+  async getPrevArticle(id, props) {
+    const { classify, userId, timelineId, tagName, accessUserId } = props;
+    let filter;
+    if (classify) {
+      filter = { classify };
+    }
+    if (tagName) {
+      filter = { tag: tagName };
+    }
+    if (timelineId) {
+      filter = { authorId: timelineId };
+    }
+    if (userId) {
+      filter = { authorId: userId };
+    }
+    if (accessUserId) {
+      filter = { authorId: accessUserId };
+    }
     const res = Article.findOne(
-      { _id: { $gt: id }, isDelete: { $nin: [true] } },
+      {
+        _id: { $gt: id },
+        isDelete: { $nin: [true] },
+        ...filter,
+      },
       {
         id: "$_id",
         _id: 0,
@@ -221,9 +242,30 @@ class articleServer {
   }
 
   // 获取下一篇文章
-  async getNextArticle(id) {
+  async getNextArticle(id, props) {
+    const { classify, userId, timelineId, tagName, accessUserId } = props;
+    let filter;
+    if (classify) {
+      filter = { classify };
+    }
+    if (tagName) {
+      filter = { tag: tagName };
+    }
+    if (timelineId) {
+      filter = { authorId: timelineId };
+    }
+    if (userId) {
+      filter = { authorId: userId };
+    }
+    if (accessUserId) {
+      filter = { authorId: accessUserId };
+    }
     const res = Article.findOne(
-      { _id: { $lt: id }, isDelete: { $nin: [true] } },
+      {
+        _id: { $lt: id },
+        isDelete: { $nin: [true] },
+        ...filter,
+      },
       {
         id: "$_id",
         _id: 0,
