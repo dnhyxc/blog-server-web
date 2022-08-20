@@ -196,6 +196,52 @@ class articleServer {
   async delAllArticle() {
     await Article.deleteMany({});
   }
+
+  // 获取上一篇文章
+  async getPrevArticle(id) {
+    const res = Article.findOne(
+      { _id: { $gt: id }, isDelete: { $nin: [true] } },
+      {
+        id: "$_id",
+        _id: 0,
+        title: 1,
+        tag: 1,
+        classify: 1,
+        abstract: 1,
+        createTime: 1,
+        authorId: 1,
+        authorName: 1,
+      }
+    )
+      // 获取上一篇需要注意排序，需要将createTime设置为正序排列
+      .sort({ createTime: 1, likeCount: -1 })
+      .limit(1);
+
+    return res;
+  }
+
+  // 获取下一篇文章
+  async getNextArticle(id) {
+    const res = Article.findOne(
+      { _id: { $lt: id }, isDelete: { $nin: [true] } },
+      {
+        id: "$_id",
+        _id: 0,
+        title: 1,
+        tag: 1,
+        classify: 1,
+        abstract: 1,
+        createTime: 1,
+        authorId: 1,
+        authorName: 1,
+      }
+    )
+      // 获取上一篇需要注意排序，需要将createTime设置为倒叙序排列
+      .sort({ createTime: -1, likeCount: -1 })
+      .limit(1);
+
+    return res;
+  }
 }
 
 module.exports = new articleServer();

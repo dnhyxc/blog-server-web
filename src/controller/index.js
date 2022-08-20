@@ -17,6 +17,8 @@ const {
   searchArticleCtr,
   getArticleByRandomCtr,
   delAllArticleCtr,
+  getPrevArticleCtr,
+  getNextArticleCtr,
 } = articleController;
 
 const { uploadFileCtr } = uploadController;
@@ -62,4 +64,6 @@ module.exports = {
   getAuthorArticleListCtr,
   getAuthorLikeArticlesCtr,
   getAuthorTimelineCtr,
+  getPrevArticleCtr,
+  getNextArticleCtr,
 };

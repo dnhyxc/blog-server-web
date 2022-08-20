@@ -9,6 +9,8 @@ const {
   searchArticleCtr,
   getArticleByRandomCtr,
   delAllArticleCtr,
+  getPrevArticleCtr,
+  getNextArticleCtr,
 } = require("../controller");
 
 const { auth } = require("../middleware");
@@ -38,6 +40,12 @@ router.post("/articleDetail", getArticleByIdCtr);
 
 // 随机获取文章
 router.post("/getArticleByRandom", getArticleByRandomCtr);
+
+// 获取上一篇文章
+router.post("/getPrevArticle", getPrevArticleCtr);
+
+// 获取下一篇文章
+router.post("/getNextArticle", getNextArticleCtr);
 
 // 删除所有文章
 // router.del("/delAllArticle", delAllArticleCtr);

@@ -8,6 +8,8 @@ const {
   updateArticle,
   getArticleByRandom,
   delAllArticle,
+  getPrevArticle,
+  getNextArticle,
 } = require("../service");
 const { databaseError, fieldFormateError } = require("../constant");
 
@@ -202,7 +204,41 @@ class ArticleController {
         data: [],
       };
     } catch (error) {
-      console.error("getArticleByRandomCtr", error);
+      console.error("delAllArticleCtr", error);
+      ctx.app.emit("error", databaseError, ctx);
+    }
+  }
+
+  // 获取上一篇文章
+  async getPrevArticleCtr(ctx, next) {
+    try {
+      const { id, classify } = ctx.request.body;
+      const res = await getPrevArticle(id, classify);
+      ctx.body = {
+        code: 200,
+        success: true,
+        message: "获取上一篇文章成功",
+        data: res || {},
+      };
+    } catch (error) {
+      console.error("getPrevArticleCtr", error);
+      ctx.app.emit("error", databaseError, ctx);
+    }
+  }
+
+  // 获取下一篇文章
+  async getNextArticleCtr(ctx, next) {
+    try {
+      const { id, classify } = ctx.request.body;
+      const res = await getNextArticle(id, classify);
+      ctx.body = {
+        code: 200,
+        success: true,
+        message: "获取下一篇文章成功",
+        data: res || {},
+      };
+    } catch (error) {
+      console.error("getNextArticleCtr", error);
       ctx.app.emit("error", databaseError, ctx);
     }
   }

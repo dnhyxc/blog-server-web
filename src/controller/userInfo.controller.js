@@ -28,7 +28,7 @@ class userInfoController {
         data: res,
       };
     } catch (error) {
-      console.error("getClassifyListCtr", error);
+      console.error("getMyArticleListCtr", error);
       ctx.app.emit("error", databaseError, ctx);
     }
   }
@@ -48,7 +48,7 @@ class userInfoController {
         data: res,
       };
     } catch (error) {
-      console.error("getClassifyListCtr", error);
+      console.error("getLikeArticleListCtr", error);
       ctx.app.emit("error", databaseError, ctx);
     }
   }
@@ -76,7 +76,7 @@ class userInfoController {
         data: res,
       };
     } catch (error) {
-      console.error("getClassifyListCtr", error);
+      console.error("getAuthorArticleListCtr", error);
       ctx.app.emit("error", databaseError, ctx);
     }
   }
@@ -103,7 +103,7 @@ class userInfoController {
         data: res,
       };
     } catch (error) {
-      console.error("getClassifyListCtr", error);
+      console.error("getAuthorLikeArticlesCtr", error);
       ctx.app.emit("error", databaseError, ctx);
     }
   }
@@ -131,7 +131,7 @@ class userInfoController {
         data: res,
       };
     } catch (error) {
-      console.error("getTimelineListCtr", error);
+      console.error("getAuthorTimelineCtr", error);
       ctx.app.emit("error", databaseError, ctx);
     }
   }
