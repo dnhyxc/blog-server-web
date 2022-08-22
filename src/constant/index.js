@@ -90,6 +90,48 @@ const fileUploadError = {
   data: "",
 };
 
+const anotherFields = {
+  id: "$_id",
+  _id: 0,
+  title: 1,
+  tag: 1,
+  classify: 1,
+  abstract: 1,
+  createTime: 1,
+  authorId: 1,
+  authorName: 1,
+};
+
+const detailFields = {
+  id: "$_id",
+  _id: 0,
+  title: 1,
+  content: 1,
+  classify: 1,
+  tag: 1,
+  abstract: 1,
+  createTime: 1,
+  coverImage: 1,
+  authorId: 1,
+  likeCount: 1,
+  isLike: 1,
+  authorName: 1,
+};
+
+const userFields = {
+  username: 1,
+  job: 1,
+  motto: 1,
+  headUrl: 1,
+  introduce: 1,
+  github: 1,
+  juejin: 1,
+  zhihu: 1,
+  blog: 1,
+  mainCover: 1,
+  auth: 1,
+};
+
 module.exports = {
   databaseError,
   userFormateError,
@@ -104,4 +146,7 @@ module.exports = {
   fileUploadError,
   fieldFormateError,
   userNotExist,
+  anotherFields,
+  detailFields,
+  userFields,
 };

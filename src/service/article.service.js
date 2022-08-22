@@ -1,5 +1,7 @@
+const mongoose = require("mongoose");
 const { Article, LikeArticle } = require("../models");
-const { findUserById } = require("./user.service");
+const { findUserById, findOneUser } = require("./user.service");
+const { anotherFields, detailFields } = require("../constant");
 
 class articleServer {
   // 创建文章
@@ -30,7 +32,7 @@ class articleServer {
   }
 
   async getLikeArticles(userId) {
-    const likes = await LikeArticle.find({ userId });
+    const likes = await LikeArticle.find({ userId }).sort({ createTime: 1 });
     return likes;
   }
 
@@ -69,16 +71,16 @@ class articleServer {
               $project: {
                 _id: 0, // 默认情况下_id是包含的，将_id设置为0|false，则选择不包含_id，其他字段也可以这样选择是否显示。
                 id: "$_id", // 将_id更名为classify
-                title: "$title",
-                classify: "$classify",
-                tag: "$tag",
-                coverImage: "$coverImage",
-                abstract: "$abstract",
-                authorId: "$authorId",
-                isLike: "$isLike",
-                likeCount: "$likeCount",
-                createTime: "$createTime",
-                authorName: "$authorName",
+                title: 1,
+                classify: 1,
+                tag: 1,
+                coverImage: 1,
+                abstract: 1,
+                authorId: 1,
+                isLike: 1,
+                likeCount: 1,
+                createTime: 1,
+                authorName: 1,
               },
             },
             { $sort: { createTime: -1, likeCount: -1 } },
@@ -131,21 +133,7 @@ class articleServer {
 
   // 根据文章id查找文章详情
   async findArticleById(id) {
-    const article = await Article.findById(id, {
-      id: "$_id",
-      _id: 0,
-      title: 1,
-      content: 1,
-      classify: 1,
-      tag: 1,
-      abstract: 1,
-      createTime: 1,
-      coverImage: 1,
-      authorId: 1,
-      likeCount: 1,
-      isLike: 1,
-      authorName: 1,
-    });
+    const article = await Article.findById(id, detailFields);
     const userInfo = article && (await findUserById(article.authorId));
     return {
       ...article._doc,
@@ -176,16 +164,7 @@ class articleServer {
       { $match: { isDelete: { $nin: [true] } } },
       { $sample: { size: 5 } },
       {
-        $project: {
-          _id: 0, // 默认情况下_id是包含的，将_id设置为0|false，则选择不包含_id，其他字段也可以这样选择是否显示。
-          id: "$_id", // 将_id更名为classify
-          title: "$title",
-          abstract: "$abstract",
-          authorId: "$authorId",
-          authorName: "$authorName",
-          likeCount: "$likeCount",
-          createTime: "$createTime",
-        },
+        $project: anotherFields,
       },
       { $sort: { createTime: -1, likeCount: -1 } },
     ]);
@@ -197,43 +176,64 @@ class articleServer {
     await Article.deleteMany({});
   }
 
+  async getParams(id, props) {
+    const { classify, userId, tagName, from, selectKey } = props;
+    if (from === "classify" && classify) {
+      return { _id: id, isDelete: { $nin: [true] }, classify };
+    }
+    if (from === "tag" && tagName) {
+      return { _id: id, isDelete: { $nin: [true] }, tag: tagName };
+    }
+    if (from === "timeline" && userId) {
+      return { _id: id, isDelete: { $nin: [true] }, authorId: userId };
+    }
+    if (from === "personal" && selectKey === "1" && userId) {
+      return { _id: id, isDelete: { $nin: [true] }, authorId: userId };
+    }
+    if (from === "personal" && selectKey === "2" && userId) {
+      // 返回文章列表前，首先根据userId检测点赞状态
+      const likes = await await new articleServer().getLikeArticles(userId);
+      const articleIds = likes.map(
+        (i) => new mongoose.Types.ObjectId(i.articleId)
+      );
+      return {
+        _id: { $in: articleIds, ...id },
+        isDelete: { $nin: [true] },
+      };
+    }
+    if (from === "author" && selectKey === "1") {
+      // 查询 auth 为1 的博主信息
+      const authorInfo = await findOneUser({ auth: 1 });
+      return {
+        _id: id,
+        isDelete: { $nin: [true] },
+        authorId: authorInfo?._id?.toString(),
+      };
+    }
+    if (from === "author" && selectKey === "2") {
+      // 查询 auth 为1 的博主信息
+      // const authorInfo = await findOneUser({ auth: 1 });
+      return {
+        _id: id,
+        isDelete: { $nin: [true] },
+        // authorId: authorInfo?._id?.toString(),
+      };
+    }
+    if (from === "author" && selectKey === "3") {
+      // 查询 auth 为1 的博主信息
+      // const authorInfo = await findOneUser({ auth: 1 });
+      return {
+        _id: id,
+        isDelete: { $nin: [true] },
+        // authorId: authorInfo?._id?.toString(),
+      };
+    }
+  }
+
   // 获取上一篇文章
   async getPrevArticle(id, props) {
-    const { classify, userId, timelineId, tagName, accessUserId } = props;
-    let filter;
-    if (classify) {
-      filter = { classify };
-    }
-    if (tagName) {
-      filter = { tag: tagName };
-    }
-    if (timelineId) {
-      filter = { authorId: timelineId };
-    }
-    if (userId) {
-      filter = { authorId: userId };
-    }
-    if (accessUserId) {
-      filter = { authorId: accessUserId };
-    }
-    const res = Article.findOne(
-      {
-        _id: { $gt: id },
-        isDelete: { $nin: [true] },
-        ...filter,
-      },
-      {
-        id: "$_id",
-        _id: 0,
-        title: 1,
-        tag: 1,
-        classify: 1,
-        abstract: 1,
-        createTime: 1,
-        authorId: 1,
-        authorName: 1,
-      }
-    )
+    const filter = await new articleServer().getParams({ $gt: id }, props);
+    const res = Article.findOne(filter, anotherFields)
       // 获取上一篇需要注意排序，需要将createTime设置为正序排列
       .sort({ createTime: 1, likeCount: -1 })
       .limit(1);
@@ -243,41 +243,8 @@ class articleServer {
 
   // 获取下一篇文章
   async getNextArticle(id, props) {
-    const { classify, userId, timelineId, tagName, accessUserId } = props;
-    let filter;
-    if (classify) {
-      filter = { classify };
-    }
-    if (tagName) {
-      filter = { tag: tagName };
-    }
-    if (timelineId) {
-      filter = { authorId: timelineId };
-    }
-    if (userId) {
-      filter = { authorId: userId };
-    }
-    if (accessUserId) {
-      filter = { authorId: accessUserId };
-    }
-    const res = Article.findOne(
-      {
-        _id: { $lt: id },
-        isDelete: { $nin: [true] },
-        ...filter,
-      },
-      {
-        id: "$_id",
-        _id: 0,
-        title: 1,
-        tag: 1,
-        classify: 1,
-        abstract: 1,
-        createTime: 1,
-        authorId: 1,
-        authorName: 1,
-      }
-    )
+    const filter = await new articleServer().getParams({ $lt: id }, props);
+    const res = Article.findOne(filter, anotherFields)
       // 获取上一篇需要注意排序，需要将createTime设置为倒叙序排列
       .sort({ createTime: -1, likeCount: -1 })
       .limit(1);

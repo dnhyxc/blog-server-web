@@ -1,4 +1,5 @@
 const { User } = require("../models");
+const { userFields } = require("../constant");
 
 class UserServer {
   // 用户登录
@@ -7,17 +8,7 @@ class UserServer {
       userId: `${"$_id".toString()}`,
       _id: 1,
       password: 1,
-      username: 1,
-      job: 1,
-      motto: 1,
-      headUrl: 1,
-      introduce: 1,
-      github: 1,
-      juejin: 1,
-      zhihu: 1,
-      blog: 1,
-      mainCover: 1,
-      auth: 1,
+      ...userFields,
     });
     return user;
   }
@@ -27,17 +18,7 @@ class UserServer {
     const user = await User.findById(id, {
       userId: "$_id",
       _id: 0,
-      username: 1,
-      job: 1,
-      motto: 1,
-      headUrl: 1,
-      introduce: 1,
-      github: 1,
-      juejin: 1,
-      zhihu: 1,
-      blog: 1,
-      mainCover: 1,
-      auth: 1,
+      ...userFields,
       logout: 1,
     });
     return user;

@@ -3,7 +3,6 @@ const {
   getLikeArticles,
   getArticleListWithTotal,
 } = require("./article.service");
-
 class userInfoServer {
   // 获取我的文章
   async getMyArticleList({ pageNo = 1, pageSize = 20, userId }) {
@@ -16,11 +15,7 @@ class userInfoServer {
   }
 
   // 获取点赞文章
-  async getLikeArticleList({
-    pageNo = 1,
-    pageSize = 20,
-    userId,
-  }) {
+  async getLikeArticleList({ pageNo = 1, pageSize = 20, userId }) {
     // 返回文章列表前，首先根据userId检测点赞状态
     const likes = await getLikeArticles(userId);
     const articleIds = likes.map((i) => {
