@@ -49,9 +49,16 @@ class UserController {
 
   // 获取用户信息
   async getUserInfoCtr(ctx, next) {
-    const { userId } = ctx.request.body;
+    const { userId, auth } = ctx.request.body;
+    let filter = ''
+    if (auth) {
+      const authorInfo = await findOneUser({ auth: 1 });
+      filter = authorInfo?._id?.toString()
+    } else {
+      filter = userId
+    }
     try {
-      const res = await findUserById(userId);
+      const res = await findUserById(filter);
       if (!res) {
         ctx.app.emit("error", userNotExist, ctx);
         return;

@@ -212,21 +212,21 @@ class articleServer {
     }
     if (from === "author" && selectKey === "2") {
       // 查询 auth 为1 的博主信息
-      // const authorInfo = await findOneUser({ auth: 1 });
+      const authorInfo = await findOneUser({ auth: 1 });
+      const userId = authorInfo?._id?.toString()
+      const likes = await await new articleServer().getLikeArticles(userId);
+      const articleIds = likes.map(
+        (i) => new mongoose.Types.ObjectId(i.articleId)
+      );
       return {
-        _id: id,
+        _id: { $in: articleIds, ...id },
         isDelete: { $nin: [true] },
-        // authorId: authorInfo?._id?.toString(),
       };
     }
     if (from === "author" && selectKey === "3") {
-      // 查询 auth 为1 的博主信息
-      // const authorInfo = await findOneUser({ auth: 1 });
-      return {
-        _id: id,
-        isDelete: { $nin: [true] },
-        // authorId: authorInfo?._id?.toString(),
-      };
+      const authorInfo = await findOneUser({ auth: 1 });
+      const userId = authorInfo?._id?.toString()
+      return { _id: id, isDelete: { $nin: [true] }, authorId: userId };
     }
   }
 
