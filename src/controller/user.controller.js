@@ -6,6 +6,7 @@ const {
   findOneUser,
   updateUser,
   findUserById,
+  getArticleTotal,
 } = require("../service");
 
 class UserController {
@@ -49,15 +50,24 @@ class UserController {
 
   // 获取用户信息
   async getUserInfoCtr(ctx, next) {
-    const { userId, auth } = ctx.request.body;
-    let filter = ''
+    const { userId, auth, needTotal } = ctx.request.body;
+    const authorInfo = auth && (await findOneUser({ auth: 1 }));
+
+    let filter = "";
     if (auth) {
-      const authorInfo = await findOneUser({ auth: 1 });
-      filter = authorInfo?._id?.toString()
+      filter = authorInfo?._id?.toString();
     } else {
-      filter = userId
+      filter = userId;
     }
+
     try {
+      const articleTotal =
+        needTotal &&
+        (await getArticleTotal({
+          isDelete: { $nin: [true] },
+          authorId: authorInfo?._id?.toString(),
+        }));
+
       const res = await findUserById(filter);
       if (!res) {
         ctx.app.emit("error", userNotExist, ctx);
@@ -67,7 +77,10 @@ class UserController {
         code: 200,
         success: true,
         message: "获取用户信息成功",
-        data: res,
+        data: {
+          ...res?._doc,
+          articleTotal,
+        },
       };
     } catch (error) {
       console.error("getUserInfo", error);

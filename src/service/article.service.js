@@ -253,6 +253,12 @@ class articleServer {
 
     return res;
   }
+
+  // 获取文章总条数
+  async getArticleTotal(filter) {
+    const res = Article.find(filter).count();
+    return res;
+  }
 }
 
 module.exports = new articleServer();

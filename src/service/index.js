@@ -19,6 +19,7 @@ const {
   delAllArticle,
   getPrevArticle,
   getNextArticle,
+  getArticleTotal,
 } = require("./article.service");
 
 const {
@@ -69,4 +70,5 @@ module.exports = {
   getArticleByRandom,
   getPrevArticle,
   getNextArticle,
+  getArticleTotal,
 };
