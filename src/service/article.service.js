@@ -176,6 +176,7 @@ class articleServer {
     await Article.deleteMany({});
   }
 
+  // 处理上下页参数
   async getParams(id, props) {
     const { classify, userId, tagName, from, selectKey } = props;
     if (from === "classify" && classify) {
@@ -213,7 +214,7 @@ class articleServer {
     if (from === "author" && selectKey === "2") {
       // 查询 auth 为1 的博主信息
       const authorInfo = await findOneUser({ auth: 1 });
-      const userId = authorInfo?._id?.toString()
+      const userId = authorInfo?._id?.toString();
       const likes = await await new articleServer().getLikeArticles(userId);
       const articleIds = likes.map(
         (i) => new mongoose.Types.ObjectId(i.articleId)
@@ -225,9 +226,10 @@ class articleServer {
     }
     if (from === "author" && selectKey === "3") {
       const authorInfo = await findOneUser({ auth: 1 });
-      const userId = authorInfo?._id?.toString()
+      const userId = authorInfo?._id?.toString();
       return { _id: id, isDelete: { $nin: [true] }, authorId: userId };
     }
+    return { _id: id, isDelete: { $nin: [true] } };
   }
 
   // 获取上一篇文章
@@ -235,7 +237,7 @@ class articleServer {
     const filter = await new articleServer().getParams({ $gt: id }, props);
     const res = Article.findOne(filter, anotherFields)
       // 获取上一篇需要注意排序，需要将createTime设置为正序排列
-      .sort({ createTime: 1, likeCount: -1 })
+      .sort({ _id: 1, createTime: 1 })
       .limit(1);
 
     return res;
@@ -246,7 +248,7 @@ class articleServer {
     const filter = await new articleServer().getParams({ $lt: id }, props);
     const res = Article.findOne(filter, anotherFields)
       // 获取上一篇需要注意排序，需要将createTime设置为倒叙序排列
-      .sort({ createTime: -1, likeCount: -1 })
+      .sort({ _id: -1, createTime: -1 })
       .limit(1);
 
     return res;
