@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
-const { Article, LikeArticle } = require("../models");
+const { Article, LikeArticle } = require("../../models/web");
 const { findUserById, findOneUser } = require("./user.service");
-const { anotherFields, detailFields } = require("../constant");
+const { anotherFields, detailFields } = require("../../constant");
 
 class articleServer {
   // 创建文章

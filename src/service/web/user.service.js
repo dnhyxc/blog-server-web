@@ -1,5 +1,5 @@
-const { User } = require("../models");
-const { userFields } = require("../constant");
+const { User } = require("../../models/web");
+const { userFields } = require("../../constant");
 
 class UserServer {
   // 用户登录

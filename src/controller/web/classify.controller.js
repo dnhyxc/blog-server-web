@@ -3,8 +3,8 @@ const {
   getTagList,
   getTimelineList,
   checkLikeStatus,
-} = require("../service");
-const { databaseError, userFormateError } = require("../constant");
+} = require("../../service/web");
+const { databaseError, userFormateError } = require("../../constant");
 
 class classifyController {
   // 创建文章

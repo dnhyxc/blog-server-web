@@ -10,8 +10,8 @@ const {
   delAllArticle,
   getPrevArticle,
   getNextArticle,
-} = require("../service");
-const { databaseError, fieldFormateError } = require("../constant");
+} = require("../../service/web");
+const { databaseError, fieldFormateError } = require("../../constant");
 
 class ArticleController {
   // 创建文章

@@ -1,4 +1,4 @@
-const { Comments, Like } = require("../models");
+const { Comments, Like } = require("../../models/web");
 const { findUserById } = require("./user.service");
 
 class commentServer {

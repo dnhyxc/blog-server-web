@@ -2,7 +2,7 @@ const Koa = require("koa");
 const koaBody = require("koa-body");
 const koaStatic = require("koa-static");
 const path = require("path");
-const router = require("../router");
+const router = require("../router/web");
 const connectMongodb = require("../db");
 const errorHandler = require("../utils");
 

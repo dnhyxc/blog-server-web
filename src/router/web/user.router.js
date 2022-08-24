@@ -4,7 +4,7 @@ const {
   loginCtr,
   updateInfoCtr,
   getUserInfoCtr,
-} = require("../controller");
+} = require("../../controller/web");
 const {
   userValidator,
   verifyUser,
@@ -13,7 +13,7 @@ const {
   auth,
   verifyUpdateInfo,
   verifyUserExists,
-} = require("../middleware");
+} = require("../../middleware");
 
 const router = new Router({ prefix: "/api" });
 

@@ -5,7 +5,7 @@ const {
   getAuthorArticleListCtr,
   getAuthorLikeArticlesCtr,
   getAuthorTimelineCtr,
-} = require("../controller");
+} = require("../../controller/web");
 
 const router = new Router({ prefix: "/api" });
 

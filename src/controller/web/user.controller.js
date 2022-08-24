@@ -1,13 +1,13 @@
 const jwt = require("jsonwebtoken");
-const { databaseError, userNotExist } = require("../constant");
-const { JWT_SECRET } = require("../config");
+const { databaseError, userNotExist } = require("../../constant");
+const { JWT_SECRET } = require("../../config");
 const {
   createUserServer,
   findOneUser,
   updateUser,
   findUserById,
   getArticleTotal,
-} = require("../service");
+} = require("../../service/web");
 
 class UserController {
   async registerCtr(ctx, next) {

@@ -5,8 +5,8 @@ const {
   giveLike,
   createLike,
   deleteComment,
-} = require("../service");
-const { databaseError } = require("../constant");
+} = require("../../service/web");
+const { databaseError } = require("../../constant");
 
 class CommentsController {
   // 创建评论

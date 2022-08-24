@@ -11,9 +11,9 @@ const {
   delAllArticleCtr,
   getPrevArticleCtr,
   getNextArticleCtr,
-} = require("../controller");
+} = require("../../controller/web");
 
-const { auth } = require("../middleware");
+const { auth } = require("../../middleware");
 
 const router = new Router({ prefix: "/api" });
 

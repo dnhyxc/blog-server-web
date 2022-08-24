@@ -1,5 +1,5 @@
 const bcrypt = require("bcryptjs");
-const { findOneUser, findUserById } = require("../service");
+const { findOneUser, findUserById } = require("../service/web");
 const {
   databaseError,
   userFormateError,

@@ -1,5 +1,5 @@
 const path = require("path");
-const { fileUploadError } = require("../constant");
+const { fileUploadError } = require("../../constant");
 
 class UploadController {
   // 创建文章
