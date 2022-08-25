@@ -105,7 +105,7 @@ class ArticleController {
     }
   }
 
-  // 获取文章列表
+  // 搜索文章列表
   async searchArticleCtr(ctx, next) {
     try {
       const { pageNo, pageSize, keyword, userId, tagName } = ctx.request.body;
