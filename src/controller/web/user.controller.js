@@ -111,6 +111,21 @@ class UserController {
       ctx.app.emit("error", databaseError, ctx);
     }
   }
+
+  // 校验token是否过期
+  async verifyTokenCtr(ctx, next) {
+    try {
+      ctx.body = {
+        code: 200,
+        success: true,
+        message: "effective",
+        data: 1,
+      };
+    } catch (error) {
+      console.error("verifyTokenCtr", error);
+      ctx.app.emit("error", databaseError, ctx);
+    }
+  }
 }
 
 module.exports = new UserController();

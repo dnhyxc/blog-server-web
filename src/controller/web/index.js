@@ -5,7 +5,8 @@ const commentsController = require("./comments.controller");
 const classifyController = require("./classify.controller");
 const userInfoController = require("./userInfo.controller");
 
-const { registerCtr, loginCtr, updateInfoCtr, getUserInfoCtr } = userController;
+const { registerCtr, loginCtr, updateInfoCtr, getUserInfoCtr, verifyTokenCtr } =
+  userController;
 
 const {
   createArticleCtr,
@@ -66,4 +67,5 @@ module.exports = {
   getAuthorTimelineCtr,
   getPrevArticleCtr,
   getNextArticleCtr,
+  verifyTokenCtr,
 };

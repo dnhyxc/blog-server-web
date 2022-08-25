@@ -4,6 +4,7 @@ const {
   loginCtr,
   updateInfoCtr,
   getUserInfoCtr,
+  verifyTokenCtr,
 } = require("../../controller/web");
 const {
   userValidator,
@@ -50,5 +51,8 @@ router.put(
   bcryptPassword,
   updateInfoCtr
 );
+
+// 校验token是否过期
+router.post("/verify", auth, verifyTokenCtr);
 
 module.exports = router;
