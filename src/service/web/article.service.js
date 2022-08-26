@@ -120,6 +120,7 @@ class articleServer {
           { tag: { $regex: reg } },
           { classify: { $regex: reg } },
           { authorId: { $regex: reg } },
+          { authorName: { $regex: reg } },
         ],
         isDelete: { $nin: [true] },
       };
