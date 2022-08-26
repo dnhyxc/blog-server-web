@@ -1,9 +1,12 @@
 const { Comments, Like } = require("../../models/web");
 const { findUserById } = require("./user.service");
+const { updateReplyCount } = require('./article.service')
 
 class commentServer {
   // 创建评论
   async createComments({ params }) {
+    // 发表评论时，为当前文章评论数 + 1
+    await updateReplyCount({ articleId: params.articleId })
     const userInfo = await findUserById(params.userId);
     const comment = await Comments.create({
       ...params,
@@ -98,13 +101,16 @@ class commentServer {
   async updateComments(commentId, params) {
     const { fromCommentId } = params;
 
+    // 回复评论时，为当前文章评论数 + 1
+    await updateReplyCount({ articleId: params.articleId })
+
     const userInfo = await findUserById(params.userId);
 
     const filter = fromCommentId
       ? {
-          articleId: params.articleId,
-          "replyList._id": fromCommentId,
-        }
+        articleId: params.articleId,
+        "replyList._id": fromCommentId,
+      }
       : { _id: commentId, articleId: params.articleId };
 
     const comment = await Comments.updateOne(
@@ -138,8 +144,8 @@ class commentServer {
   async giveLike(commentId, fromCommentId, status) {
     const filter = fromCommentId
       ? {
-          "replyList._id": fromCommentId, // 选择数组replyList中某个对象中的_id属性
-        }
+        "replyList._id": fromCommentId, // 选择数组replyList中某个对象中的_id属性
+      }
       : { _id: commentId };
 
     const comment = await Comments.updateOne(
@@ -150,16 +156,16 @@ class commentServer {
       {
         $inc: fromCommentId
           ? {
-              "replyList.$.likeCount": status ? -1 : 1, // replyList.$.likeCount：表示选择数组replyList中某个对象的likeCount属性
-            }
+            "replyList.$.likeCount": status ? -1 : 1, // replyList.$.likeCount：表示选择数组replyList中某个对象的likeCount属性
+          }
           : { likeCount: status ? -1 : 1 },
         $set: fromCommentId
           ? {
-              "replyList.$.isLike": status ? false : true,
-            }
+            "replyList.$.isLike": status ? false : true,
+          }
           : {
-              isLike: status ? false : true,
-            },
+            isLike: status ? false : true,
+          },
       }
     );
 
@@ -169,8 +175,8 @@ class commentServer {
   async deleteComment(commentId, fromCommentId) {
     const filter = fromCommentId
       ? {
-          "replyList._id": fromCommentId, // 选择数组replyList中某个对象中的_id属性
-        }
+        "replyList._id": fromCommentId, // 选择数组replyList中某个对象中的_id属性
+      }
       : { _id: commentId };
 
     const comment = await Comments.updateOne(
@@ -181,11 +187,11 @@ class commentServer {
       {
         $set: fromCommentId
           ? {
-              "replyList.$.isDelete": true,
-            }
+            "replyList.$.isDelete": true,
+          }
           : {
-              isDelete: true,
-            },
+            isDelete: true,
+          },
       }
     );
 

@@ -10,6 +10,7 @@ class articleServer {
     return await Article.create({
       ...params,
       likeCount: 0,
+      replyCount: 0,
       authorName: userInfo.username,
     });
   }
@@ -81,6 +82,7 @@ class articleServer {
                 likeCount: 1,
                 createTime: 1,
                 authorName: 1,
+                replyCount: 1,
               },
             },
             { $sort: { createTime: -1, likeCount: -1 } },
@@ -141,6 +143,15 @@ class articleServer {
       authorName: userInfo?.username,
       headUrl: userInfo?.headUrl,
     };
+  }
+
+  async updateReplyCount({ articleId: _id }) {
+    await Article.updateOne(
+      { _id },
+      {
+        $inc: { replyCount: 1 },
+      }
+    );
   }
 
   // 根据文章id查找文章详情
