@@ -116,6 +116,7 @@ const detailFields = {
   likeCount: 1,
   isLike: 1,
   authorName: 1,
+  replyCount: 1,
 };
 
 const userFields = {
