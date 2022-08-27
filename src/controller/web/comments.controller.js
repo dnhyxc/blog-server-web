@@ -92,9 +92,9 @@ class CommentsController {
   // 删除评论
   async deleteCommentCtr(ctx, next) {
     try {
-      const { commentId, fromCommentId } = ctx.request.body;
+      const { commentId, fromCommentId, articleId } = ctx.request.body;
       // 判断当前用户是否对当前评论点过赞
-      await deleteComment(commentId, fromCommentId);
+      await deleteComment(commentId, fromCommentId, articleId);
       ctx.body = {
         code: 200,
         success: true,

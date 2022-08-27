@@ -145,11 +145,11 @@ class articleServer {
     };
   }
 
-  async updateReplyCount({ articleId: _id }) {
+  async updateReplyCount({ articleId: _id, type, count }) {
     await Article.updateOne(
       { _id },
       {
-        $inc: { replyCount: 1 },
+        $inc: { replyCount: type === 'add' ? 1 : -count },
       }
     );
   }
