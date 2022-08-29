@@ -23,54 +23,24 @@ const {
   updateReplyCount,
 } = require("./article.service");
 
-const {
-  createComments,
-  findCommentById,
-  updateComments,
-  giveLike,
-  deleteComment,
-} = require("./comments.service");
-
-const { createLike } = require("./like.service");
-
-const { checkLikeArticle } = require("./likeArticle.service");
-
-const {
-  getClassifyList,
-  getTagList,
-  getTimelineList,
-} = require("./classify.service");
-
-const { getMyArticleList, getLikeArticleList } = require("./userInfo.service");
-
 module.exports = {
+  // 用户
   findOneUser,
   findUserById,
-  updateUser,
   createUserServer,
+  updateUser,
+  // 文章
   createArticle,
   findArticles,
-  delAllArticle,
-  getLikeArticles,
   findArticleById,
+  getLikeArticles,
   updateArticle,
-  createComments,
-  findCommentById,
-  updateComments,
-  giveLike,
-  createLike,
-  deleteComment,
   deleteArticles,
   likeArticle,
-  checkLikeArticle,
-  getClassifyList,
-  getTagList,
-  getTimelineList,
   checkLikeStatus,
   getArticleListWithTotal,
-  getMyArticleList,
-  getLikeArticleList,
   getArticleByRandom,
+  delAllArticle,
   getPrevArticle,
   getNextArticle,
   getArticleTotal,

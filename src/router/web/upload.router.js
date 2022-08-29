@@ -1,5 +1,5 @@
 const Router = require("koa-router");
-const { uploadFileCtr } = require("../../controller/web");
+const { uploadFileCtr } = require("../../controller");
 const { auth } = require("../../middleware");
 
 const router = new Router({ prefix: "/api" });

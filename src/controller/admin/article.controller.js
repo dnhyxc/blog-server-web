@@ -35,7 +35,7 @@ class ArticleController {
     }
   }
 
-  // 创建文章
+  // 更新文章
   async updateArticleCtr(ctx, next) {
     try {
       const params = ctx.request.body;

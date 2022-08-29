@@ -1,4 +1,4 @@
-const { Comments, Like } = require("../../models/web");
+const { Comments, Like } = require("../../models");
 const { findUserById } = require("./user.service");
 const { updateReplyCount } = require('./article.service')
 

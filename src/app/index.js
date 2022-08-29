@@ -3,6 +3,7 @@ const koaBody = require("koa-body");
 const koaStatic = require("koa-static");
 const path = require("path");
 const router = require("../router/web");
+const routerAdmin = require("../router/admin");
 const connectMongodb = require("../db");
 const errorHandler = require("../utils");
 
@@ -29,7 +30,11 @@ app.use(
 
 app.use(koaStatic(path.join(__dirname, "../upload")));
 
+// 前太路由注册
 app.use(router.routes()).use(router.allowedMethods());
+
+// 后台路由注册
+app.use(routerAdmin.routes()).use(routerAdmin.allowedMethods());
 
 app.on("error", errorHandler);
 

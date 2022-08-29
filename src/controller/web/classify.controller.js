@@ -3,7 +3,7 @@ const {
   getTagList,
   getTimelineList,
   checkLikeStatus,
-} = require("../../service/web");
+} = require("../../service");
 const { databaseError, userFormateError } = require("../../constant");
 
 class classifyController {

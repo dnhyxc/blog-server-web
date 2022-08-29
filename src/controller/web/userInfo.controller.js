@@ -4,7 +4,7 @@ const {
   findOneUser,
   getTimelineList,
   checkLikeStatus,
-} = require("../../service/web");
+} = require("../../service");
 const { databaseError } = require("../../constant");
 
 class userInfoController {

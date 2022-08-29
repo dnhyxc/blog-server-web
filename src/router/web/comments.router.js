@@ -4,7 +4,7 @@ const {
   findCommentsById,
   giveLikeCtr,
   deleteCommentCtr,
-} = require("../../controller/web");
+} = require("../../controller");
 const { auth } = require("../../middleware");
 
 const router = new Router({ prefix: "/api" });

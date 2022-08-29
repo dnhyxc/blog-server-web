@@ -1,4 +1,4 @@
-const { Like } = require("../../models/web");
+const { Like } = require("../../models");
 
 class likeServer {
   // 创建评论

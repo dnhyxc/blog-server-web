@@ -1,4 +1,4 @@
-const { Article } = require("../../models/web");
+const { Article } = require("../../models");
 const {
   checkLikeStatus,
   getArticleListWithTotal,

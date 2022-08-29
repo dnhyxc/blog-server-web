@@ -3,7 +3,7 @@ const {
   findUserById,
   createUserServer,
   updateUser,
-} = require("./user.service");
+} = require("./web/user.service");
 
 const {
   createArticle,
@@ -21,7 +21,7 @@ const {
   getNextArticle,
   getArticleTotal,
   updateReplyCount,
-} = require("./article.service");
+} = require("./web/article.service");
 
 const {
   createComments,
@@ -29,19 +29,19 @@ const {
   updateComments,
   giveLike,
   deleteComment,
-} = require("./comments.service");
+} = require("./web/comments.service");
 
-const { createLike } = require("./like.service");
+const { createLike } = require("./web/like.service");
 
-const { checkLikeArticle } = require("./likeArticle.service");
+const { checkLikeArticle } = require("./web/likeArticle.service");
 
 const {
   getClassifyList,
   getTagList,
   getTimelineList,
-} = require("./classify.service");
+} = require("./web/classify.service");
 
-const { getMyArticleList, getLikeArticleList } = require("./userInfo.service");
+const { getMyArticleList, getLikeArticleList } = require("./web/userInfo.service");
 
 module.exports = {
   findOneUser,

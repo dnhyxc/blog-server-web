@@ -3,7 +3,7 @@ const {
   getClassifyListCtr,
   getTagListCtr,
   getTimelineListCtr,
-} = require("../../controller/web");
+} = require("../../controller");
 
 const router = new Router({ prefix: "/api" });
 

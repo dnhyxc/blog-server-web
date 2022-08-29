@@ -11,7 +11,7 @@ const {
   delAllArticleCtr,
   getPrevArticleCtr,
   getNextArticleCtr,
-} = require("../../controller/web");
+} = require("../../controller");
 
 const { auth } = require("../../middleware");
 
