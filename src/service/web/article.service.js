@@ -20,6 +20,11 @@ class articleServer {
     await Article.updateOne({ _id }, { $set: params });
   }
 
+  // 修改作者名称
+  async updateAuthorName(authorId, authorName) {
+    await Article.updateMany({ authorId }, { $set: { authorName } });
+  }
+
   // 删除文章
   async deleteArticles({ articleId }) {
     return await Article.updateOne(
@@ -149,7 +154,7 @@ class articleServer {
     await Article.updateOne(
       { _id },
       {
-        $inc: { replyCount: type === 'add' ? 1 : -count },
+        $inc: { replyCount: type === "add" ? 1 : -count },
       }
     );
   }

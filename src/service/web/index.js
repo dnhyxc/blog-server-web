@@ -21,6 +21,7 @@ const {
   getNextArticle,
   getArticleTotal,
   updateReplyCount,
+  updateAuthorName,
 } = require("./article.service");
 
 const {
@@ -73,4 +74,5 @@ module.exports = {
   getNextArticle,
   getArticleTotal,
   updateReplyCount,
+  updateAuthorName,
 };
