@@ -4,7 +4,6 @@ const {
   createUserServer,
   updateUser,
 } = require("./web/user.service");
-
 const {
   createArticle,
   findArticles,
@@ -22,7 +21,6 @@ const {
   getArticleTotal,
   updateReplyCount,
 } = require("./web/article.service");
-
 const {
   createComments,
   findCommentById,
@@ -30,24 +28,43 @@ const {
   giveLike,
   deleteComment,
 } = require("./web/comments.service");
-
 const { createLike } = require("./web/like.service");
-
 const { checkLikeArticle } = require("./web/likeArticle.service");
-
 const {
   getClassifyList,
   getTagList,
   getTimelineList,
 } = require("./web/classify.service");
+const {
+  getMyArticleList,
+  getLikeArticleList,
+} = require("./web/userInfo.service");
 
-const { getMyArticleList, getLikeArticleList } = require("./web/userInfo.service");
+// 后台数据库接口
+const {
+  adminFindOneUser,
+  adminFindUserById,
+  adminUpdateUser,
+  adminCreateUserServer,
+} = require("./admin/user.service");
+
+const {
+  adminCreateArticle,
+  adminUpdateArticle,
+  adminDeleteArticles,
+  adminFindArticles,
+  adminFindArticleById,
+  adminDelAllArticle,
+  adminGetArticleTotal,
+} = require("./admin/article.service");
 
 module.exports = {
+  // 前台用户
   findOneUser,
   findUserById,
   updateUser,
   createUserServer,
+  // 前台文章
   createArticle,
   findArticles,
   delAllArticle,
@@ -75,4 +92,18 @@ module.exports = {
   getNextArticle,
   getArticleTotal,
   updateReplyCount,
+
+  // 后台
+  adminFindOneUser,
+  adminFindUserById,
+  adminCreateUserServer,
+  adminUpdateUser,
+  // 后台文章
+  adminCreateArticle,
+  adminUpdateArticle,
+  adminDeleteArticles,
+  adminFindArticles,
+  adminFindArticleById,
+  adminDelAllArticle,
+  adminGetArticleTotal,
 };

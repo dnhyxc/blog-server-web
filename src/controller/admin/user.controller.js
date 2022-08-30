@@ -2,18 +2,18 @@ const jwt = require("jsonwebtoken");
 const { databaseError, userNotExist } = require("../../constant");
 const { JWT_SECRET } = require("../../config");
 const {
-  createUserServer,
-  findOneUser,
-  updateUser,
-  findUserById,
-  getArticleTotal,
+  adminCreateUserServer,
+  adminFindOneUser,
+  adminFindUserById,
+  adminUpdateUser,
+  adminGetArticleTotal,
 } = require("../../service");
 
 class UserController {
-  async registerCtr(ctx, next) {
+  async adminRegisterCtr(ctx, next) {
     const { username, password } = ctx.request.body;
     try {
-      const res = await createUserServer({ username, password });
+      const res = await adminCreateUserServer({ username, password });
       ctx.body = {
         code: 200,
         message: "注册成功",
@@ -26,11 +26,13 @@ class UserController {
     }
   }
 
-  async loginCtr(ctx, next) {
+  async adminLoginCtr(ctx, next) {
     const { username } = ctx.request.body;
+    console.log(username, "username");
     // 1. 获取用户信息（在token的playload中，记录id，username）
     try {
-      const { password, ...props } = (await findOneUser({ username })) || {};
+      const { password, ...props } =
+        (await adminFindOneUser({ username })) || {};
       delete props?._doc.password;
       delete props?._doc._id;
       ctx.body = {
@@ -49,9 +51,9 @@ class UserController {
   }
 
   // 获取用户信息
-  async getUserInfoCtr(ctx, next) {
+  async adminGetUserInfoCtr(ctx, next) {
     const { userId, auth, needTotal } = ctx.request.body;
-    const authorInfo = auth && (await findOneUser({ auth: 1 }));
+    const authorInfo = auth && (await adminFindOneUser({ auth: 1 }));
 
     let filter = "";
     if (auth) {
@@ -63,12 +65,12 @@ class UserController {
     try {
       const articleTotal =
         needTotal &&
-        (await getArticleTotal({
+        (await adminGetArticleTotal({
           isDelete: { $nin: [true] },
           authorId: authorInfo?._id?.toString(),
         }));
 
-      const res = await findUserById(filter);
+      const res = await adminFindUserById(filter);
       if (!res) {
         ctx.app.emit("error", userNotExist, ctx);
         return;
@@ -89,15 +91,15 @@ class UserController {
   }
 
   // 更新用户信息
-  async updateInfoCtr(ctx, next) {
+  async adminUpdateInfoCtr(ctx, next) {
     const { userId, ...params } = ctx.request.body;
     if (!userId) {
       ctx.app.emit("error", fieldFormateError, ctx);
       return;
     }
     try {
-      await updateUser(userId, params);
-      const userInfo = await findUserById(userId);
+      await adminUpdateUser(userId, params);
+      const userInfo = await adminFindUserById(userId);
       if (userInfo) {
         ctx.body = {
           code: 200,
@@ -113,7 +115,7 @@ class UserController {
   }
 
   // 校验token是否过期
-  async verifyTokenCtr(ctx, next) {
+  async adminVerifyTokenCtr(ctx, next) {
     try {
       ctx.body = {
         code: 200,

@@ -5,9 +5,13 @@ const commentsController = require("./web/comments.controller");
 const classifyController = require("./web/classify.controller");
 const userInfoController = require("./web/userInfo.controller");
 
+// 后台用户控制器
+const adminUserController = require("./admin/user.controller");
+const adminArticleController = require("./admin/article.controller");
+
+// 前台控制器
 const { registerCtr, loginCtr, updateInfoCtr, getUserInfoCtr, verifyTokenCtr } =
   userController;
-
 const {
   createArticleCtr,
   getArticleListCtr,
@@ -21,15 +25,11 @@ const {
   getPrevArticleCtr,
   getNextArticleCtr,
 } = articleController;
-
 const { uploadFileCtr } = uploadController;
-
 const { createCommentsCtr, findCommentsById, giveLikeCtr, deleteCommentCtr } =
   commentsController;
-
 const { getClassifyListCtr, getTagListCtr, getTimelineListCtr } =
   classifyController;
-
 const {
   getMyArticleListCtr,
   getLikeArticleListCtr,
@@ -38,7 +38,27 @@ const {
   getAuthorTimelineCtr,
 } = userInfoController;
 
+// 后台控制器
+const {
+  adminRegisterCtr,
+  adminLoginCtr,
+  adminGetUserInfoCtr,
+  adminUpdateInfoCtr,
+  adminVerifyTokenCtr,
+} = adminUserController;
+// 后台文章控制器
+const {
+  adminCreateArticleCtr,
+  adminUpdateArticleCtr,
+  adminDeleteArticleCtr,
+  adminGetArticleListCtr,
+  adminSearchArticleCtr,
+  adminGetArticleByIdCtr,
+  adminDelAllArticleCtr,
+} = adminArticleController;
+
 module.exports = {
+  // 前台控制器
   registerCtr,
   loginCtr,
   updateInfoCtr,
@@ -68,4 +88,19 @@ module.exports = {
   getPrevArticleCtr,
   getNextArticleCtr,
   verifyTokenCtr,
+
+  // 后台用户控制器
+  adminRegisterCtr,
+  adminLoginCtr,
+  adminGetUserInfoCtr,
+  adminUpdateInfoCtr,
+  adminVerifyTokenCtr,
+  // 后台文章控制器
+  adminCreateArticleCtr,
+  adminUpdateArticleCtr,
+  adminDeleteArticleCtr,
+  adminGetArticleListCtr,
+  adminSearchArticleCtr,
+  adminGetArticleByIdCtr,
+  adminDelAllArticleCtr,
 };

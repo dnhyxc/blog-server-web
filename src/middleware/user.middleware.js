@@ -1,5 +1,10 @@
 const bcrypt = require("bcryptjs");
-const { findOneUser, findUserById } = require("../service/web");
+const {
+  findOneUser,
+  findUserById,
+  adminFindOneUser,
+  adminFindUserById,
+} = require("../service");
 const {
   databaseError,
   userFormateError,
@@ -83,7 +88,30 @@ const verifyLogin = async (ctx, next) => {
   try {
     const { username, password } = ctx.request.body;
     const filter = { username };
+    console.log(filter, "filter");
     const user = await findOneUser(filter);
+    console.log(user, "verifyLogin");
+    if (!user) {
+      return ctx.app.emit("error", userNotFind, ctx);
+    }
+    const checkPwd = bcrypt.compareSync(password, user.password);
+    if (!checkPwd) {
+      console.log(checkPwd, "checkPwd");
+      return ctx.app.emit("error", userPwdError, ctx);
+    }
+  } catch (error) {
+    ctx.app.emit("error", databaseError, ctx);
+  }
+
+  await next();
+};
+
+// 校验用户用户名或者密码是否正确
+const verifyAdminLogin = async (ctx, next) => {
+  try {
+    const { username, password } = ctx.request.body;
+    const filter = { username };
+    const user = await adminFindOneUser(filter);
     if (!user) {
       return ctx.app.emit("error", userNotFind, ctx);
     }
@@ -103,6 +131,24 @@ const verifyUpdateInfo = async (ctx, next) => {
   const { id } = ctx.state.user;
   try {
     const user = await findUserById(id);
+    console.log(user, "verifyUpdateInfo");
+    // 校验密码是否一致
+    const checkPwd = bcrypt.compareSync(password, user.password);
+    if (checkPwd) {
+      return ctx.app.emit("error", pwdNotChange, ctx);
+    }
+  } catch (error) {
+    ctx.app.emit("error", databaseError, ctx);
+  }
+
+  await next();
+};
+
+const verifyAdminUpdateInfo = async (ctx, next) => {
+  const { password } = ctx.request.body;
+  const { id } = ctx.state.user;
+  try {
+    const user = await adminFindUserById(id);
     // 校验密码是否一致
     const checkPwd = bcrypt.compareSync(password, user.password);
     if (checkPwd) {
@@ -122,4 +168,8 @@ module.exports = {
   verifyLogin,
   verifyUpdateInfo,
   verifyUserExists,
+
+  // 后台中间件
+  verifyAdminLogin,
+  verifyAdminUpdateInfo,
 };

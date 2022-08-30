@@ -1,10 +1,10 @@
 const Router = require("koa-router");
 const {
-  registerCtr,
-  loginCtr,
-  updateInfoCtr,
-  getUserInfoCtr,
-  verifyTokenCtr,
+  adminRegisterCtr,
+  adminLoginCtr,
+  adminGetUserInfoCtr,
+  adminUpdateInfoCtr,
+  adminVerifyTokenCtr,
 } = require("../../controller");
 const {
   userValidator,
@@ -14,9 +14,13 @@ const {
   auth,
   verifyUpdateInfo,
   verifyUserExists,
+
+  // 后台中间件
+  verifyAdminLogin,
+  verifyAdminUpdateInfo,
 } = require("../../middleware");
 
-const router = new Router({ prefix: "/api" });
+const router = new Router({ prefix: "/admin" });
 
 // 注册接口
 router.post(
@@ -24,14 +28,14 @@ router.post(
   userValidator, // 检验用户名或密码是否为空中间件
   verifyUser, // 检验用户名是否存在中间件
   bcryptPassword, // 密码加密中间件
-  registerCtr
+  adminRegisterCtr
 );
 
 // 登录接口
-router.post("/login", userValidator, verifyLogin, loginCtr);
+router.post("/login", userValidator, verifyAdminLogin, adminLoginCtr);
 
 // 获取用户信息
-router.post("/getUserInfo", getUserInfoCtr);
+router.post("/getUserInfo", adminGetUserInfoCtr);
 
 // 修改用户信息接口
 router.put(
@@ -39,7 +43,7 @@ router.put(
   auth,
   verifyUserExists,
   // verifyUpdateInfo,
-  updateInfoCtr
+  adminUpdateInfoCtr
 );
 
 // 修改用户信息接口
@@ -49,10 +53,10 @@ router.put(
   verifyUserExists,
   // verifyUpdateInfo,
   bcryptPassword,
-  updateInfoCtr
+  adminUpdateInfoCtr
 );
 
 // 校验token是否过期
-router.post("/verify", auth, verifyTokenCtr);
+router.post("/verify", auth, adminVerifyTokenCtr);
 
 module.exports = router;
