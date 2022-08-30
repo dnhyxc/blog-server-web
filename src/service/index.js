@@ -20,6 +20,7 @@ const {
   getNextArticle,
   getArticleTotal,
   updateReplyCount,
+  updateAuthorName,
 } = require("./web/article.service");
 const {
   createComments,
@@ -92,6 +93,7 @@ module.exports = {
   getNextArticle,
   getArticleTotal,
   updateReplyCount,
+  updateAuthorName,
 
   // 后台
   adminFindOneUser,

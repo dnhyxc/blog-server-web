@@ -7,6 +7,7 @@ const {
   updateUser,
   findUserById,
   getArticleTotal,
+  updateAuthorName,
 } = require("../../service");
 
 class UserController {
@@ -96,6 +97,8 @@ class UserController {
       return;
     }
     try {
+      // 更新用户名称时，需要同时更新当前用户的所有文章中的作者名称
+      await updateAuthorName(userId, params.username);
       await updateUser(userId, params);
       const userInfo = await findUserById(userId);
       if (userInfo) {
