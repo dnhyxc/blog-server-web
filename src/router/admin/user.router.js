@@ -5,6 +5,7 @@ const {
   adminGetUserInfoCtr,
   adminUpdateInfoCtr,
   adminVerifyTokenCtr,
+  adminGetUserListCtr,
 } = require("../../controller");
 const {
   userValidator,
@@ -55,6 +56,9 @@ router.put(
   bcryptPassword,
   adminUpdateInfoCtr
 );
+
+// 获取用户列表
+router.post('/getUserList', auth, adminGetUserListCtr)
 
 // 校验token是否过期
 router.post("/verify", auth, adminVerifyTokenCtr);

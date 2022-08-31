@@ -7,6 +7,7 @@ const {
   adminFindUserById,
   adminUpdateUser,
   adminGetArticleTotal,
+  adminGetUserList,
 } = require("../../service");
 
 class UserController {
@@ -124,6 +125,23 @@ class UserController {
       };
     } catch (error) {
       console.error("verifyTokenCtr", error);
+      ctx.app.emit("error", databaseError, ctx);
+    }
+  }
+
+  // 获取用户列表
+  async adminGetUserListCtr(ctx, next) {
+    const { pageNo, pageSize } = ctx.request.body
+    const res = await adminGetUserList({ pageNo, pageSize })
+    try {
+      ctx.body = {
+        code: 200,
+        success: true,
+        message: "用户列表获取成功",
+        data: res,
+      };
+    } catch (error) {
+      console.error("adminGetUserListCtr", error);
       ctx.app.emit("error", databaseError, ctx);
     }
   }

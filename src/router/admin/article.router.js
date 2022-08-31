@@ -23,15 +23,15 @@ router.post("/updateArticle", auth, adminUpdateArticleCtr);
 router.post("/deleteArticle", auth, adminDeleteArticleCtr);
 
 // 获取文章
-router.post("/articleList", adminGetArticleListCtr);
+router.post("/articleList", auth, adminGetArticleListCtr);
 
 // 搜索文章
-router.post("/searchArticle", adminSearchArticleCtr);
+router.post("/searchArticle", auth, adminSearchArticleCtr);
 
 // 获取文章详情
-router.post("/articleDetail", adminGetArticleByIdCtr);
+router.post("/articleDetail", auth, adminGetArticleByIdCtr);
 
 // 删除所有文章
-router.del("/delAllArticle", adminDelAllArticleCtr);
+router.del("/delAllArticle", auth, adminDelAllArticleCtr);
 
 module.exports = router;

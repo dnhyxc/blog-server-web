@@ -45,6 +45,7 @@ const {
   adminGetUserInfoCtr,
   adminUpdateInfoCtr,
   adminVerifyTokenCtr,
+  adminGetUserListCtr,
 } = adminUserController;
 // 后台文章控制器
 const {
@@ -95,6 +96,7 @@ module.exports = {
   adminGetUserInfoCtr,
   adminUpdateInfoCtr,
   adminVerifyTokenCtr,
+  adminGetUserListCtr,
   // 后台文章控制器
   adminCreateArticleCtr,
   adminUpdateArticleCtr,

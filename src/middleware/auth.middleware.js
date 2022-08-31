@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const { JWT_SECRET } = require("../config");
-const { TokenExpiredError, JsonWebTokenError } = require("../constant");
+const { TokenExpiredError, JsonWebTokenError, databaseError } = require("../constant");
 
 const auth = async (ctx, next) => {
   try {
@@ -23,6 +23,7 @@ const auth = async (ctx, next) => {
         // console.error("无效的token", error);
         return ctx.app.emit("error", JsonWebTokenError, ctx);
       default:
+        return ctx.app.emit("error", databaseError, ctx);
         break;
     }
   }

@@ -47,6 +47,7 @@ const {
   adminFindUserById,
   adminUpdateUser,
   adminCreateUserServer,
+  adminGetUserList,
 } = require("./admin/user.service");
 
 const {
@@ -100,6 +101,7 @@ module.exports = {
   adminFindUserById,
   adminCreateUserServer,
   adminUpdateUser,
+  adminGetUserList,
   // 后台文章
   adminCreateArticle,
   adminUpdateArticle,
