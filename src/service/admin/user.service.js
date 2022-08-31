@@ -4,7 +4,6 @@ const { userFields } = require("../../constant");
 class UserServer {
   // 用户登录
   async adminFindOneUser(filter) {
-    console.log(filter, "filter");
     const user = await AdminUsers.findOne(filter, {
       userId: `${"$_id".toString()}`,
       _id: 1,

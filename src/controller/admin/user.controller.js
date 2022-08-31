@@ -28,7 +28,6 @@ class UserController {
 
   async adminLoginCtr(ctx, next) {
     const { username } = ctx.request.body;
-    console.log(username, "username");
     // 1. 获取用户信息（在token的playload中，记录id，username）
     try {
       const { password, ...props } =

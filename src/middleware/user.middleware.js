@@ -88,15 +88,12 @@ const verifyLogin = async (ctx, next) => {
   try {
     const { username, password } = ctx.request.body;
     const filter = { username };
-    console.log(filter, "filter");
     const user = await findOneUser(filter);
-    console.log(user, "verifyLogin");
     if (!user) {
       return ctx.app.emit("error", userNotFind, ctx);
     }
     const checkPwd = bcrypt.compareSync(password, user.password);
     if (!checkPwd) {
-      console.log(checkPwd, "checkPwd");
       return ctx.app.emit("error", userPwdError, ctx);
     }
   } catch (error) {
@@ -131,7 +128,6 @@ const verifyUpdateInfo = async (ctx, next) => {
   const { id } = ctx.state.user;
   try {
     const user = await findUserById(id);
-    console.log(user, "verifyUpdateInfo");
     // 校验密码是否一致
     const checkPwd = bcrypt.compareSync(password, user.password);
     if (checkPwd) {
