@@ -5,6 +5,7 @@ const {
   adminFindArticles,
   adminFindArticleById,
   adminDelAllArticle,
+  adminBatchDeleteArticle,
 } = require("../../service");
 const { databaseError, fieldFormateError } = require("../../constant");
 
@@ -162,6 +163,23 @@ class ArticleController {
       };
     } catch (error) {
       console.error("adminDelAllArticleCtr", error);
+      ctx.app.emit("error", databaseError, ctx);
+    }
+  }
+
+  // 清空数据库文章
+  async adminBatchDeleteArticleCtr(ctx, next) {
+    try {
+      const { articleIds } = ctx.request.body;
+      const res = await adminBatchDeleteArticle({ articleIds });
+      ctx.body = {
+        code: 200,
+        success: true,
+        message: "删除成功",
+        data: res,
+      };
+    } catch (error) {
+      console.error("adminBatchDeleteArticleCtr", error);
       ctx.app.emit("error", databaseError, ctx);
     }
   }

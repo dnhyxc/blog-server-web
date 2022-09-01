@@ -123,6 +123,12 @@ class articleServer {
     const res = Article.find(filter).count();
     return res;
   }
+
+  // 批量删除文章
+  async adminBatchDeleteArticle({ articleIds }) {
+    const res = await Article.deleteMany({ _id: { $in: articleIds } });
+    return res.deletedCount;
+  }
 }
 
 module.exports = new articleServer();

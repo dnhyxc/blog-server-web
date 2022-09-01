@@ -60,6 +60,7 @@ const {
   adminFindArticleById,
   adminDelAllArticle,
   adminGetArticleTotal,
+  adminBatchDeleteArticle,
 } = require("./admin/article.service");
 
 module.exports = {
@@ -114,4 +115,5 @@ module.exports = {
   adminFindArticleById,
   adminDelAllArticle,
   adminGetArticleTotal,
+  adminBatchDeleteArticle,
 };
