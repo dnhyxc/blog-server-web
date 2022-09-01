@@ -2,6 +2,15 @@ const { User } = require("../../models");
 const { userFields } = require("../../constant");
 
 class UserServer {
+  // 注册用户
+  async createUserServer({ username, password }) {
+    return await User.create({
+      username,
+      password,
+      registerTime: new Date().valueOf(),
+    });
+  }
+
   // 用户登录
   async findOneUser(filter) {
     const user = await User.findOne(filter, {
@@ -31,11 +40,6 @@ class UserServer {
       $set: newUserInfo,
     });
     return res.modifiedCount > 0 ? true : false;
-  }
-
-  // 注册用户
-  async createUserServer({ username, password }) {
-    return await User.create({ username, password });
   }
 }
 

@@ -6,19 +6,16 @@ const {
   adminUpdateInfoCtr,
   adminVerifyTokenCtr,
   adminGetUserListCtr,
+  adminBatchDeleteUserCtr,
+  adminSetAuthCtr,
 } = require("../../controller");
 const {
   userValidator,
   verifyUser,
   bcryptPassword,
-  verifyLogin,
   auth,
-  verifyUpdateInfo,
   verifyUserExists,
-
-  // 后台中间件
   verifyAdminLogin,
-  verifyAdminUpdateInfo,
 } = require("../../middleware");
 
 const router = new Router({ prefix: "/admin" });
@@ -57,10 +54,16 @@ router.put(
   adminUpdateInfoCtr
 );
 
-// 获取用户列表
-router.post('/getUserList', auth, adminGetUserListCtr)
-
 // 校验token是否过期
 router.post("/verify", auth, adminVerifyTokenCtr);
+
+// 获取用户列表
+router.post("/getUserList", auth, adminGetUserListCtr);
+
+// 批量删除用户
+router.post("/batchDeleteUser", auth, adminBatchDeleteUserCtr);
+
+// 设置用户权限
+router.post("/setAuth", auth, adminSetAuthCtr);
 
 module.exports = router;

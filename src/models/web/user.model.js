@@ -15,6 +15,7 @@ const userSchema = new mongoose.Schema({
   mainCover: String,
   auth: Number,
   logout: String,
+  registerTime: Number,
 });
 
 const User = mongoose.model("users", userSchema);

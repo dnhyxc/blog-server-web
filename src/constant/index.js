@@ -130,6 +130,7 @@ const userFields = {
   blog: 1,
   mainCover: 1,
   auth: 1,
+  registerTime: 1,
 };
 
 module.exports = {

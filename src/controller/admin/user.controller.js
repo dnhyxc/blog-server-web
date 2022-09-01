@@ -8,12 +8,14 @@ const {
   adminUpdateUser,
   adminGetArticleTotal,
   adminGetUserList,
+  adminBatchDeleteUser,
+  adminSetAuth,
 } = require("../../service");
 
 class UserController {
   async adminRegisterCtr(ctx, next) {
-    const { username, password } = ctx.request.body;
     try {
+      const { username, password } = ctx.request.body;
       const res = await adminCreateUserServer({ username, password });
       ctx.body = {
         code: 200,
@@ -28,9 +30,9 @@ class UserController {
   }
 
   async adminLoginCtr(ctx, next) {
-    const { username } = ctx.request.body;
     // 1. 获取用户信息（在token的playload中，记录id，username）
     try {
+      const { username } = ctx.request.body;
       const { password, ...props } =
         (await adminFindOneUser({ username })) || {};
       delete props?._doc.password;
@@ -52,17 +54,16 @@ class UserController {
 
   // 获取用户信息
   async adminGetUserInfoCtr(ctx, next) {
-    const { userId, auth, needTotal } = ctx.request.body;
-    const authorInfo = auth && (await adminFindOneUser({ auth: 1 }));
-
-    let filter = "";
-    if (auth) {
-      filter = authorInfo?._id?.toString();
-    } else {
-      filter = userId;
-    }
-
     try {
+      const { userId, auth, needTotal } = ctx.request.body;
+      const authorInfo = auth && (await adminFindOneUser({ auth: 1 }));
+
+      let filter = "";
+      if (auth) {
+        filter = authorInfo?._id?.toString();
+      } else {
+        filter = userId;
+      }
       const articleTotal =
         needTotal &&
         (await adminGetArticleTotal({
@@ -92,12 +93,12 @@ class UserController {
 
   // 更新用户信息
   async adminUpdateInfoCtr(ctx, next) {
-    const { userId, ...params } = ctx.request.body;
-    if (!userId) {
-      ctx.app.emit("error", fieldFormateError, ctx);
-      return;
-    }
     try {
+      const { userId, ...params } = ctx.request.body;
+      if (!userId) {
+        ctx.app.emit("error", fieldFormateError, ctx);
+        return;
+      }
       await adminUpdateUser(userId, params);
       const userInfo = await adminFindUserById(userId);
       if (userInfo) {
@@ -131,9 +132,9 @@ class UserController {
 
   // 获取用户列表
   async adminGetUserListCtr(ctx, next) {
-    const { pageNo, pageSize } = ctx.request.body
-    const res = await adminGetUserList({ pageNo, pageSize })
     try {
+      const { pageNo, pageSize } = ctx.request.body;
+      const res = await adminGetUserList({ pageNo, pageSize });
       ctx.body = {
         code: 200,
         success: true,
@@ -142,6 +143,40 @@ class UserController {
       };
     } catch (error) {
       console.error("adminGetUserListCtr", error);
+      ctx.app.emit("error", databaseError, ctx);
+    }
+  }
+
+  // 批量删除用户
+  async adminBatchDeleteUserCtr(ctx, next) {
+    try {
+      const { userIds } = ctx.request.body;
+      const res = await adminBatchDeleteUser({ userIds });
+      ctx.body = {
+        code: 200,
+        success: true,
+        message: "删除成功",
+        data: res,
+      };
+    } catch (error) {
+      console.error("adminBatchDeleteUserCtr", error);
+      ctx.app.emit("error", databaseError, ctx);
+    }
+  }
+
+  // 批量删除用户
+  async adminSetAuthCtr(ctx, next) {
+    try {
+      const { auth, userId } = ctx.request.body;
+      const res = await adminSetAuth({ auth, userId });
+      ctx.body = {
+        code: 200,
+        success: true,
+        message: "权限设置成功",
+        data: userId,
+      };
+    } catch (error) {
+      console.error("adminSetAuthCtr", error);
       ctx.app.emit("error", databaseError, ctx);
     }
   }

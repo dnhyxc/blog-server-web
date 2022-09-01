@@ -2,6 +2,11 @@ const { AdminUsers, User } = require("../../models");
 const { userFields } = require("../../constant");
 
 class UserServer {
+  // 注册用户
+  async adminCreateUserServer({ username, password }) {
+    return await AdminUsers.create({ username, password });
+  }
+
   // 用户登录
   async adminFindOneUser(filter) {
     const user = await AdminUsers.findOne(filter, {
@@ -62,7 +67,11 @@ class UserServer {
 
   // 查询用户列表
   async adminGetUserList({ filterKey, pageNo, pageSize }) {
-    const res = await new UserServer().adminGetUserListWithTotal({ filterKey, pageNo, pageSize })
+    const res = await new UserServer().adminGetUserListWithTotal({
+      filterKey,
+      pageNo,
+      pageSize,
+    });
     return res;
   }
 
@@ -75,9 +84,20 @@ class UserServer {
     return res.modifiedCount > 0 ? true : false;
   }
 
-  // 注册用户
-  async adminCreateUserServer({ username, password }) {
-    return await AdminUsers.create({ username, password });
+  // 批量删除用户
+  async adminBatchDeleteUser({ userIds }) {
+    const res = await User.deleteMany({ _id: { $in: userIds } });
+    return res.deletedCount;
+  }
+
+  // 设置为博主
+  async adminSetAuth({ auth, userId }) {
+    const res = await User.updateOne({ auth }, { $unset: { auth } });
+    if (res.matchedCount) {
+      const data = await User.updateOne({ _id: userId }, { $set: { auth } });
+      return data.modifiedCount;
+    }
+    return 0;
   }
 }
 

@@ -48,6 +48,8 @@ const {
   adminUpdateUser,
   adminCreateUserServer,
   adminGetUserList,
+  adminBatchDeleteUser,
+  adminSetAuth,
 } = require("./admin/user.service");
 
 const {
@@ -102,6 +104,8 @@ module.exports = {
   adminCreateUserServer,
   adminUpdateUser,
   adminGetUserList,
+  adminBatchDeleteUser,
+  adminSetAuth,
   // 后台文章
   adminCreateArticle,
   adminUpdateArticle,
