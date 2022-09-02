@@ -32,7 +32,7 @@ class CommentsController {
     }
   }
   // 根据文章id查找对应的评论
-  async findCommentsById(ctx, next) {
+  async findCommentsByIdCtr(ctx, next) {
     try {
       const { id, userId } = ctx.request.body;
       // 操作数据库

@@ -8,6 +8,7 @@ const {
   adminGetArticleByIdCtr,
   adminBatchDeleteArticleCtr,
   adminShelvesArticleCtr,
+  adminFindCommentsByIdCtr,
 } = require("../../controller");
 
 const { auth } = require("../../middleware");
@@ -37,5 +38,8 @@ router.post("/batchDelArticle", auth, adminBatchDeleteArticleCtr);
 
 // 上架文章
 router.post("/shelvesArticle", auth, adminShelvesArticleCtr);
+
+// 上架文章
+router.post("/getCommentList", auth, adminFindCommentsByIdCtr);
 
 module.exports = router;

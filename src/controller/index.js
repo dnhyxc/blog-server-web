@@ -26,8 +26,12 @@ const {
   getNextArticleCtr,
 } = articleController;
 const { uploadFileCtr } = uploadController;
-const { createCommentsCtr, findCommentsById, giveLikeCtr, deleteCommentCtr } =
-  commentsController;
+const {
+  createCommentsCtr,
+  findCommentsByIdCtr,
+  giveLikeCtr,
+  deleteCommentCtr,
+} = commentsController;
 const { getClassifyListCtr, getTagListCtr, getTimelineListCtr } =
   classifyController;
 const {
@@ -59,6 +63,7 @@ const {
   adminGetArticleByIdCtr,
   adminBatchDeleteArticleCtr,
   adminShelvesArticleCtr,
+  adminFindCommentsByIdCtr,
 } = adminArticleController;
 
 module.exports = {
@@ -73,7 +78,7 @@ module.exports = {
   getArticleByIdCtr,
   delAllArticleCtr,
   createCommentsCtr,
-  findCommentsById,
+  findCommentsByIdCtr,
   giveLikeCtr,
   deleteCommentCtr,
   deleteArticleCtr,
@@ -111,4 +116,5 @@ module.exports = {
   adminGetArticleByIdCtr,
   adminBatchDeleteArticleCtr,
   adminShelvesArticleCtr,
+  adminFindCommentsByIdCtr,
 };

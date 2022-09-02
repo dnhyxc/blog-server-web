@@ -6,6 +6,7 @@ const {
   adminFindArticleById,
   adminBatchDeleteArticle,
   adminShelvesArticle,
+  adminFindCommentById,
 } = require("../../service");
 const { databaseError, fieldFormateError } = require("../../constant");
 
@@ -181,6 +182,45 @@ class ArticleController {
       };
     } catch (error) {
       console.error("adminBatchDeleteArticleCtr", error);
+      ctx.app.emit("error", databaseError, ctx);
+    }
+  }
+
+  // 根据文章id查找对应的评论
+  async adminFindCommentsByIdCtr(ctx, next) {
+    try {
+      const { id } = ctx.request.body;
+      // 操作数据库
+      const res = await adminFindCommentById(id);
+      if (res) {
+        const filterDelComments = res.filter((i) => !i.isDelete);
+        const comments = filterDelComments.map((i) => {
+          const comment = { ...i._doc };
+          comment.commentId = comment._id;
+          delete comment._id;
+          delete comment.__v;
+          const filterReplyList = comment.replyList.filter((i) => !i.isDelete);
+          const newList = filterReplyList.map((j) => {
+            const item = { ...j._doc };
+            item.commentId = j._id;
+            delete item._id;
+            delete item.__v;
+            return item;
+          });
+          comment.replyList = newList;
+          return comment;
+        });
+
+        // 返回结果
+        ctx.body = {
+          code: 200,
+          success: true,
+          message: "获取评论成功",
+          data: comments,
+        };
+      }
+    } catch (error) {
+      console.error("findCommentsById", error);
       ctx.app.emit("error", databaseError, ctx);
     }
   }

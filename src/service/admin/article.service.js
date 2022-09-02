@@ -1,5 +1,5 @@
-const { Article } = require("../../models");
-const { findUserById } = require("./user.service");
+const { Article, Comments } = require("../../models");
+const { findUserById } = require("../web/user.service");
 const { detailFields } = require("../../constant");
 
 class articleServer {
@@ -132,6 +132,12 @@ class articleServer {
       { $unset: { isDelete: true } }
     );
     return res;
+  }
+
+  // 根据文章id查找评论
+  async adminFindCommentById(articleId) {
+    const comment = await Comments.find({ articleId });
+    return comment;
   }
 }
 

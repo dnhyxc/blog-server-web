@@ -1,7 +1,7 @@
 const Router = require("koa-router");
 const {
   createCommentsCtr,
-  findCommentsById,
+  findCommentsByIdCtr,
   giveLikeCtr,
   deleteCommentCtr,
 } = require("../../controller");
@@ -12,7 +12,7 @@ const router = new Router({ prefix: "/api" });
 // 创建评论
 router.post("/comments", auth, createCommentsCtr);
 // 获取评论
-router.post("/getCommentList", findCommentsById);
+router.post("/getCommentList", findCommentsByIdCtr);
 // 点赞
 router.post("/giveLike", auth, giveLikeCtr);
 // 删除评论
