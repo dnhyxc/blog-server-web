@@ -30,12 +30,12 @@ class ArticleController {
         },
       };
     } catch (error) {
-      console.error("registerCtr", error);
+      console.error("createArticleCtr", error);
       ctx.app.emit("error", databaseError, ctx);
     }
   }
 
-  // 创建文章
+  // 更新文章
   async updateArticleCtr(ctx, next) {
     try {
       const params = ctx.request.body;
@@ -51,7 +51,7 @@ class ArticleController {
         },
       };
     } catch (error) {
-      console.error("registerCtr", error);
+      console.error("updateArticleCtr", error);
       ctx.app.emit("error", databaseError, ctx);
     }
   }
@@ -74,7 +74,7 @@ class ArticleController {
         data: articleId,
       };
     } catch (error) {
-      console.error("getArticleListCtr", error);
+      console.error("deleteArticleCtr", error);
       ctx.app.emit("error", databaseError, ctx);
     }
   }

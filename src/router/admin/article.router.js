@@ -6,8 +6,8 @@ const {
   adminGetArticleListCtr,
   adminSearchArticleCtr,
   adminGetArticleByIdCtr,
-  adminDelAllArticleCtr,
   adminBatchDeleteArticleCtr,
+  adminShelvesArticleCtr,
 } = require("../../controller");
 
 const { auth } = require("../../middleware");
@@ -33,9 +33,9 @@ router.post("/searchArticle", auth, adminSearchArticleCtr);
 router.post("/articleDetail", auth, adminGetArticleByIdCtr);
 
 // 删除所有文章
-router.del("/delAllArticle", auth, adminDelAllArticleCtr);
-
-// 删除所有文章
 router.post("/batchDelArticle", auth, adminBatchDeleteArticleCtr);
+
+// 上架文章
+router.post("/shelvesArticle", auth, adminShelvesArticleCtr);
 
 module.exports = router;

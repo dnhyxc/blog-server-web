@@ -4,8 +4,8 @@ const {
   adminDeleteArticles,
   adminFindArticles,
   adminFindArticleById,
-  adminDelAllArticle,
   adminBatchDeleteArticle,
+  adminShelvesArticle,
 } = require("../../service");
 const { databaseError, fieldFormateError } = require("../../constant");
 
@@ -151,23 +151,7 @@ class ArticleController {
     }
   }
 
-  // 清空数据库文章
-  async adminDelAllArticleCtr(ctx, next) {
-    try {
-      await adminDelAllArticle();
-      ctx.body = {
-        code: 200,
-        success: true,
-        message: "清空成功",
-        data: [],
-      };
-    } catch (error) {
-      console.error("adminDelAllArticleCtr", error);
-      ctx.app.emit("error", databaseError, ctx);
-    }
-  }
-
-  // 清空数据库文章
+  // 批量删除
   async adminBatchDeleteArticleCtr(ctx, next) {
     try {
       const { articleIds } = ctx.request.body;
@@ -177,6 +161,23 @@ class ArticleController {
         success: true,
         message: "删除成功",
         data: res,
+      };
+    } catch (error) {
+      console.error("adminBatchDeleteArticleCtr", error);
+      ctx.app.emit("error", databaseError, ctx);
+    }
+  }
+
+  // 文章上架
+  async adminShelvesArticleCtr(ctx, next) {
+    try {
+      const { articleIds } = ctx.request.body;
+      const res = await adminShelvesArticle({ articleIds });
+      ctx.body = {
+        code: 200,
+        success: true,
+        message: "删除成功",
+        data: res.modifiedCount,
       };
     } catch (error) {
       console.error("adminBatchDeleteArticleCtr", error);

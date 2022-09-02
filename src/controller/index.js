@@ -57,8 +57,8 @@ const {
   adminGetArticleListCtr,
   adminSearchArticleCtr,
   adminGetArticleByIdCtr,
-  adminDelAllArticleCtr,
   adminBatchDeleteArticleCtr,
+  adminShelvesArticleCtr,
 } = adminArticleController;
 
 module.exports = {
@@ -109,6 +109,6 @@ module.exports = {
   adminGetArticleListCtr,
   adminSearchArticleCtr,
   adminGetArticleByIdCtr,
-  adminDelAllArticleCtr,
   adminBatchDeleteArticleCtr,
+  adminShelvesArticleCtr,
 };

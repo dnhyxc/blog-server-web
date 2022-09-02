@@ -2,7 +2,7 @@ const path = require("path");
 const { fileUploadError } = require("../../constant");
 
 class UploadController {
-  // 创建文章
+  // 文件上传
   async uploadFileCtr(ctx, next) {
     const { file } = ctx.request.files;
     if (file) {

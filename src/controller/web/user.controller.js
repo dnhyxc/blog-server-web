@@ -11,6 +11,7 @@ const {
 } = require("../../service");
 
 class UserController {
+  // 账号注册
   async registerCtr(ctx, next) {
     const { username, password } = ctx.request.body;
     try {
@@ -27,6 +28,7 @@ class UserController {
     }
   }
 
+  // 账号登录
   async loginCtr(ctx, next) {
     const { username } = ctx.request.body;
     // 1. 获取用户信息（在token的playload中，记录id，username）

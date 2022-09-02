@@ -54,6 +54,7 @@ class articleServer {
                 createTime: 1,
                 authorName: 1,
                 replyCount: 1,
+                isDelete: 1,
               },
             },
             { $sort: { createTime: -1, likeCount: -1 } },
@@ -80,7 +81,7 @@ class articleServer {
   async adminFindArticles({ pageNo = 1, pageSize = 20, filter, tagName }) {
     let filterKey;
     if (tagName) {
-      filterKey = { tag: tagName, isDelete: { $nin: [true] } };
+      filterKey = { tag: tagName };
     } else {
       // 不区分大小写
       const reg = (filter && new RegExp(filter, "i")) || "";
@@ -92,7 +93,6 @@ class articleServer {
           { authorId: { $regex: reg } },
           { authorName: { $regex: reg } },
         ],
-        isDelete: { $nin: [true] },
       };
     }
     return await new articleServer().adminGetArticleListWithTotal({
@@ -113,11 +113,6 @@ class articleServer {
     };
   }
 
-  // 清空所有文章
-  async adminDelAllArticle() {
-    await Article.deleteMany({});
-  }
-
   // 获取文章总条数
   async adminGetArticleTotal(filter) {
     const res = Article.find(filter).count();
@@ -128,6 +123,15 @@ class articleServer {
   async adminBatchDeleteArticle({ articleIds }) {
     const res = await Article.deleteMany({ _id: { $in: articleIds } });
     return res.deletedCount;
+  }
+
+  // 重新上架文章
+  async adminShelvesArticle({ articleIds }) {
+    const res = await Article.updateMany(
+      { _id: { $in: articleIds } },
+      { $unset: { isDelete: true } }
+    );
+    return res;
   }
 }
 

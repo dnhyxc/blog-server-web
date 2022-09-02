@@ -7,7 +7,7 @@ const {
 const { databaseError, userFormateError } = require("../../constant");
 
 class classifyController {
-  // 创建文章
+  // 获取文章分类
   async getClassifyListCtr(ctx, next) {
     const { pageNo, pageSize, classify, userId } = ctx.request.body;
     if (!classify) {
