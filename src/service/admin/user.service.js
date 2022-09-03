@@ -92,12 +92,9 @@ class UserServer {
 
   // 设置为博主
   async adminSetAuth({ auth, userId }) {
-    const res = await User.updateOne({ auth }, { $unset: { auth } });
-    if (res.matchedCount) {
-      const data = await User.updateOne({ _id: userId }, { $set: { auth } });
-      return data.modifiedCount;
-    }
-    return 0;
+    await User.updateOne({ auth }, { $unset: { auth } });
+    const data = await User.updateOne({ _id: userId }, { $set: { auth } });
+    return data.modifiedCount;
   }
 }
 
