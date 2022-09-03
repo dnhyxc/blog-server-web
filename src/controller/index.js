@@ -64,6 +64,7 @@ const {
   adminBatchDeleteArticleCtr,
   adminShelvesArticleCtr,
   adminFindCommentsByIdCtr,
+  adminDeleteCommentCtr,
 } = adminArticleController;
 
 module.exports = {
@@ -117,4 +118,5 @@ module.exports = {
   adminBatchDeleteArticleCtr,
   adminShelvesArticleCtr,
   adminFindCommentsByIdCtr,
+  adminDeleteCommentCtr,
 };

@@ -62,6 +62,7 @@ const {
   adminBatchDeleteArticle,
   adminShelvesArticle,
   adminFindCommentById,
+  adminDeleteComment,
 } = require("./admin/article.service");
 
 module.exports = {
@@ -118,4 +119,5 @@ module.exports = {
   adminBatchDeleteArticle,
   adminShelvesArticle,
   adminFindCommentById,
+  adminDeleteComment,
 };

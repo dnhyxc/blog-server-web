@@ -9,6 +9,7 @@ const {
   adminBatchDeleteArticleCtr,
   adminShelvesArticleCtr,
   adminFindCommentsByIdCtr,
+  adminDeleteCommentCtr,
 } = require("../../controller");
 
 const { auth } = require("../../middleware");
@@ -41,5 +42,8 @@ router.post("/shelvesArticle", auth, adminShelvesArticleCtr);
 
 // 上架文章
 router.post("/getCommentList", auth, adminFindCommentsByIdCtr);
+
+// 上架文章
+router.post("/deleteComment", auth, adminDeleteCommentCtr);
 
 module.exports = router;
