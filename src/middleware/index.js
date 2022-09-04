@@ -9,16 +9,17 @@ const {
   verifyAdminUpdateInfo,
 } = require("./user.middleware");
 
-const { auth } = require("./auth.middleware");
+const { auth, adminAuth } = require("./auth.middleware");
 
 module.exports = {
   userValidator,
   verifyUser,
   bcryptPassword,
   verifyLogin,
-  auth,
   verifyUpdateInfo,
   verifyUserExists,
   verifyAdminLogin,
   verifyAdminUpdateInfo,
+  auth,
+  adminAuth,
 };

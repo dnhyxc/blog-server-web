@@ -13,9 +13,10 @@ const {
   userValidator,
   verifyUser,
   bcryptPassword,
-  auth,
   verifyUserExists,
   verifyAdminLogin,
+  auth,
+  adminAuth,
 } = require("../../middleware");
 
 const router = new Router({ prefix: "/admin" });
@@ -38,7 +39,7 @@ router.post("/getUserInfo", adminGetUserInfoCtr);
 // 修改用户信息接口
 router.put(
   "/updateInfo",
-  auth,
+  adminAuth,
   verifyUserExists,
   // verifyUpdateInfo,
   adminUpdateInfoCtr
@@ -47,7 +48,7 @@ router.put(
 // 修改用户信息接口
 router.put(
   "/updatePassword",
-  auth,
+  adminAuth,
   verifyUserExists,
   // verifyUpdateInfo,
   bcryptPassword,
@@ -55,15 +56,15 @@ router.put(
 );
 
 // 校验token是否过期
-router.post("/verify", auth, adminVerifyTokenCtr);
+router.post("/verify", adminAuth, adminVerifyTokenCtr);
 
 // 获取用户列表
-router.post("/getUserList", auth, adminGetUserListCtr);
+router.post("/getUserList", adminAuth, adminGetUserListCtr);
 
 // 批量删除用户
-router.post("/batchDeleteUser", auth, adminBatchDeleteUserCtr);
+router.post("/batchDeleteUser", adminAuth, adminBatchDeleteUserCtr);
 
 // 设置用户权限
-router.post("/setAuth", auth, adminSetAuthCtr);
+router.post("/setAuth", adminAuth, adminSetAuthCtr);
 
 module.exports = router;

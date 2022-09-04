@@ -13,41 +13,41 @@ const {
   adminRestoreCommentCtr,
 } = require("../../controller");
 
-const { auth } = require("../../middleware");
+const { adminAuth } = require("../../middleware");
 
 const router = new Router({ prefix: "/admin" });
 
 // 创建文章
-router.post("/createArticle", auth, adminCreateArticleCtr);
+router.post("/createArticle", adminAuth, adminCreateArticleCtr);
 
 // 更新文章
-router.post("/updateArticle", auth, adminUpdateArticleCtr);
+router.post("/updateArticle", adminAuth, adminUpdateArticleCtr);
 
 // 删除文章
-router.post("/deleteArticle", auth, adminDeleteArticleCtr);
+router.post("/deleteArticle", adminAuth, adminDeleteArticleCtr);
 
 // 获取文章
-router.post("/articleList", auth, adminGetArticleListCtr);
+router.post("/articleList", adminAuth, adminGetArticleListCtr);
 
 // 搜索文章
-router.post("/searchArticle", auth, adminSearchArticleCtr);
+router.post("/searchArticle", adminAuth, adminSearchArticleCtr);
 
 // 获取文章详情
-router.post("/articleDetail", auth, adminGetArticleByIdCtr);
+router.post("/articleDetail", adminAuth, adminGetArticleByIdCtr);
 
 // 删除所有文章
-router.post("/batchDelArticle", auth, adminBatchDeleteArticleCtr);
+router.post("/batchDelArticle", adminAuth, adminBatchDeleteArticleCtr);
 
 // 上架文章
-router.post("/shelvesArticle", auth, adminShelvesArticleCtr);
+router.post("/shelvesArticle", adminAuth, adminShelvesArticleCtr);
 
 // 获取文章评论
-router.post("/getCommentList", auth, adminFindCommentsByIdCtr);
+router.post("/getCommentList", adminAuth, adminFindCommentsByIdCtr);
 
 // 删除文章评论
-router.post("/deleteComment", auth, adminDeleteCommentCtr);
+router.post("/deleteComment", adminAuth, adminDeleteCommentCtr);
 
 // 恢复前台删除的文章评论
-router.post("/restoreComment", auth, adminRestoreCommentCtr);
+router.post("/restoreComment", adminAuth, adminRestoreCommentCtr);
 
 module.exports = router;

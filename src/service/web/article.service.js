@@ -1,15 +1,12 @@
 const mongoose = require("mongoose");
 const { Article, LikeArticle } = require("../../models");
 const { findUserById, findOneUser } = require("./user.service");
-const { anotherFields, detailFields, userNotFind } = require("../../constant");
+const { anotherFields, detailFields } = require("../../constant");
 
 class articleServer {
   // 创建文章
   async createArticle({ ...params }) {
     const userInfo = await findUserById(params.authorId);
-    if (!userInfo?.username) {
-      return userNotFind
-    }
     return await Article.create({
       ...params,
       likeCount: 0,
