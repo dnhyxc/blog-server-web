@@ -11,7 +11,7 @@ const {
   getPrevArticle,
   getNextArticle,
 } = require("../../service");
-const { databaseError, fieldFormateError } = require("../../constant");
+const { databaseError, fieldFormateError, userNotFind } = require("../../constant");
 
 class ArticleController {
   // 创建文章
@@ -20,15 +20,19 @@ class ArticleController {
       const params = ctx.request.body;
       // 操作数据库
       const res = await createArticle({ ...params });
-      // 返回结果
-      ctx.body = {
-        code: 200,
-        success: true,
-        message: "发布成功",
-        data: {
-          id: res.id,
-        },
-      };
+      if (!res.title) {
+        ctx.app.emit("error", userNotFind, ctx);
+      } else {
+        // 返回结果
+        ctx.body = {
+          code: 200,
+          success: true,
+          message: "发布成功",
+          data: {
+            id: res.id,
+          },
+        };
+      }
     } catch (error) {
       console.error("createArticleCtr", error);
       ctx.app.emit("error", databaseError, ctx);
