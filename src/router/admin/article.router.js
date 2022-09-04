@@ -10,6 +10,7 @@ const {
   adminShelvesArticleCtr,
   adminFindCommentsByIdCtr,
   adminDeleteCommentCtr,
+  adminRestoreCommentCtr,
 } = require("../../controller");
 
 const { auth } = require("../../middleware");
@@ -40,10 +41,13 @@ router.post("/batchDelArticle", auth, adminBatchDeleteArticleCtr);
 // 上架文章
 router.post("/shelvesArticle", auth, adminShelvesArticleCtr);
 
-// 上架文章
+// 获取文章评论
 router.post("/getCommentList", auth, adminFindCommentsByIdCtr);
 
-// 上架文章
+// 删除文章评论
 router.post("/deleteComment", auth, adminDeleteCommentCtr);
+
+// 恢复前台删除的文章评论
+router.post("/restoreComment", auth, adminRestoreCommentCtr);
 
 module.exports = router;

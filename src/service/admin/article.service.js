@@ -179,6 +179,50 @@ class articleServer {
       return delComment;
     }
   }
+
+  // 恢复评论
+  async adminRestoreComment(commentId, fromCommentId, articleId) {
+    const filter = fromCommentId
+      ? {
+        "replyList._id": fromCommentId, // 选择数组replyList中某个对象中的_id属性
+      }
+      : { _id: commentId };
+
+    let count = 0
+
+    // fromCommentId有值说明是子级评论，直接减一就行
+    if (fromCommentId) {
+      count = 1
+    }
+
+    const res = await Comments.findOne({ _id: commentId, articleId })
+    // fromCommentId没有值说明是最上层父级评论，删除时需要加上底下所有子级的评论数及自身数量1，并且需要排除之前删除的replyList中的子级评论
+    if (res && !fromCommentId) {
+      const notDel = res.replyList.filter(i => !i.isDelete)
+      count = notDel.length + 1
+    }
+
+    // 删除评论时，为当前文章评论数 - 1
+    await updateReplyCount({ articleId: articleId, count, type: 'add' })
+
+    const comment = await Comments.updateOne(
+      {
+        $and: [filter],
+      },
+      // $inc：自增自减运算符，传入正值为自增，负值为自减
+      {
+        $unset: fromCommentId
+          ? {
+            "replyList.$.isDelete": true,
+          }
+          : {
+            isDelete: true,
+          },
+      }
+    );
+
+    return comment;
+  }
 }
 
 module.exports = new articleServer();

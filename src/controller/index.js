@@ -65,6 +65,7 @@ const {
   adminShelvesArticleCtr,
   adminFindCommentsByIdCtr,
   adminDeleteCommentCtr,
+  adminRestoreCommentCtr,
 } = adminArticleController;
 
 module.exports = {
@@ -119,4 +120,5 @@ module.exports = {
   adminShelvesArticleCtr,
   adminFindCommentsByIdCtr,
   adminDeleteCommentCtr,
+  adminRestoreCommentCtr,
 };

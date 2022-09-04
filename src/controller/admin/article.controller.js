@@ -8,6 +8,7 @@ const {
   adminShelvesArticle,
   adminFindCommentById,
   adminDeleteComment,
+  adminRestoreComment,
 } = require("../../service");
 const { databaseError, fieldFormateError } = require("../../constant");
 
@@ -229,11 +230,29 @@ class ArticleController {
     try {
       const { commentId, fromCommentId, articleId } = ctx.request.body;
       // 判断当前用户是否对当前评论点过赞
-      const res = await adminDeleteComment(commentId, fromCommentId, articleId);
+      await adminDeleteComment(commentId, fromCommentId, articleId);
       ctx.body = {
         code: 200,
         success: true,
         message: "删除成功",
+        data: commentId,
+      };
+    } catch (error) {
+      console.error("adminDeleteCommentCtr", error);
+      ctx.app.emit("error", databaseError, ctx);
+    }
+  }
+
+  // 删除评论
+  async adminRestoreCommentCtr(ctx, next) {
+    try {
+      const { commentId, fromCommentId, articleId } = ctx.request.body;
+      // 判断当前用户是否对当前评论点过赞
+      await adminRestoreComment(commentId, fromCommentId, articleId);
+      ctx.body = {
+        code: 200,
+        success: true,
+        message: "恢复成功",
         data: commentId,
       };
     } catch (error) {
