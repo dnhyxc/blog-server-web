@@ -142,12 +142,16 @@ class articleServer {
   // 根据文章id查找文章详情
   async findArticleById(id) {
     const article = await Article.findById(id, detailFields);
-    const userInfo = article && (await findUserById(article.authorId));
-    return {
-      ...article._doc,
-      authorName: userInfo?.username,
-      headUrl: userInfo?.headUrl,
-    };
+    if (article) {
+      const userInfo = article && (await findUserById(article.authorId));
+      return {
+        ...article._doc,
+        authorName: userInfo?.username,
+        headUrl: userInfo?.headUrl,
+      };
+    } else {
+      return null
+    }
   }
 
   async updateReplyCount({ articleId: _id, type, count }) {

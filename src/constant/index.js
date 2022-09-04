@@ -69,6 +69,13 @@ const userNotExist = {
   data: "",
 };
 
+const ArticleNotFind = {
+  code: "10010",
+  success: false,
+  message: "文章不存在",
+  data: "",
+};
+
 const TokenExpiredError = {
   code: "10101",
   success: false,
@@ -141,6 +148,7 @@ module.exports = {
   userLoginError,
   userPwdError,
   userNotFind,
+  ArticleNotFind,
   pwdNotChange,
   TokenExpiredError,
   JsonWebTokenError,

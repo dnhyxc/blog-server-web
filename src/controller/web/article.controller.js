@@ -11,7 +11,7 @@ const {
   getPrevArticle,
   getNextArticle,
 } = require("../../service");
-const { databaseError, fieldFormateError } = require("../../constant");
+const { databaseError, ArticleNotFind, fieldFormateError } = require("../../constant");
 
 class ArticleController {
   // 创建文章
@@ -141,6 +141,10 @@ class ArticleController {
     try {
       const { id } = ctx.request.body;
       const res = await findArticleById(id);
+      if (!res) {
+        ctx.app.emit("error", ArticleNotFind, ctx);
+        return
+      }
       if (res) {
         ctx.body = {
           code: 200,
