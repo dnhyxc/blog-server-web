@@ -24,7 +24,7 @@ class userInfoController {
       ctx.body = {
         code: 200,
         success: true,
-        message: "获取分类列表成功",
+        message: "获取文章列表成功",
         data: res,
       };
     } catch (error) {
@@ -44,7 +44,7 @@ class userInfoController {
       ctx.body = {
         code: 200,
         success: true,
-        message: "获取分类列表成功",
+        message: "获取文章列表成功",
         data: res,
       };
     } catch (error) {
@@ -72,7 +72,7 @@ class userInfoController {
       ctx.body = {
         code: 200,
         success: true,
-        message: "获取分类列表成功",
+        message: "获取文章列表成功",
         data: res,
       };
     } catch (error) {
@@ -99,7 +99,7 @@ class userInfoController {
       ctx.body = {
         code: 200,
         success: true,
-        message: "获取分类列表成功",
+        message: "获取文章列表成功",
         data: res,
       };
     } catch (error) {
