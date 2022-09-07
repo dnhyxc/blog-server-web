@@ -1,11 +1,20 @@
 // 前台model
 const User = require("./web/user.model");
 const Article = require("./web/article.model");
+const Draft = require("./web/draft.model");
 const Comments = require("./web/comments.model");
 const Like = require("./web/like.model");
 const LikeArticle = require("./web/likeArticle.model");
 
 // 后台model
-const AdminUsers = require('./admin/user.model')
+const AdminUsers = require("./admin/user.model");
 
-module.exports = { User, Article, Comments, Like, LikeArticle, AdminUsers };
+module.exports = {
+  User,
+  Article,
+  Draft,
+  Comments,
+  Like,
+  LikeArticle,
+  AdminUsers,
+};

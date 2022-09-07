@@ -11,7 +11,11 @@ const {
   getPrevArticle,
   getNextArticle,
 } = require("../../service");
-const { databaseError, ArticleNotFind, fieldFormateError } = require("../../constant");
+const {
+  databaseError,
+  ArticleNotFind,
+  fieldFormateError,
+} = require("../../constant");
 
 class ArticleController {
   // 创建文章
@@ -82,13 +86,12 @@ class ArticleController {
   // 获取文章列表
   async getArticleListCtr(ctx, next) {
     try {
-      const { pageNo, pageSize, filter, userId } = ctx.request.body;
+      const { pageNo, pageSize, userId } = ctx.request.body;
       // 操作数据库
       const res = await findArticles({
         pageNo,
         pageSize,
         userId,
-        filter,
       });
       // 返回结果
       if (res) {
@@ -143,7 +146,7 @@ class ArticleController {
       const res = await findArticleById(id);
       if (!res) {
         ctx.app.emit("error", ArticleNotFind, ctx);
-        return
+        return;
       }
       if (res) {
         ctx.body = {

@@ -4,6 +4,7 @@ const uploadController = require("./web/upload.controller");
 const commentsController = require("./web/comments.controller");
 const classifyController = require("./web/classify.controller");
 const userInfoController = require("./web/userInfo.controller");
+const draftController = require("./web/draft.controller");
 
 // 后台用户控制器
 const adminUserController = require("./admin/user.controller");
@@ -41,6 +42,8 @@ const {
   getAuthorLikeArticlesCtr,
   getAuthorTimelineCtr,
 } = userInfoController;
+const { createDraftCtr, updateDraftCtr, deleteDraftCtr, getDraftListCtr } =
+  draftController;
 
 // 后台控制器
 const {
@@ -99,6 +102,10 @@ module.exports = {
   getPrevArticleCtr,
   getNextArticleCtr,
   verifyTokenCtr,
+  createDraftCtr,
+  updateDraftCtr,
+  deleteDraftCtr,
+  getDraftListCtr,
 
   // 后台用户控制器
   adminRegisterCtr,

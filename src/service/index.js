@@ -40,6 +40,12 @@ const {
   getMyArticleList,
   getLikeArticleList,
 } = require("./web/userInfo.service");
+const {
+  createDraft,
+  updateDraft,
+  deleteDraft,
+  findDraftList,
+} = require("./web/draft.service");
 
 // 后台数据库接口
 const {
@@ -101,6 +107,10 @@ module.exports = {
   getArticleTotal,
   updateReplyCount,
   updateAuthorName,
+  createDraft,
+  updateDraft,
+  deleteDraft,
+  findDraftList,
 
   // 后台
   adminFindOneUser,
