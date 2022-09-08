@@ -42,8 +42,13 @@ const {
   getAuthorLikeArticlesCtr,
   getAuthorTimelineCtr,
 } = userInfoController;
-const { createDraftCtr, updateDraftCtr, deleteDraftCtr, getDraftListCtr } =
-  draftController;
+const {
+  createDraftCtr,
+  updateDraftCtr,
+  deleteDraftCtr,
+  getDraftListCtr,
+  getDraftByIdCtr,
+} = draftController;
 
 // 后台控制器
 const {
@@ -106,6 +111,7 @@ module.exports = {
   updateDraftCtr,
   deleteDraftCtr,
   getDraftListCtr,
+  getDraftByIdCtr,
 
   // 后台用户控制器
   adminRegisterCtr,

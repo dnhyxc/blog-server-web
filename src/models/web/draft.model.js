@@ -1,22 +1,13 @@
 const mongoose = require("mongoose");
 
 const DraftSchema = new mongoose.Schema({
-  title: {
-    required: true,
-    type: String,
-  },
+  title: String,
   content: {
     required: true,
     type: String,
   },
-  classify: {
-    required: true,
-    type: String,
-  },
-  tag: {
-    required: true,
-    type: String,
-  },
+  classify: String,
+  tag: String,
   coverImage: String,
   abstract: String,
   createTime: Number,

@@ -45,6 +45,7 @@ const {
   updateDraft,
   deleteDraft,
   findDraftList,
+  findDraftById,
 } = require("./web/draft.service");
 
 // 后台数据库接口
@@ -111,6 +112,7 @@ module.exports = {
   updateDraft,
   deleteDraft,
   findDraftList,
+  findDraftById,
 
   // 后台
   adminFindOneUser,

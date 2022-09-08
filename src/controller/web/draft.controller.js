@@ -3,6 +3,7 @@ const {
   updateDraft,
   deleteDraft,
   findDraftList,
+  findDraftById,
 } = require("../../service");
 const { databaseError } = require("../../constant");
 
@@ -13,14 +14,21 @@ class ArticleController {
       const params = ctx.request.body;
       // 操作数据库
       const res = await createDraft({ ...params });
+
+      const data = {
+        id: res._id,
+        authorId: res.authorId,
+        authorName: res.authorName,
+        content: res.content,
+        createTime: res.createTime,
+      };
+
       // 返回结果
       ctx.body = {
         code: 200,
         success: true,
-        message: "创建草稿成功",
-        data: {
-          id: res.id,
-        },
+        message: "保存草稿成功",
+        data,
       };
     } catch (error) {
       console.error("createDraftCtr", error);
@@ -93,6 +101,29 @@ class ArticleController {
       }
     } catch (error) {
       console.error("getDraftListCtr", error);
+      ctx.app.emit("error", databaseError, ctx);
+    }
+  }
+
+  // 根据文章id草稿详情
+  async getDraftByIdCtr(ctx, next) {
+    try {
+      const { id } = ctx.request.body;
+      const res = await findDraftById(id);
+      if (!res) {
+        ctx.app.emit("error", ArticleNotFind, ctx);
+        return;
+      }
+      if (res) {
+        ctx.body = {
+          code: 200,
+          success: true,
+          message: "获取草稿详情成功",
+          data: res,
+        };
+      }
+    } catch (error) {
+      console.error("getDraftByIdCtr", error);
       ctx.app.emit("error", databaseError, ctx);
     }
   }

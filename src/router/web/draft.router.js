@@ -4,6 +4,7 @@ const {
   updateDraftCtr,
   deleteDraftCtr,
   getDraftListCtr,
+  getDraftByIdCtr,
 } = require("../../controller");
 
 const { auth } = require("../../middleware");
@@ -19,7 +20,10 @@ router.post("/updateDraft", auth, updateDraftCtr);
 // 删除文章
 router.post("/deleteDraft", auth, deleteDraftCtr);
 
-// 获取文章
+// 获取草稿列表
 router.post("/getDraftList", getDraftListCtr);
+
+// 获取草稿详情
+router.post("/getDraftById", getDraftByIdCtr);
 
 module.exports = router;
