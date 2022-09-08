@@ -5,7 +5,11 @@ const {
   findDraftList,
   findDraftById,
 } = require("../../service");
-const { databaseError } = require("../../constant");
+const {
+  databaseError,
+  ArticleNotFind,
+  fieldFormateError,
+} = require("../../constant");
 
 class ArticleController {
   // 创建文章
@@ -60,19 +64,19 @@ class ArticleController {
   // 删除文章
   async deleteDraftCtr(ctx, next) {
     try {
-      const { articleId } = ctx.request.body;
-      if (!articleId) {
+      const { id } = ctx.request.body;
+      if (!id) {
         ctx.app.emit("error", fieldFormateError, ctx);
         return;
       }
       // 操作数据库
-      await deleteDraft(articleId);
+      const res = await deleteDraft(id);
       // 返回结果
       ctx.body = {
         code: 200,
         success: true,
         message: "删除成功",
-        data: articleId,
+        data: id,
       };
     } catch (error) {
       console.error("deleteDraftCtr", error);

@@ -22,7 +22,7 @@ class draftServer {
   // 删除草稿
   deleteDraft = async (articleId) => {
     const res = await Draft.deleteOne({ _id: articleId });
-    console.log(res, "res");
+    return res
   };
 
   // 获取草稿列表同时返回文章总条数
