@@ -12,7 +12,7 @@ class UploadController {
         message: "文件上传成功",
         success: true,
         data: {
-          filePath: `${ctx.origin}/${basename}`,
+          filePath: `${ctx.origin}/image/${basename}`,
         },
       };
     } else {

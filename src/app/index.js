@@ -19,7 +19,7 @@ app.use(
     multipart: true,
     formidable: {
       // 图片保存的静态资源文件路径
-      uploadDir: path.join(__dirname, "../upload"),
+      uploadDir: path.join(__dirname, "../upload/image"),
       // 是否保留扩展名
       keepExtensions: true,
       // 文件上传大小
