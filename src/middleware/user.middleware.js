@@ -69,6 +69,27 @@ const verifyUserExists = async (ctx, next) => {
   await next();
 };
 
+// 根据用户名检验用户是否存在
+const verifyUserExistsByUsername = async (ctx, next) => {
+  const { username } = ctx.request.body;
+
+  if (!username) {
+    ctx.app.emit("error", fieldFormateError, ctx);
+    return;
+  }
+
+  try {
+    const user = await findOneUser({ username })
+    if (!user) {
+      return ctx.app.emit("error", userNotExist, ctx);
+    }
+  } catch (error) {
+    ctx.app.emit("error", databaseError, ctx);
+  }
+
+  await next();
+};
+
 // 密码加密
 const bcryptPassword = async (ctx, next) => {
   const { password } = ctx.request.body;
@@ -164,6 +185,7 @@ module.exports = {
   verifyLogin,
   verifyUpdateInfo,
   verifyUserExists,
+  verifyUserExistsByUsername,
 
   // 后台中间件
   verifyAdminLogin,

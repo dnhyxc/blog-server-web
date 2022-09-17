@@ -101,7 +101,8 @@ class UserController {
     try {
       // 更新用户名称时，需要同时更新当前用户的所有文章中的作者名称
       await updateAuthorName(userId, params.username);
-      await updateUser(userId, params);
+      const filter = { _id: userId }
+      await updateUser(filter, params);
       const userInfo = await findUserById(userId);
       if (userInfo) {
         ctx.body = {
@@ -113,6 +114,31 @@ class UserController {
       }
     } catch (error) {
       console.error("updateInfoCtr", error);
+      ctx.app.emit("error", databaseError, ctx);
+    }
+  }
+
+  // 重置密码
+  async resetPwdCtr(ctx, next) {
+    const { password, username } = ctx.request.body;
+    if (!password || !username) {
+      ctx.app.emit("error", fieldFormateError, ctx);
+      return;
+    }
+    try {
+      const filter = { username }
+      await updateUser(filter, { password });
+      const { ...props } = await findOneUser({ username }) || {}
+      delete props?._doc.password;
+      delete props?._doc._id;
+      ctx.body = {
+        code: 200,
+        success: true,
+        message: "密码修改成功",
+        data: props?._doc,
+      };
+    } catch (error) {
+      console.error("resetPwdCtr", error);
       ctx.app.emit("error", databaseError, ctx);
     }
   }

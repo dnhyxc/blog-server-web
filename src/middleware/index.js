@@ -5,6 +5,7 @@ const {
   verifyLogin,
   verifyUpdateInfo,
   verifyUserExists,
+  verifyUserExistsByUsername,
   verifyAdminLogin,
   verifyAdminUpdateInfo,
 } = require("./user.middleware");
@@ -18,6 +19,7 @@ module.exports = {
   verifyLogin,
   verifyUpdateInfo,
   verifyUserExists,
+  verifyUserExistsByUsername,
   verifyAdminLogin,
   verifyAdminUpdateInfo,
   auth,

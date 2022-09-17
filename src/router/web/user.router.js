@@ -3,6 +3,7 @@ const {
   registerCtr,
   loginCtr,
   updateInfoCtr,
+  resetPwdCtr,
   getUserInfoCtr,
   verifyTokenCtr,
 } = require("../../controller");
@@ -13,6 +14,7 @@ const {
   verifyLogin,
   auth,
   verifyUpdateInfo,
+  verifyUserExistsByUsername,
   verifyUserExists,
 } = require("../../middleware");
 
@@ -42,14 +44,14 @@ router.put(
   updateInfoCtr
 );
 
-// 修改用户信息接口
+// 重置密码
 router.put(
-  "/updatePassword",
-  auth,
-  verifyUserExists,
+  "/resetPassword",
+  // auth,
+  verifyUserExistsByUsername,
   // verifyUpdateInfo,
   bcryptPassword,
-  updateInfoCtr
+  resetPwdCtr
 );
 
 // 校验token是否过期

@@ -11,7 +11,7 @@ const adminUserController = require("./admin/user.controller");
 const adminArticleController = require("./admin/article.controller");
 
 // 前台控制器
-const { registerCtr, loginCtr, updateInfoCtr, getUserInfoCtr, verifyTokenCtr } =
+const { registerCtr, loginCtr, updateInfoCtr, resetPwdCtr, getUserInfoCtr, verifyTokenCtr } =
   userController;
 const {
   createArticleCtr,
@@ -81,6 +81,7 @@ module.exports = {
   registerCtr,
   loginCtr,
   updateInfoCtr,
+  resetPwdCtr,
   getUserInfoCtr,
   uploadFileCtr,
   createArticleCtr,

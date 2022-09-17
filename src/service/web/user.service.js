@@ -34,9 +34,8 @@ class UserServer {
   }
 
   // 修改用户信息
-  async updateUser(userId, newUserInfo) {
-    const id = { _id: userId };
-    const res = await User.updateOne(id, {
+  async updateUser(filter, newUserInfo) {
+    const res = await User.updateOne(filter, {
       $set: newUserInfo,
     });
     return res.modifiedCount > 0 ? true : false;
