@@ -10,6 +10,7 @@ const {
   delAllArticle,
   getPrevArticle,
   getNextArticle,
+  searchArticles,
 } = require("../../service");
 const {
   databaseError,
@@ -130,6 +131,45 @@ class ArticleController {
           code: 200,
           success: true,
           message: "获取文章列表成功",
+          data: res,
+        };
+      }
+    } catch (error) {
+      console.error("searchArticleCtr", error);
+      ctx.app.emit("error", databaseError, ctx);
+    }
+  }
+
+  // 高级搜索
+  async advancedSearchCtr(ctx, next) {
+    try {
+      const {
+        pageNo,
+        pageSize,
+        keyword,
+        userId,
+        filterList,
+      } = ctx.request.body;
+
+      if (!keyword) {
+        ctx.app.emit("error", fieldFormateError, ctx);
+        return;
+      }
+
+      const res = await searchArticles({
+        pageNo,
+        pageSize,
+        userId,
+        keyword,
+        filterList,
+      });
+
+      // 返回结果
+      if (res) {
+        ctx.body = {
+          code: 200,
+          success: true,
+          message: "搜索文章列表成功",
           data: res,
         };
       }

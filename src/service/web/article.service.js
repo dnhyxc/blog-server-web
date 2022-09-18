@@ -150,7 +150,7 @@ class articleServer {
         headUrl: userInfo?.headUrl,
       };
     } else {
-      return null
+      return null;
     }
   }
 
@@ -279,6 +279,77 @@ class articleServer {
   async getArticleTotal(filter) {
     const res = Article.find(filter).count();
     return res;
+  }
+
+  // 高级搜索
+  async searchArticles({
+    pageNo = 1,
+    pageSize = 20,
+    keyword,
+    userId,
+    filterList,
+    // isLike,
+    // likeCount,
+    // replyCount,
+  }) {
+    // 获取文章列表时，需要先根据userId判断文章点赞状态
+    await new articleServer().checkLikeStatus(userId);
+
+    const keywordReg = (keyword && new RegExp(keyword, "i")) || "";
+
+    const filters = [];
+
+    if (filterList.includes("title")) {
+      filters.push({ title: { $regex: keywordReg } });
+    }
+
+    if (filterList.includes("tag")) {
+      filters.push({ tag: { $regex: keywordReg } });
+    }
+
+    if (filterList.includes("classify")) {
+      filters.push({ classify: { $regex: keywordReg } });
+    }
+
+    if (filterList.includes("abstract")) {
+      filters.push({ abstract: { $regex: keywordReg } });
+    }
+
+    if (filterList.includes("authorName")) {
+      filters.push({ authorName: { $regex: keywordReg } });
+    }
+
+    if (filterList.includes("content")) {
+      filters.push({ content: { $regex: keywordReg } });
+    }
+
+    if (filterList.includes("articleId")) {
+      filters.push({ articleId: { $regex: keywordReg } });
+    }
+
+    const filterKey = filters.length
+      ? {
+          $or: filters,
+          isDelete: { $nin: [true] },
+        }
+      : {
+          isDelete: { $nin: [true] },
+          $or: [
+            { title: { $regex: keywordReg } },
+            { tag: { $regex: keywordReg } },
+            { classify: { $regex: keywordReg } },
+            { abstract: { $regex: keywordReg } },
+            { content: { $regex: keywordReg } },
+            { authorName: { $regex: keywordReg } },
+            { articleId: { $regex: keywordReg } },
+          ],
+        };
+
+    return await new articleServer().getArticleListWithTotal({
+      filterKey,
+      pageNo,
+      pageSize,
+    });
   }
 }
 

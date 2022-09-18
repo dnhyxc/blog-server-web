@@ -101,7 +101,7 @@ class UserController {
     try {
       // 更新用户名称时，需要同时更新当前用户的所有文章中的作者名称
       await updateAuthorName(userId, params.username);
-      const filter = { _id: userId }
+      const filter = { _id: userId };
       await updateUser(filter, params);
       const userInfo = await findUserById(userId);
       if (userInfo) {
@@ -126,15 +126,15 @@ class UserController {
       return;
     }
     try {
-      const filter = { username }
+      const filter = { username };
       await updateUser(filter, { password });
-      const { ...props } = await findOneUser({ username }) || {}
+      const { ...props } = (await findOneUser({ username })) || {};
       delete props?._doc.password;
       delete props?._doc._id;
       ctx.body = {
         code: 200,
         success: true,
-        message: "密码修改成功",
+        message: "密码重置成功",
         data: props?._doc,
       };
     } catch (error) {

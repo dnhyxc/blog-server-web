@@ -21,6 +21,7 @@ const {
   getArticleTotal,
   updateReplyCount,
   updateAuthorName,
+  searchArticles,
 } = require("./web/article.service");
 const {
   createComments,
@@ -113,6 +114,7 @@ module.exports = {
   deleteDraft,
   findDraftList,
   findDraftById,
+  searchArticles,
 
   // 后台
   adminFindOneUser,

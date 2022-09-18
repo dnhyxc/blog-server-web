@@ -11,6 +11,7 @@ const {
   delAllArticleCtr,
   getPrevArticleCtr,
   getNextArticleCtr,
+  advancedSearchCtr,
 } = require("../../controller");
 
 const { auth } = require("../../middleware");
@@ -46,6 +47,9 @@ router.post("/getPrevArticle", getPrevArticleCtr);
 
 // 获取下一篇文章
 router.post("/getNextArticle", getNextArticleCtr);
+
+// 获取下一篇文章
+router.post("/advancedSearch", advancedSearchCtr);
 
 // 删除所有文章
 // router.del("/delAllArticle", delAllArticleCtr);

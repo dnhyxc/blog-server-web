@@ -11,8 +11,14 @@ const adminUserController = require("./admin/user.controller");
 const adminArticleController = require("./admin/article.controller");
 
 // 前台控制器
-const { registerCtr, loginCtr, updateInfoCtr, resetPwdCtr, getUserInfoCtr, verifyTokenCtr } =
-  userController;
+const {
+  registerCtr,
+  loginCtr,
+  updateInfoCtr,
+  resetPwdCtr,
+  getUserInfoCtr,
+  verifyTokenCtr,
+} = userController;
 const {
   createArticleCtr,
   getArticleListCtr,
@@ -25,6 +31,7 @@ const {
   delAllArticleCtr,
   getPrevArticleCtr,
   getNextArticleCtr,
+  advancedSearchCtr,
 } = articleController;
 const { uploadFileCtr } = uploadController;
 const {
@@ -107,6 +114,7 @@ module.exports = {
   getAuthorTimelineCtr,
   getPrevArticleCtr,
   getNextArticleCtr,
+  advancedSearchCtr,
   verifyTokenCtr,
   createDraftCtr,
   updateDraftCtr,
