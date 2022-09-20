@@ -37,10 +37,10 @@ class articleServer {
     );
   }
 
-  async getLikeArticles(userId) {
+  getLikeArticles = async (userId) => {
     const likes = await LikeArticle.find({ userId }).sort({ createTime: 1 });
     return likes;
-  }
+  };
 
   // 查询用户是否点赞
   async checkLikeStatus(userId) {
@@ -66,7 +66,12 @@ class articleServer {
   }
 
   // 获取文章列表同时返回文章总条数
-  async getArticleListWithTotal({ filterKey, pageNo, pageSize }) {
+  getArticleListWithTotal = async ({
+    filterKey,
+    pageNo,
+    pageSize,
+    sortType,
+  }) => {
     const list = await Article.aggregate([
       { $match: filterKey },
       {
@@ -90,9 +95,13 @@ class articleServer {
                 replyCount: 1,
               },
             },
-            { $sort: { createTime: -1, likeCount: -1 } },
+            {
+              $sort: Object.keys(sortType).length
+                ? sortType
+                : { createTime: -1, likeCount: -1 },
+            },
             { $skip: (pageNo - 1) * pageSize },
-            { $limit: pageSize },
+            { $limit: !Object.keys(sortType).length ? pageSize : 1 },
           ],
         },
       },
@@ -109,10 +118,16 @@ class articleServer {
         list: [],
       };
     }
-  }
+  };
 
   // 获取文章列表
-  async findArticles({ pageNo = 1, pageSize = 20, filter, userId, tagName }) {
+  findArticles = async ({
+    pageNo = 1,
+    pageSize = 20,
+    filter,
+    userId,
+    tagName,
+  }) => {
     // 获取文章列表时，需要先根据userId判断文章点赞状态
     await new articleServer().checkLikeStatus(userId);
     let filterKey;
@@ -132,12 +147,12 @@ class articleServer {
         isDelete: { $nin: [true] },
       };
     }
-    return await new articleServer().getArticleListWithTotal({
+    return await this.getArticleListWithTotal({
       filterKey,
       pageNo,
       pageSize,
     });
-  }
+  };
 
   // 根据文章id查找文章详情
   async findArticleById(id) {
@@ -198,7 +213,7 @@ class articleServer {
   }
 
   // 处理上下页参数
-  async getParams(id, props) {
+  getParams = async (id, props) => {
     const { classify, userId, tagName, from, selectKey } = props;
     if (from === "classify" && classify) {
       return { _id: id, isDelete: { $nin: [true] }, classify };
@@ -214,7 +229,7 @@ class articleServer {
     }
     if (from === "personal" && selectKey === "2" && userId) {
       // 返回文章列表前，首先根据userId检测点赞状态
-      const likes = await await new articleServer().getLikeArticles(userId);
+      const likes = await this.getLikeArticles(userId);
       const articleIds = likes.map(
         (i) => new mongoose.Types.ObjectId(i.articleId)
       );
@@ -236,7 +251,7 @@ class articleServer {
       // 查询 auth 为1 的博主信息
       const authorInfo = await findOneUser({ auth: 1 });
       const userId = authorInfo?._id?.toString();
-      const likes = await await new articleServer().getLikeArticles(userId);
+      const likes = await this.getLikeArticles(userId);
       const articleIds = likes.map(
         (i) => new mongoose.Types.ObjectId(i.articleId)
       );
@@ -251,29 +266,29 @@ class articleServer {
       return { _id: id, isDelete: { $nin: [true] }, authorId: userId };
     }
     return { _id: id, isDelete: { $nin: [true] } };
-  }
+  };
 
   // 获取上一篇文章
-  async getPrevArticle(id, props) {
-    const filter = await new articleServer().getParams({ $gt: id }, props);
+  getPrevArticle = async (id, props) => {
+    const filter = await this.getParams({ $gt: id }, props);
     const res = Article.findOne(filter, anotherFields)
       // 获取上一篇需要注意排序，需要将createTime设置为正序排列
       .sort({ _id: 1, createTime: 1 })
       .limit(1);
 
     return res;
-  }
+  };
 
   // 获取下一篇文章
-  async getNextArticle(id, props) {
-    const filter = await new articleServer().getParams({ $lt: id }, props);
+  getNextArticle = async (id, props) => {
+    const filter = await this.getParams({ $lt: id }, props);
     const res = Article.findOne(filter, anotherFields)
       // 获取上一篇需要注意排序，需要将createTime设置为倒叙序排列
       .sort({ _id: -1, createTime: -1 })
       .limit(1);
 
     return res;
-  }
+  };
 
   // 获取文章总条数
   async getArticleTotal(filter) {
@@ -282,18 +297,16 @@ class articleServer {
   }
 
   // 高级搜索
-  async searchArticles({
+  searchArticles = async ({
     pageNo = 1,
     pageSize = 20,
     keyword,
     userId,
     filterList,
-    // isLike,
-    // likeCount,
-    // replyCount,
-  }) {
+    // isLike
+  }) => {
     // 获取文章列表时，需要先根据userId判断文章点赞状态
-    await new articleServer().checkLikeStatus(userId);
+    await this.checkLikeStatus(userId);
 
     const keywordReg = (keyword && new RegExp(keyword, "i")) || "";
 
@@ -345,12 +358,39 @@ class articleServer {
           ],
         };
 
-    return await new articleServer().getArticleListWithTotal({
+    let sortType = {};
+
+    if (filterList.includes("all")) {
+      sortType = {};
+    }
+    if (filterList.includes("likeCount")) {
+      sortType.likeCount = -1;
+    }
+    if (filterList.includes("replyCount")) {
+      sortType.replyCount = -1;
+    }
+
+    const res = await this.getArticleListWithTotal({
       filterKey,
       pageNo,
       pageSize,
+      sortType,
     });
-  }
+
+    if (filterList.includes("isLike")) {
+      const likes = await this.getLikeArticles(userId);
+      const articleIds = likes.map((i) => i.articleId);
+      const list = res?.list.filter((i) =>
+        articleIds.includes(i.id.toString())
+      );
+      return {
+        total: list.length,
+        list: list,
+      };
+    } else {
+      return res;
+    }
+  };
 }
 
 module.exports = new articleServer();
