@@ -70,7 +70,7 @@ class articleServer {
     filterKey,
     pageNo,
     pageSize,
-    sortType,
+    sortType = {},
   }) => {
     const list = await Article.aggregate([
       { $match: filterKey },
