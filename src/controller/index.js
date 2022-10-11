@@ -5,6 +5,7 @@ const commentsController = require("./web/comments.controller");
 const classifyController = require("./web/classify.controller");
 const userInfoController = require("./web/userInfo.controller");
 const draftController = require("./web/draft.controller");
+const collectionController = require("./web/collection.controller");
 
 // 后台用户控制器
 const adminUserController = require("./admin/user.controller");
@@ -56,6 +57,9 @@ const {
   getDraftListCtr,
   getDraftByIdCtr,
 } = draftController;
+const {
+  createCollectionCtr
+} = collectionController
 
 // 后台控制器
 const {
@@ -121,6 +125,7 @@ module.exports = {
   deleteDraftCtr,
   getDraftListCtr,
   getDraftByIdCtr,
+  createCollectionCtr,
 
   // 后台用户控制器
   adminRegisterCtr,

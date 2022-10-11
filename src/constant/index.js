@@ -79,14 +79,14 @@ const ArticleNotFind = {
 const TokenExpiredError = {
   code: "10101",
   success: false,
-  message: "token已过期",
+  message: "登录已过期，请重新登录",
   data: new Date().valueOf(),
 };
 
 const JsonWebTokenError = {
   code: "10102",
   success: false,
-  message: "无效的token",
+  message: "请登录后再试",
   data: new Date().valueOf(),
 };
 

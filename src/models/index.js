@@ -5,6 +5,7 @@ const Draft = require("./web/draft.model");
 const Comments = require("./web/comments.model");
 const Like = require("./web/like.model");
 const LikeArticle = require("./web/likeArticle.model");
+const Collection = require('./web/collection.model')
 
 // 后台model
 const AdminUsers = require("./admin/user.model");
@@ -17,4 +18,5 @@ module.exports = {
   Like,
   LikeArticle,
   AdminUsers,
+  Collection
 };
