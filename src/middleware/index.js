@@ -12,6 +12,8 @@ const {
 
 const { auth, adminAuth } = require("./auth.middleware");
 
+const { verifyCollection } = require("./common.middleware");
+
 module.exports = {
   userValidator,
   verifyUser,
@@ -24,4 +26,5 @@ module.exports = {
   verifyAdminUpdateInfo,
   auth,
   adminAuth,
+  verifyCollection,
 };

@@ -48,7 +48,11 @@ const {
   findDraftList,
   findDraftById,
 } = require("./web/draft.service");
-const { createCollection } = require('./web/collection.service')
+const {
+  createCollection,
+  findOneCollection,
+  getCollectionList,
+} = require("./web/collection.service");
 
 // 后台数据库接口
 const {
@@ -117,6 +121,8 @@ module.exports = {
   findDraftById,
   searchArticles,
   createCollection,
+  findOneCollection,
+  getCollectionList,
 
   // 后台
   adminFindOneUser,

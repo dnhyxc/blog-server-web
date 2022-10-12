@@ -97,6 +97,13 @@ const fileUploadError = {
   data: "",
 };
 
+const collectionAlreadyExited = {
+  code: "10002",
+  success: false,
+  message: "收藏集已存在",
+  data: "",
+};
+
 const anotherFields = {
   id: "$_id",
   _id: 0,
@@ -140,6 +147,19 @@ const userFields = {
   registerTime: 1,
 };
 
+// 收藏集response
+const collectionRes = {
+  id: "$_id",
+  _id: 0,
+  name: 1,
+  status: 1,
+  count: 1,
+  desc: 1,
+  createTime: 1,
+  articleIds: 1,
+  userId: 1,
+};
+
 module.exports = {
   databaseError,
   userFormateError,
@@ -158,4 +178,6 @@ module.exports = {
   anotherFields,
   detailFields,
   userFields,
+  collectionAlreadyExited,
+  collectionRes,
 };

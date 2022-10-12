@@ -6,7 +6,8 @@ const CollectionSchema = new mongoose.Schema({
   desc: String,
   status: Number,
   createTime: Number,
-  articleIds: [String]
+  articleIds: [String],
+  userId: String,
 });
 
 const Collection = mongoose.model("collections", CollectionSchema);
