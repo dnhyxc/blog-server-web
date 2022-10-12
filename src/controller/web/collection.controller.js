@@ -1,4 +1,4 @@
-const { createCollection, getCollectionList } = require("../../service");
+const { createCollection, getCollectionList, collectArticles } = require("../../service");
 const { databaseError } = require("../../constant");
 
 class collectionController {
@@ -6,17 +6,13 @@ class collectionController {
   async createCollectionCtr(ctx, next) {
     try {
       const params = ctx.request.body;
-      // 操作数据库
       const res = await createCollection({ ...params });
-
       const data = {
         id: res._id,
         name: res.name,
         desc: res.desc,
         status: res.status,
       };
-
-      // 返回结果
       ctx.body = {
         code: 200,
         success: true,
@@ -33,9 +29,7 @@ class collectionController {
   async getCollectionListCtr(ctx, next) {
     try {
       const params = ctx.request.body;
-      // 操作数据库
       const res = await getCollectionList({ ...params });
-      // 返回结果
       ctx.body = {
         code: 200,
         success: true,
@@ -44,6 +38,24 @@ class collectionController {
       };
     } catch (error) {
       console.error("getCollectionListCtr", error);
+      ctx.app.emit("error", databaseError, ctx);
+    }
+  }
+
+  // 收藏文章
+  async collectArticlesCtr(ctx, next) {
+    try {
+      const params = ctx.request.body;
+      const res = await collectArticles({ ...params });
+      console.log(res, 'res');
+      ctx.body = {
+        code: 200,
+        success: true,
+        message: "获取收藏集列表成功",
+        data: params.articleId,
+      };
+    } catch (error) {
+      console.error("collectArticlesCtr", error);
       ctx.app.emit("error", databaseError, ctx);
     }
   }

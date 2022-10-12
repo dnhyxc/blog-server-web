@@ -57,7 +57,7 @@ const {
   getDraftListCtr,
   getDraftByIdCtr,
 } = draftController;
-const { createCollectionCtr, getCollectionListCtr } = collectionController;
+const { createCollectionCtr, getCollectionListCtr, collectArticlesCtr } = collectionController;
 
 // 后台控制器
 const {
@@ -125,6 +125,7 @@ module.exports = {
   getDraftByIdCtr,
   createCollectionCtr,
   getCollectionListCtr,
+  collectArticlesCtr,
 
   // 后台用户控制器
   adminRegisterCtr,

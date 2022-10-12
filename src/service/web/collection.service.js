@@ -8,6 +8,7 @@ class collectionServer {
       ...params,
       count: 0,
       articleIds: [],
+      createTime: new Date().valueOf()
     });
   };
   // 根据收藏集名称查询
@@ -27,7 +28,7 @@ class collectionServer {
               $project: collectionRes,
             },
             {
-              $sort: { createTime: -1, count: -1 },
+              $sort: { createTime: -1 },
             },
             { $skip: (pageNo - 1) * pageSize },
             { $limit: pageSize },
@@ -48,11 +49,31 @@ class collectionServer {
       };
     }
   };
-
   // 分页获取收藏集
   getCollectionList = async ({ pageNo, pageSize, userId }) => {
     return await this.getCollectionWithTotal({ pageNo, pageSize, userId });
   };
+  // 收藏文章
+  collectArticles = async ({ ids, articleId, userId }) => {
+    const res = Collection.updateMany(
+      { _id: { $in: ids }, userId },
+      // 向查找到的document中的replyList数组中插入一条评论
+      // 注意：如果要使用排序，$sort必须与$each一起使用才会生效
+      {
+        $push: {
+          articleIds: {
+            // 不使用用$each包一下sort不会生效
+            $each: [articleId], // $each可向articleIds中插入多条
+            $sort: { date: -1 }, // 倒序排列
+          },
+        },
+        $inc: {
+          count: 1
+        },
+      },
+    )
+    return res
+  }
 }
 
 module.exports = new collectionServer();
