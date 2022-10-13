@@ -99,6 +99,20 @@ class collectionServer {
     );
     return res;
   };
+  // 获取我的收藏文章总数
+  getCollectedTotal = async ({ userId }) => {
+    const res = Collection.aggregate([
+      { "$match": { userId } },
+      {
+        "$project": {
+          "_id": 0,
+          "name": 1,
+          "total": { "$size": "$articleIds" }
+        }
+      }
+    ])
+    return res
+  }
 }
 
 module.exports = new collectionServer();

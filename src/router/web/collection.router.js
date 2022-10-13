@@ -5,6 +5,7 @@ const {
   collectArticlesCtr,
   checkCollectionStatusCtr,
   cancelCollectedCtr,
+  getCollectedTotalCtr,
 } = require("../../controller");
 
 const { auth, verifyCollection } = require("../../middleware");
@@ -25,5 +26,8 @@ router.post("/checkCollectionStatus", auth, checkCollectionStatusCtr);
 
 // 取消收藏
 router.post("/cancelCollected", auth, cancelCollectedCtr);
+
+// 取消收藏
+router.post("/getCollectedTotal", auth, getCollectedTotalCtr);
 
 module.exports = router;

@@ -4,6 +4,7 @@ const {
   collectArticles,
   checkCollectionStatus,
   cancelCollected,
+  getCollectedTotal,
 } = require("../../service");
 const { databaseError } = require("../../constant");
 
@@ -99,6 +100,25 @@ class collectionController {
       };
     } catch (error) {
       console.error("cancelCollectedCtr", error);
+      ctx.app.emit("error", databaseError, ctx);
+    }
+  }
+
+  // 获取收藏的文章总数
+  async getCollectedTotalCtr(ctx, next) {
+    try {
+      const params = ctx.request.body;
+      const res = await getCollectedTotal({ ...params });
+      const collectedList = res?.length && res.filter(i => i.total)
+      const total = collectedList.reduce((prev, cur) => prev += cur.total, 0)
+      ctx.body = {
+        code: 200,
+        success: true,
+        message: "获取收藏文章总和成功",
+        data: { total },
+      };
+    } catch (error) {
+      console.error("getCollectedTotalCtr", error);
       ctx.app.emit("error", databaseError, ctx);
     }
   }
