@@ -3,6 +3,8 @@ const {
   createCollectionCtr,
   getCollectionListCtr,
   collectArticlesCtr,
+  checkCollectionStatusCtr,
+  cancelCollectedCtr,
 } = require("../../controller");
 
 const { auth, verifyCollection } = require("../../middleware");
@@ -17,5 +19,11 @@ router.post("/getCollectionList", auth, getCollectionListCtr);
 
 // 收藏文章
 router.post("/collectArticles", auth, collectArticlesCtr);
+
+// 获取文章收藏状态
+router.post("/checkCollectionStatus", auth, checkCollectionStatusCtr);
+
+// 取消收藏
+router.post("/cancelCollected", auth, cancelCollectedCtr);
 
 module.exports = router;

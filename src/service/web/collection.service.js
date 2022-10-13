@@ -8,7 +8,7 @@ class collectionServer {
       ...params,
       count: 0,
       articleIds: [],
-      createTime: new Date().valueOf()
+      createTime: new Date().valueOf(),
     });
   };
   // 根据收藏集名称查询
@@ -68,12 +68,37 @@ class collectionServer {
           },
         },
         $inc: {
-          count: 1
+          count: 1,
         },
-      },
-    )
-    return res
-  }
+      }
+    );
+    return res;
+  };
+  // 获取文章收藏状态
+  checkCollectionStatus = async ({ articleId, userId }) => {
+    const res = await Collection.find(
+      // 查询字段中的数组中是否包含某值，找出articleIds数组中是否包含当前的articleId
+      { userId, articleIds: { $elemMatch: { $eq: articleId } } },
+      collectionRes
+    );
+    return res;
+  };
+  // 取消收藏
+  cancelCollected = async ({ articleId, userId }) => {
+    const res = Collection.updateMany(
+      // 查询条件为，查找当前用户下的，并且articleIds数组中包含articleId的所有数据
+      { userId, articleIds: { $elemMatch: { $eq: articleId } } },
+      // 向查找到的document中的replyList数组中插入一条评论
+      // 注意：如果要使用排序，$sort必须与$each一起使用才会生效
+      {
+        $pull: { articleIds: articleId },
+        $inc: {
+          count: -1,
+        },
+      }
+    );
+    return res;
+  };
 }
 
 module.exports = new collectionServer();

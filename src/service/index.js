@@ -53,6 +53,8 @@ const {
   findOneCollection,
   getCollectionList,
   collectArticles,
+  checkCollectionStatus,
+  cancelCollected,
 } = require("./web/collection.service");
 
 // 后台数据库接口
@@ -125,6 +127,8 @@ module.exports = {
   findOneCollection,
   getCollectionList,
   collectArticles,
+  checkCollectionStatus,
+  cancelCollected,
 
   // 后台
   adminFindOneUser,
