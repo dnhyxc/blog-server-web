@@ -113,6 +113,11 @@ class collectionServer {
     ])
     return res
   }
+  // 删除
+  delCollection = async ({ userId, id }) => {
+    const res = Collection.deleteOne({ _id: id, userId })
+    return res
+  }
 }
 
 module.exports = new collectionServer();

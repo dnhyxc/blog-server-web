@@ -5,6 +5,7 @@ const {
   checkCollectionStatus,
   cancelCollected,
   getCollectedTotal,
+  delCollection,
 } = require("../../service");
 const { databaseError } = require("../../constant");
 
@@ -19,6 +20,7 @@ class collectionController {
         name: res.name,
         desc: res.desc,
         status: res.status,
+        createTime: res.createTime,
       };
       ctx.body = {
         code: 200,
@@ -119,6 +121,23 @@ class collectionController {
       };
     } catch (error) {
       console.error("getCollectedTotalCtr", error);
+      ctx.app.emit("error", databaseError, ctx);
+    }
+  }
+
+  // 获取收藏的文章总数
+  async delCollectionCtr(ctx, next) {
+    try {
+      const params = ctx.request.body;
+      await delCollection({ ...params });
+      ctx.body = {
+        code: 200,
+        success: true,
+        message: "删除收藏集成功",
+        data: params.id,
+      };
+    } catch (error) {
+      console.error("delCollectionCtr", error);
       ctx.app.emit("error", databaseError, ctx);
     }
   }
