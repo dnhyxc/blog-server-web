@@ -5,7 +5,7 @@ const path = require("path");
 const router = require("../router/web");
 const routerAdmin = require("../router/admin");
 const connectMongodb = require("../db");
-const errorHandler = require("../utils");
+const { errorHandler } = require("../utils");
 
 const app = new Koa();
 

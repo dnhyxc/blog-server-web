@@ -64,19 +64,19 @@ class ArticleController {
   // 删除文章
   async deleteArticleCtr(ctx, next) {
     try {
-      const { articleId } = ctx.request.body;
-      if (!articleId) {
+      const params = ctx.request.body;
+      if (!params.articleId) {
         ctx.app.emit("error", fieldFormateError, ctx);
         return;
       }
       // 操作数据库
-      await deleteArticles({ articleId });
+      const res = await deleteArticles(params);
       // 返回结果
       ctx.body = {
         code: 200,
         success: true,
         message: "删除成功",
-        data: articleId,
+        data: res,
       };
     } catch (error) {
       console.error("deleteArticleCtr", error);
@@ -143,13 +143,8 @@ class ArticleController {
   // 高级搜索
   async advancedSearchCtr(ctx, next) {
     try {
-      const {
-        pageNo,
-        pageSize,
-        keyword,
-        userId,
-        filterList,
-      } = ctx.request.body;
+      const { pageNo, pageSize, keyword, userId, filterList } =
+        ctx.request.body;
 
       if (!keyword) {
         ctx.app.emit("error", fieldFormateError, ctx);

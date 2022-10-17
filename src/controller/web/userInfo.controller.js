@@ -10,16 +10,11 @@ const { databaseError } = require("../../constant");
 class userInfoController {
   // 获取我的文章
   async getMyArticleListCtr(ctx, next) {
-    const { pageNo, pageSize, userId, accessUserId } = ctx.request.body;
+    const params = ctx.request.body;
     try {
       // accessUserId有值，说明是访问别人的主页，需要通过accessUserId去获取点赞状态
-      await checkLikeStatus(accessUserId);
-      const res = await getMyArticleList({
-        pageNo,
-        pageSize,
-        userId,
-        accessUserId,
-      });
+      await checkLikeStatus(params.accessUserId);
+      const res = await getMyArticleList(params);
       // 返回结果
       ctx.body = {
         code: 200,
@@ -36,10 +31,11 @@ class userInfoController {
   // 获取点赞的文章
   async getLikeArticleListCtr(ctx, next) {
     try {
-      const { pageNo, pageSize, userId } = ctx.request.body;
-      await checkLikeStatus(userId);
+      const params = ctx.request.body;
+      // const { pageNo, pageSize, userId } = ctx.request.body;
+      await checkLikeStatus(params.userId);
       // 操作数据库
-      const res = await getLikeArticleList({ pageNo, pageSize, userId });
+      const res = await getLikeArticleList(params);
       // 返回结果
       ctx.body = {
         code: 200,
@@ -56,17 +52,16 @@ class userInfoController {
   // 获取博主文章列表：accessUserId 需要进行点赞状态比较的 userId，比如 a 进入了 博主页面，那么 accessUserId 就是 a 的 userId
   async getAuthorArticleListCtr(ctx, next) {
     try {
-      const { pageNo, pageSize, accessUserId } = ctx.request.body;
-      await checkLikeStatus(accessUserId);
+      const params = ctx.request.body;
+      await checkLikeStatus(params?.accessUserId);
       // 查询 auth 为1 的博主信息
       const authorInfo = await findOneUser({ auth: 1 });
       // accessUserId有值，说明是访问别人的主页，需要通过accessUserId去获取点赞状态
-      const res = await getMyArticleList({
-        pageNo,
-        pageSize,
+      const filterKey = {
+        ...params,
         userId: authorInfo?._id?.toString(),
-        accessUserId,
-      });
+      };
+      const res = await getMyArticleList(filterKey);
 
       // 返回结果
       ctx.body = {
@@ -84,16 +79,16 @@ class userInfoController {
   // 获取博主点赞的文章
   async getAuthorLikeArticlesCtr(ctx, next) {
     try {
-      const { pageNo, pageSize, accessUserId } = ctx.request.body;
-      await checkLikeStatus(accessUserId);
+      const params = ctx.request.body;
+      // const { pageNo, pageSize, accessUserId } = ctx.request.body;
+      await checkLikeStatus(params?.accessUserId);
       // 查询 auth 为1 的博主信息
       const authorInfo = await findOneUser({ auth: 1 });
       // 操作数据库
       const res = await getLikeArticleList({
-        pageNo,
-        pageSize,
+        ...params,
         userId: authorInfo?._id?.toString(),
-        accessUserId,
+        // accessUserId: params?.accessUserId,
       });
       // 返回结果
       ctx.body = {

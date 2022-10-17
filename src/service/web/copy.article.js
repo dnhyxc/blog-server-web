@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
 const { Article, LikeArticle } = require("../../models");
 const { findUserById, findOneUser } = require("./user.service");
+const { getClassifyList } = require("./classify.service");
 const { anotherFields, detailFields } = require("../../constant");
-const { getAdvancedSearchFilter, getSortType } = require("../../utils");
 
 class articleServer {
   // 创建文章
@@ -33,14 +33,9 @@ class articleServer {
     pageSize,
     type,
     userId,
-    tagName, // 表示标签页查询条件
+    tagName,
     keyword, // 首页输入的内容
     classify, // 分类页面删除时选中的分类
-    accessUserId, // 访问别人的主页时，需要使用accessUserId去检查点赞状态
-    delType, // delType 为 '2' 时，说明删除的点赞文章
-    authorPage, // 表示博主主页
-    authorLike, // 表示博主主页点赞列表
-    filterList, // 高级搜索条件
   }) => {
     // home 页面获取下一页第一条数据筛选条件
     const filters = {
@@ -52,105 +47,26 @@ class articleServer {
       filter: keyword,
     };
 
-    let filterKey = {};
-
-    if (accessUserId) {
-      await this.checkLikeStatus(accessUserId);
-      filterKey = {
-        $and: [{ isDelete: { $nin: [true] }, authorId: userId }],
-      };
-    }
-
-    if (classify) {
-      await this.checkLikeStatus(userId);
-      filterKey = { $and: [{ isDelete: { $nin: [true] }, classify }] };
-    }
-
-    // 我的主页详情
-    if (delType) {
-      await this.checkLikeStatus(accessUserId || userId);
-      // 返回文章列表前，首先根据userId检测点赞状态
-      const likes = await this.getLikeArticles(userId);
-      const articleIds = likes.map((i) => {
-        return new mongoose.Types.ObjectId(i.articleId);
-      });
-      filterKey = {
-        $and: [{ isDelete: { $nin: [true] }, _id: { $in: articleIds } }],
-      };
-    }
-
-    // 博主主页，博主文章
-    if (authorPage) {
-      await this.checkLikeStatus(accessUserId || userId);
-      // 查询 auth 为1 的博主信息
-      const authorInfo = await findOneUser({ auth: 1 });
-      filterKey = {
-        $and: [
-          { isDelete: { $nin: [true] }, authorId: authorInfo?._id?.toString() },
-        ],
-      };
-    }
-
-    // 博主主页，博主点赞
-    if (authorLike) {
-      await this.checkLikeStatus(accessUserId || userId);
-      const authorInfo = await findOneUser({ auth: 1 });
-
-      const likes = await this.getLikeArticles(authorInfo?._id?.toString());
-      const articleIds = likes.map((i) => {
-        return new mongoose.Types.ObjectId(i.articleId);
-      });
-
-      filterKey = {
-        $and: [
-          {
-            isDelete: { $nin: [true] },
-            _id: { $in: articleIds },
-          },
-        ],
-      };
-    }
-
-    // 高级搜索
-    if (filterList) {
-      // 获取文章列表时，需要先根据userId判断文章点赞状态
-      await this.checkLikeStatus(userId);
-      filterKey = getAdvancedSearchFilter({ filterList, keyword });
-    }
-
-    const sortType = filterList ? getSortType(filterList) : { createTime: -1 };
+    console.log(filters, "filtersfiltersfilters");
 
     // 有type,代表是时间轴页面调的删除接口，时间没有分页，不需要获取下一页第一条数据
     let nextPageOne;
     if (!type) {
-      if (classify || accessUserId || authorPage || authorLike) {
-        // 返回文章列表前，首先根据userId检测点赞状态
-        const res = await this.getArticleListWithTotal({
-          filterKey,
+      if (classify) {
+        nextPageOne = await getClassifyList({
           pageNo: pageNo + 1,
           pageSize,
-          sortType,
+          classify,
+          userId,
         });
-
-        if (filterList?.includes("isLike")) {
-          const likes = await this.getLikeArticles(userId);
-          const articleIds = likes.map((i) => i.articleId);
-          const list = res?.list.filter((i) =>
-            articleIds.includes(i.id.toString())
-          );
-          nextPageOne = {
-            total: list.length,
-            list: list,
-          };
-        } else {
-          nextPageOne = res;
-        }
-      } else {
-        nextPageOne = await this.findArticles(filters);
+        return;
       }
+      nextPageOne = await this.findArticles(filters);
     } else {
       nextPageOne = { total: 0, list: [] };
     }
+
+    console.log(nextPageOne, "nextPageOne");
 
     await Article.updateOne(
       { _id: articleId },
@@ -256,6 +172,8 @@ class articleServer {
     tagName,
     sortType,
   }) => {
+    console.log(filter, "filter>>>>");
+
     // 获取文章列表时，需要先根据userId判断文章点赞状态
     await this.checkLikeStatus(userId);
     let filterKey;
@@ -284,7 +202,7 @@ class articleServer {
   };
 
   // 根据文章id查找文章详情
-  async findArticleById(id) {
+  findArticleById = async (id) => {
     const article = await Article.findById(id, detailFields);
     if (article) {
       const userInfo = article && (await findUserById(article.authorId));
@@ -296,19 +214,19 @@ class articleServer {
     } else {
       return null;
     }
-  }
+  };
 
-  async updateReplyCount({ articleId: _id, type, count }) {
+  updateReplyCount = async ({ articleId: _id, type, count }) => {
     await Article.updateOne(
       { _id },
       {
         $inc: { replyCount: type === "add" ? 1 : -count },
       }
     );
-  }
+  };
 
   // 根据文章id查找文章详情
-  async likeArticle({ id: _id, likeStatus }) {
+  likeArticle = async ({ id: _id, likeStatus }) => {
     await Article.updateOne(
       { _id },
       {
@@ -319,7 +237,7 @@ class articleServer {
       }
     );
     return likeStatus ? false : true;
-  }
+  };
 
   // 随机获取文章
   getArticleByRandom = async (userId) => {
@@ -432,13 +350,72 @@ class articleServer {
     keyword,
     userId,
     filterList,
+    // isLike
   }) => {
     // 获取文章列表时，需要先根据userId判断文章点赞状态
     await this.checkLikeStatus(userId);
 
-    const filterKey = getAdvancedSearchFilter({ filterList, keyword });
+    const keywordReg = (keyword && new RegExp(keyword, "i")) || "";
 
-    const sortType = getSortType(filterList);
+    const filters = [];
+
+    if (filterList.includes("title")) {
+      filters.push({ title: { $regex: keywordReg } });
+    }
+
+    if (filterList.includes("tag")) {
+      filters.push({ tag: { $regex: keywordReg } });
+    }
+
+    if (filterList.includes("classify")) {
+      filters.push({ classify: { $regex: keywordReg } });
+    }
+
+    if (filterList.includes("abstract")) {
+      filters.push({ abstract: { $regex: keywordReg } });
+    }
+
+    if (filterList.includes("authorName")) {
+      filters.push({ authorName: { $regex: keywordReg } });
+    }
+
+    if (filterList.includes("content")) {
+      filters.push({ content: { $regex: keywordReg } });
+    }
+
+    if (filterList.includes("articleId")) {
+      filters.push({ articleId: { $regex: keywordReg } });
+    }
+
+    const filterKey = filters.length
+      ? {
+          $or: filters,
+          isDelete: { $nin: [true] },
+        }
+      : {
+          isDelete: { $nin: [true] },
+          $or: [
+            { title: { $regex: keywordReg } },
+            { tag: { $regex: keywordReg } },
+            { classify: { $regex: keywordReg } },
+            { abstract: { $regex: keywordReg } },
+            { content: { $regex: keywordReg } },
+            { authorName: { $regex: keywordReg } },
+            { articleId: { $regex: keywordReg } },
+          ],
+        };
+
+    let sortType = {};
+
+    if (filterList.includes("all")) {
+      sortType = {};
+    }
+    if (filterList.includes("likeCount")) {
+      sortType.likeCount = -1;
+    }
+    if (filterList.includes("replyCount")) {
+      sortType.replyCount = -1;
+    }
 
     const res = await this.getArticleListWithTotal({
       filterKey,
