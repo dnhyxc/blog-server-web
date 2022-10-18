@@ -19,9 +19,21 @@ class collectionServer {
   };
 
   // 分页获取收藏集方法
-  getCollectionWithTotal = async ({ pageNo, pageSize, userId, getOne }) => {
+  getCollectionWithTotal = async ({
+    pageNo,
+    pageSize,
+    userId,
+    isVisitor,
+    getOne,
+  }) => {
+    const filter = { userId };
+
+    if (isVisitor) {
+      filter.status = 1;
+    }
+
     const list = await Collection.aggregate([
-      { $match: { userId } },
+      { $match: filter },
       {
         $facet: {
           total: [{ $count: "count" }],
@@ -53,8 +65,13 @@ class collectionServer {
   };
 
   // 分页获取收藏集
-  getCollectionList = async ({ pageNo, pageSize, userId }) => {
-    return await this.getCollectionWithTotal({ pageNo, pageSize, userId });
+  getCollectionList = async ({ pageNo, pageSize, userId, isVisitor }) => {
+    return await this.getCollectionWithTotal({
+      pageNo,
+      pageSize,
+      userId,
+      isVisitor,
+    });
   };
 
   // 收藏文章
@@ -120,8 +137,8 @@ class collectionServer {
     ]);
     return res;
   };
-  
-  // 删除
+
+  // 删除收藏集
   delCollection = async ({ userId, id, pageNo, pageSize }) => {
     // 删除时先获取下一页的第一条数据，防止删除当前数据后，下一页第一条数据跑到上一页无法获取到
     const nextPageOne = await this.getCollectionWithTotal({
@@ -132,6 +149,16 @@ class collectionServer {
     });
     await Collection.deleteOne({ _id: id, userId });
     return nextPageOne;
+  };
+
+  // 更新收藏集
+  updateCollection = async ({ id, ...props }) => {
+    return await Collection.updateOne(
+      { _id: id },
+      {
+        $set: { ...props },
+      }
+    );
   };
 }
 

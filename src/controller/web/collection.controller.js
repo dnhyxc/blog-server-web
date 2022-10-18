@@ -6,6 +6,7 @@ const {
   cancelCollected,
   getCollectedTotal,
   delCollection,
+  updateCollection,
 } = require("../../service");
 const { databaseError } = require("../../constant");
 
@@ -135,6 +136,23 @@ class collectionController {
         success: true,
         message: "删除收藏集成功",
         data: res,
+      };
+    } catch (error) {
+      console.error("delCollectionCtr", error);
+      ctx.app.emit("error", databaseError, ctx);
+    }
+  }
+
+  // 更新收藏集
+  async updateCollectionCtr(ctx, next) {
+    try {
+      const params = ctx.request.body;
+      await updateCollection(params);
+      ctx.body = {
+        code: 200,
+        success: true,
+        message: "更新收藏集成功",
+        data: params?.id,
       };
     } catch (error) {
       console.error("delCollectionCtr", error);

@@ -7,14 +7,15 @@ const {
   cancelCollectedCtr,
   getCollectedTotalCtr,
   delCollectionCtr,
+  updateCollectionCtr,
 } = require("../../controller");
 
-const { auth, verifyCollection } = require("../../middleware");
+const { auth } = require("../../middleware");
 
 const router = new Router({ prefix: "/api" });
 
 // 创建收藏集
-router.post("/createCollection", auth, verifyCollection, createCollectionCtr);
+router.post("/createCollection", auth, createCollectionCtr);
 
 // 获取收藏集列表
 router.post("/getCollectionList", auth, getCollectionListCtr);
@@ -33,5 +34,8 @@ router.post("/getCollectedTotal", auth, getCollectedTotalCtr);
 
 // 删除收藏集
 router.post("/delCollection", auth, delCollectionCtr);
+
+// 删除收藏集
+router.post("/updateCollection", auth, updateCollectionCtr);
 
 module.exports = router;
