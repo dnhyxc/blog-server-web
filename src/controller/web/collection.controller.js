@@ -14,7 +14,7 @@ class collectionController {
   async createCollectionCtr(ctx, next) {
     try {
       const params = ctx.request.body;
-      const res = await createCollection({ ...params });
+      const res = await createCollection(params);
       const data = {
         id: res._id,
         name: res.name,
@@ -38,7 +38,7 @@ class collectionController {
   async getCollectionListCtr(ctx, next) {
     try {
       const params = ctx.request.body;
-      const res = await getCollectionList({ ...params });
+      const res = await getCollectionList(params);
       ctx.body = {
         code: 200,
         success: true,
@@ -55,7 +55,7 @@ class collectionController {
   async collectArticlesCtr(ctx, next) {
     try {
       const params = ctx.request.body;
-      const res = await collectArticles({ ...params });
+      const res = await collectArticles(params);
       if (res.modifiedCount) {
         ctx.body = {
           code: 200,
@@ -74,7 +74,7 @@ class collectionController {
   async checkCollectionStatusCtr(ctx, next) {
     try {
       const params = ctx.request.body;
-      const res = await checkCollectionStatus({ ...params });
+      const res = await checkCollectionStatus(params);
       ctx.body = {
         code: 200,
         success: true,
@@ -93,7 +93,7 @@ class collectionController {
   async cancelCollectedCtr(ctx, next) {
     try {
       const params = ctx.request.body;
-      const res = await cancelCollected({ ...params });
+      const res = await cancelCollected(params);
       ctx.body = {
         code: 200,
         success: true,
@@ -110,9 +110,9 @@ class collectionController {
   async getCollectedTotalCtr(ctx, next) {
     try {
       const params = ctx.request.body;
-      const res = await getCollectedTotal({ ...params });
-      const collectedList = res?.length && res.filter(i => i.total)
-      const total = collectedList.reduce((prev, cur) => prev += cur.total, 0)
+      const res = await getCollectedTotal(params);
+      const collectedList = res?.length && res.filter((i) => i.total);
+      const total = collectedList.reduce((prev, cur) => (prev += cur.total), 0);
       ctx.body = {
         code: 200,
         success: true,
@@ -125,16 +125,16 @@ class collectionController {
     }
   }
 
-  // 获取收藏的文章总数
+  // 删除收藏集
   async delCollectionCtr(ctx, next) {
     try {
       const params = ctx.request.body;
-      await delCollection({ ...params });
+      const res = await delCollection(params);
       ctx.body = {
         code: 200,
         success: true,
         message: "删除收藏集成功",
-        data: params.id,
+        data: res,
       };
     } catch (error) {
       console.error("delCollectionCtr", error);

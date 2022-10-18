@@ -11,13 +11,15 @@ class collectionServer {
       createTime: new Date().valueOf(),
     });
   };
+
   // 根据收藏集名称查询
   findOneCollection = async (filter) => {
     const res = await Collection.findOne(filter, collectionRes);
     return res;
   };
+
   // 分页获取收藏集方法
-  getCollectionWithTotal = async ({ pageNo, pageSize, userId }) => {
+  getCollectionWithTotal = async ({ pageNo, pageSize, userId, getOne }) => {
     const list = await Collection.aggregate([
       { $match: { userId } },
       {
@@ -31,7 +33,7 @@ class collectionServer {
               $sort: { createTime: -1 },
             },
             { $skip: (pageNo - 1) * pageSize },
-            { $limit: pageSize },
+            { $limit: !getOne ? pageSize : 1 },
           ],
         },
       },
@@ -49,10 +51,12 @@ class collectionServer {
       };
     }
   };
+
   // 分页获取收藏集
   getCollectionList = async ({ pageNo, pageSize, userId }) => {
     return await this.getCollectionWithTotal({ pageNo, pageSize, userId });
   };
+
   // 收藏文章
   collectArticles = async ({ ids, articleId, userId }) => {
     const res = Collection.updateMany(
@@ -74,6 +78,7 @@ class collectionServer {
     );
     return res;
   };
+
   // 获取文章收藏状态
   checkCollectionStatus = async ({ articleId, userId }) => {
     const res = await Collection.find(
@@ -83,6 +88,7 @@ class collectionServer {
     );
     return res;
   };
+
   // 取消收藏
   cancelCollected = async ({ articleId, userId }) => {
     const res = Collection.updateMany(
@@ -99,25 +105,34 @@ class collectionServer {
     );
     return res;
   };
+
   // 获取我的收藏文章总数
   getCollectedTotal = async ({ userId }) => {
     const res = Collection.aggregate([
-      { "$match": { userId } },
+      { $match: { userId } },
       {
-        "$project": {
-          "_id": 0,
-          "name": 1,
-          "total": { "$size": "$articleIds" }
-        }
-      }
-    ])
-    return res
-  }
+        $project: {
+          _id: 0,
+          name: 1,
+          total: { $size: "$articleIds" },
+        },
+      },
+    ]);
+    return res;
+  };
+  
   // 删除
-  delCollection = async ({ userId, id }) => {
-    const res = Collection.deleteOne({ _id: id, userId })
-    return res
-  }
+  delCollection = async ({ userId, id, pageNo, pageSize }) => {
+    // 删除时先获取下一页的第一条数据，防止删除当前数据后，下一页第一条数据跑到上一页无法获取到
+    const nextPageOne = await this.getCollectionWithTotal({
+      pageNo: pageNo + 1,
+      pageSize,
+      userId,
+      getOne: true,
+    });
+    await Collection.deleteOne({ _id: id, userId });
+    return nextPageOne;
+  };
 }
 
 module.exports = new collectionServer();
