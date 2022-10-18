@@ -66,6 +66,7 @@ const {
   getCollectedTotalCtr,
   delCollectionCtr,
   updateCollectionCtr,
+  getCollectInfoCtr,
 } = collectionController;
 
 // 后台控制器
@@ -140,6 +141,7 @@ module.exports = {
   getCollectedTotalCtr,
   delCollectionCtr,
   updateCollectionCtr,
+  getCollectInfoCtr,
 
   // 后台用户控制器
   adminRegisterCtr,

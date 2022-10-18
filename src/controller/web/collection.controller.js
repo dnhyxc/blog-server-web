@@ -7,6 +7,7 @@ const {
   getCollectedTotal,
   delCollection,
   updateCollection,
+  findOneCollection,
 } = require("../../service");
 const { databaseError } = require("../../constant");
 
@@ -156,6 +157,23 @@ class collectionController {
       };
     } catch (error) {
       console.error("delCollectionCtr", error);
+      ctx.app.emit("error", databaseError, ctx);
+    }
+  }
+
+  // 获取收藏集详情
+  async getCollectInfoCtr(ctx, next) {
+    try {
+      const params = ctx.request.body;
+      const res = await findOneCollection({ _id: params.id });
+      ctx.body = {
+        code: 200,
+        success: true,
+        message: "获取收藏集详情成功",
+        data: res,
+      };
+    } catch (error) {
+      console.error("getCollectInfoCtr", error);
       ctx.app.emit("error", databaseError, ctx);
     }
   }
