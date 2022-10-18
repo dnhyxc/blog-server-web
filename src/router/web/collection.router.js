@@ -39,7 +39,7 @@ router.post("/delCollection", auth, delCollectionCtr);
 // 删除收藏集
 router.post("/updateCollection", auth, updateCollectionCtr);
 
-// 删除收藏集
+// 获取收藏集详情
 router.post("/getCollectInfo", auth, getCollectInfoCtr);
 
 module.exports = router;
