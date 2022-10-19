@@ -10,6 +10,7 @@ const {
   findOneCollection,
   getCollectArticles,
   removeCollectArticle,
+  getCollectTotal,
 } = require("../../service");
 const { databaseError } = require("../../constant");
 
@@ -199,10 +200,7 @@ class collectionController {
   async removeCollectArticleCtr(ctx, next) {
     try {
       const params = ctx.request.body;
-      const res = await removeCollectArticle(params);
-
-      console.log(res, "res>>>>>removeCollectArticleCtr");
-
+      await removeCollectArticle(params);
       ctx.body = {
         code: 200,
         success: true,
@@ -211,6 +209,26 @@ class collectionController {
       };
     } catch (error) {
       console.error("removeCollectArticleCtr", error);
+      ctx.app.emit("error", databaseError, ctx);
+    }
+  }
+
+  // 获取收藏集收藏文章列表
+  async getCollectTotalCtr(ctx, next) {
+    try {
+      const params = ctx.request.body;
+      const res = await getCollectTotal(params);
+
+      console.log(res, "res>>>>>removeCollectArticleCtr");
+
+      ctx.body = {
+        code: 200,
+        success: true,
+        message: "获取收藏集总数成功",
+        data: res,
+      };
+    } catch (error) {
+      console.error("getCollectTotalCtr", error);
       ctx.app.emit("error", databaseError, ctx);
     }
   }

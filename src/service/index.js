@@ -60,6 +60,7 @@ const {
   updateCollection,
   getCollectArticles,
   removeCollectArticle,
+  getCollectTotal,
 } = require("./web/collection.service");
 
 // 后台数据库接口
@@ -139,6 +140,7 @@ module.exports = {
   updateCollection,
   getCollectArticles,
   removeCollectArticle,
+  getCollectTotal,
 
   // 后台
   adminFindOneUser,

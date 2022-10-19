@@ -11,6 +11,7 @@ const {
   getCollectInfoCtr,
   getCollectArticlesCtr,
   removeCollectArticleCtr,
+  getCollectTotalCtr,
 } = require("../../controller");
 
 const { auth } = require("../../middleware");
@@ -49,5 +50,8 @@ router.post("/getCollectArticles", auth, getCollectArticlesCtr);
 
 // 获取收藏集详情
 router.post("/removeCollectArticle", auth, removeCollectArticleCtr);
+
+// 获取收藏集总数
+router.post("/getCollectTotal", auth, getCollectTotalCtr);
 
 module.exports = router;

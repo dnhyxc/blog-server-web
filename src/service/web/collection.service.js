@@ -189,6 +189,12 @@ class collectionServer {
     );
     return res;
   };
+
+  // 获取收藏集的总数
+  getCollectTotal = async ({ userId }) => {
+    const total = Collection.find({ userId }).count();
+    return total
+  }
 }
 
 module.exports = new collectionServer();
