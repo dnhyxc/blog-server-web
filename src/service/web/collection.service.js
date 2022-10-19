@@ -1,12 +1,16 @@
+const mongoose = require("mongoose");
 const { Collection } = require("../../models");
 const { collectionRes } = require("../../constant");
+const {
+  getArticleListWithTotal,
+  checkLikeStatus,
+} = require("./article.service");
 
 class collectionServer {
   // 创建收藏集
   createCollection = async ({ ...params }) => {
     return await Collection.create({
       ...params,
-      count: 0,
       articleIds: [],
       createTime: new Date().valueOf(),
     });
@@ -78,21 +82,13 @@ class collectionServer {
   collectArticles = async ({ ids, articleId, userId }) => {
     const res = Collection.updateMany(
       { _id: { $in: ids }, userId },
-      // 向查找到的document中的replyList数组中插入一条评论
-      // 注意：如果要使用排序，$sort必须与$each一起使用才会生效
       {
-        $push: {
-          articleIds: {
-            // 不使用用$each包一下sort不会生效
-            $each: [articleId], // $each可向articleIds中插入多条
-            $sort: { date: -1 }, // 倒序排列
-          },
-        },
-        $inc: {
-          count: 1,
-        },
+        // 注意：如果要使用排序，$sort必须与$each一起使用才会生效
+        // $addToSet会进行去重添加操作，$push不会进行去重添加操作
+        $addToSet: { articleIds: { $each: [articleId] }, $sort: { date: -1 } },
       }
     );
+
     return res;
   };
 
@@ -111,7 +107,7 @@ class collectionServer {
     const res = Collection.updateMany(
       // 查询条件为，查找当前用户下的，并且articleIds数组中包含articleId的所有数据
       { userId, articleIds: { $elemMatch: { $eq: articleId } } },
-      // 向查找到的document中的replyList数组中插入一条评论
+      // 向查找到的Collection中的articleIdst数组中插入一篇文章
       // 注意：如果要使用排序，$sort必须与$each一起使用才会生效
       {
         $pull: { articleIds: articleId },
@@ -159,6 +155,39 @@ class collectionServer {
         $set: { ...props },
       }
     );
+  };
+
+  // 获取收藏集中收藏的文章
+  getCollectArticles = async ({ articleIds, pageNo, pageSize, userId }) => {
+    // 返回文章列表前，首先根据userId检测点赞状态
+    await checkLikeStatus(userId);
+    // 需要将字符串id转为mongoose中的id类型才能查到对应的文章
+    const ids = articleIds.map((i) => new mongoose.Types.ObjectId(i));
+    const filterKey = {
+      _id: { $in: ids },
+    };
+    return await getArticleListWithTotal({
+      filterKey,
+      pageNo,
+      pageSize,
+    });
+  };
+
+  // 移除指定收藏集中的文章
+  removeCollectArticle = async ({ articleId, userId, id }) => {
+    const res = Collection.updateOne(
+      // 查询条件为，查找当前用户下的，并且articleIds数组中包含articleId的所有数据
+      { _id: id, articleIds: { $elemMatch: { $eq: articleId } } },
+      // 向查找到的Collection中的articleIdst数组中插入一篇文章
+      // 注意：如果要使用排序，$sort必须与$each一起使用才会生效
+      {
+        $pull: { articleIds: articleId },
+        $inc: {
+          count: -1,
+        },
+      }
+    );
+    return res;
   };
 }
 

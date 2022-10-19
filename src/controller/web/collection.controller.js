@@ -8,6 +8,8 @@ const {
   delCollection,
   updateCollection,
   findOneCollection,
+  getCollectArticles,
+  removeCollectArticle,
 } = require("../../service");
 const { databaseError } = require("../../constant");
 
@@ -57,15 +59,13 @@ class collectionController {
   async collectArticlesCtr(ctx, next) {
     try {
       const params = ctx.request.body;
-      const res = await collectArticles(params);
-      if (res.modifiedCount) {
-        ctx.body = {
-          code: 200,
-          success: true,
-          message: "收藏成功，记得时常温习哦！",
-          data: params.articleId,
-        };
-      }
+      await collectArticles(params);
+      ctx.body = {
+        code: 200,
+        success: true,
+        message: "收藏成功，记得时常温习哦！",
+        data: params.articleId,
+      };
     } catch (error) {
       console.error("collectArticlesCtr", error);
       ctx.app.emit("error", databaseError, ctx);
@@ -174,6 +174,43 @@ class collectionController {
       };
     } catch (error) {
       console.error("getCollectInfoCtr", error);
+      ctx.app.emit("error", databaseError, ctx);
+    }
+  }
+
+  // 获取收藏集收藏文章列表
+  async getCollectArticlesCtr(ctx, next) {
+    try {
+      const params = ctx.request.body;
+      const res = await getCollectArticles(params);
+      ctx.body = {
+        code: 200,
+        success: true,
+        message: "获取收藏集文章列表成功",
+        data: res,
+      };
+    } catch (error) {
+      console.error("getCollectArticlesCtr", error);
+      ctx.app.emit("error", databaseError, ctx);
+    }
+  }
+
+  // 获取收藏集收藏文章列表
+  async removeCollectArticleCtr(ctx, next) {
+    try {
+      const params = ctx.request.body;
+      const res = await removeCollectArticle(params);
+
+      console.log(res, "res>>>>>removeCollectArticleCtr");
+
+      ctx.body = {
+        code: 200,
+        success: true,
+        message: "移除成功",
+        data: params.articleId,
+      };
+    } catch (error) {
+      console.error("removeCollectArticleCtr", error);
       ctx.app.emit("error", databaseError, ctx);
     }
   }

@@ -58,6 +58,8 @@ const {
   getCollectedTotal,
   delCollection,
   updateCollection,
+  getCollectArticles,
+  removeCollectArticle,
 } = require("./web/collection.service");
 
 // 后台数据库接口
@@ -135,6 +137,8 @@ module.exports = {
   getCollectedTotal,
   delCollection,
   updateCollection,
+  getCollectArticles,
+  removeCollectArticle,
 
   // 后台
   adminFindOneUser,

@@ -9,6 +9,8 @@ const {
   delCollectionCtr,
   updateCollectionCtr,
   getCollectInfoCtr,
+  getCollectArticlesCtr,
+  removeCollectArticleCtr,
 } = require("../../controller");
 
 const { auth } = require("../../middleware");
@@ -41,5 +43,11 @@ router.post("/updateCollection", auth, updateCollectionCtr);
 
 // 获取收藏集详情
 router.post("/getCollectInfo", auth, getCollectInfoCtr);
+
+// 获取收藏集详情
+router.post("/getCollectArticles", auth, getCollectArticlesCtr);
+
+// 获取收藏集详情
+router.post("/removeCollectArticle", auth, removeCollectArticleCtr);
 
 module.exports = router;
