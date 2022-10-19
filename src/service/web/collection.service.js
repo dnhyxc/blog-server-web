@@ -137,14 +137,18 @@ class collectionServer {
   // 删除收藏集
   delCollection = async ({ userId, id, pageNo, pageSize }) => {
     // 删除时先获取下一页的第一条数据，防止删除当前数据后，下一页第一条数据跑到上一页无法获取到
-    const nextPageOne = await this.getCollectionWithTotal({
-      pageNo: pageNo + 1,
-      pageSize,
-      userId,
-      getOne: true,
-    });
-    await Collection.deleteOne({ _id: id, userId });
-    return nextPageOne;
+    if (pageNo && pageSize) {
+      const nextPageOne = await this.getCollectionWithTotal({
+        pageNo: pageNo + 1,
+        pageSize,
+        userId,
+        getOne: true,
+      });
+      await Collection.deleteOne({ _id: id, userId });
+      return nextPageOne;
+    } else {
+      await Collection.deleteOne({ _id: id, userId });
+    }
   };
 
   // 更新收藏集

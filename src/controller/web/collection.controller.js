@@ -218,9 +218,6 @@ class collectionController {
     try {
       const params = ctx.request.body;
       const res = await getCollectTotal(params);
-
-      console.log(res, "res>>>>>removeCollectArticleCtr");
-
       ctx.body = {
         code: 200,
         success: true,
