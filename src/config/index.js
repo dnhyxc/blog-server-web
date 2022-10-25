@@ -2,7 +2,7 @@ const PORT = 9112;
 
 const APP_PORT = 9112;
 
-const JWT_SECRET = "dnhyxc";
+const JWT_SECRET = "DNHYXC90220911010613WYH1101DCX9022DZC0613DNH";
 
 module.exports = {
   PORT,
