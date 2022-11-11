@@ -94,6 +94,7 @@ class collectionServer {
 
   // 获取文章收藏状态
   checkCollectionStatus = async ({ articleId, userId }) => {
+    if (!userId) return;
     const res = await Collection.find(
       // 查询字段中的数组中是否包含某值，找出articleIds数组中是否包含当前的articleId
       { userId, articleIds: { $elemMatch: { $eq: articleId } } },
@@ -197,8 +198,8 @@ class collectionServer {
   // 获取收藏集的总数
   getCollectTotal = async ({ userId }) => {
     const total = Collection.find({ userId }).count();
-    return total
-  }
+    return total;
+  };
 }
 
 module.exports = new collectionServer();

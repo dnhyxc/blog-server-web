@@ -83,7 +83,7 @@ class collectionController {
         success: true,
         message: "获取收藏状态成功",
         data: {
-          collected: res.length ? true : false,
+          collected: res?.length ? true : false,
         },
       };
     } catch (error) {

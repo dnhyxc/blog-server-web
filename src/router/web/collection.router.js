@@ -28,7 +28,7 @@ router.post("/getCollectionList", auth, getCollectionListCtr);
 router.post("/collectArticles", auth, collectArticlesCtr);
 
 // 获取文章收藏状态
-router.post("/checkCollectionStatus", auth, checkCollectionStatusCtr);
+router.post("/checkCollectionStatus", checkCollectionStatusCtr);
 
 // 取消收藏
 router.post("/cancelCollected", auth, cancelCollectedCtr);
