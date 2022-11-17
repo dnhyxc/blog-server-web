@@ -114,6 +114,7 @@ const anotherFields = {
   createTime: 1,
   authorId: 1,
   authorName: 1,
+  coverImage: 1,
 };
 
 const detailFields = {
