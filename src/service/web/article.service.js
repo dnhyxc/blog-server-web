@@ -326,12 +326,17 @@ class articleServer {
     // 获取文章列表时，需要先根据userId判断文章点赞状态
     await this.checkLikeStatus(userId);
     const res = await Article.aggregate([
-      { $match: { isDelete: { $nin: [true] } } },
+      {
+        $match: {
+          isDelete: { $nin: [true] },
+          $or: [{ likeCount: { $gte: 1 } }, { replyCount: { $gte: 1 } }],
+        },
+      },
       { $sample: { size: 5 } },
       {
         $project: anotherFields,
       },
-      { $sort: { createTime: -1, likeCount: -1 } },
+      { $sort: { createTime: -1 } },
     ]);
     return res;
   };

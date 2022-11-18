@@ -115,6 +115,8 @@ const anotherFields = {
   authorId: 1,
   authorName: 1,
   coverImage: 1,
+  likeCount: 1,
+  replyCount: 1,
 };
 
 const detailFields = {
