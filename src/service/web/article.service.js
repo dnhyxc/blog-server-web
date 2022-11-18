@@ -329,9 +329,11 @@ class articleServer {
       {
         $match: {
           isDelete: { $nin: [true] },
+          // 匹配点赞大于等一1或者评论大于等于1的数据
           $or: [{ likeCount: { $gte: 1 } }, { replyCount: { $gte: 1 } }],
         },
       },
+      // 随机获取5条数据
       { $sample: { size: 5 } },
       {
         $project: anotherFields,
