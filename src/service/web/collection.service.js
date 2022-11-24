@@ -83,9 +83,15 @@ class collectionServer {
     const res = Collection.updateMany(
       { _id: { $in: ids }, userId },
       {
+        $set: {
+          createTime: new Date().valueOf(),
+        },
         // 注意：如果要使用排序，$sort必须与$each一起使用才会生效
         // $addToSet会进行去重添加操作，$push不会进行去重添加操作
-        $addToSet: { articleIds: { $each: [articleId] }, $sort: { date: -1 } },
+        $addToSet: {
+          articleIds: { $each: [articleId] },
+          $sort: { date: -1 },
+        },
       }
     );
 
@@ -114,6 +120,9 @@ class collectionServer {
         $pull: { articleIds: articleId },
         $inc: {
           count: -1,
+        },
+        $set: {
+          createTime: new Date().valueOf(),
         },
       }
     );
@@ -157,7 +166,7 @@ class collectionServer {
     return await Collection.updateOne(
       { _id: id },
       {
-        $set: { ...props },
+        $set: { ...props, createTime: new Date().valueOf() },
       }
     );
   };
