@@ -17,6 +17,7 @@ const DraftSchema = new mongoose.Schema({
   isLike: Boolean,
   likeCount: Number,
   replyCount: Number,
+  originalArticleId: String | Number,
 });
 
 const Draft = mongoose.model("drafts", DraftSchema);

@@ -133,6 +133,7 @@ const detailFields = {
   likeCount: 1,
   isLike: 1,
   authorName: 1,
+  originalArticleId: 1,
 };
 
 const userFields = {

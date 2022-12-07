@@ -42,7 +42,7 @@ class UserController {
         message: "登录成功",
         data: {
           ...props?._doc,
-          token: jwt.sign(props, JWT_SECRET, { expiresIn: "1d" }),
+          token: jwt.sign(props, JWT_SECRET, { expiresIn: "10s" }),
         },
       };
     } catch (error) {
