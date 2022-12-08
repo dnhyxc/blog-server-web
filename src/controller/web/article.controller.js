@@ -226,7 +226,7 @@ class ArticleController {
       ctx.body = {
         code: 200,
         success: true,
-        message: "为文章点赞成功",
+        message: "获取推荐文章成功",
         data: res,
       };
     } catch (error) {
