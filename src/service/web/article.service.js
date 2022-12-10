@@ -12,6 +12,7 @@ class articleServer {
       ...params,
       likeCount: 0,
       replyCount: 0,
+      readCount: 0,
       authorName: userInfo.username,
     });
   }
@@ -220,6 +221,7 @@ class articleServer {
                 createTime: 1,
                 authorName: 1,
                 replyCount: 1,
+                readCount: 1,
               },
             },
             {
@@ -283,8 +285,18 @@ class articleServer {
     });
   };
 
+  // 计算文章阅读数
+  computeArticleReadCount = async (id) => {
+    await Article.updateOne({ _id: id }, {
+      $inc: {
+        readCount: 1
+      }
+    })
+  }
+
   // 根据文章id查找文章详情
-  async findArticleById(id) {
+  findArticleById = async (id) => {
+    await this.computeArticleReadCount(id)
     const article = await Article.findById(id, detailFields);
     if (article) {
       const userInfo = article && (await findUserById(article.authorId));

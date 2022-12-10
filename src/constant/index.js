@@ -117,6 +117,7 @@ const anotherFields = {
   coverImage: 1,
   likeCount: 1,
   replyCount: 1,
+  readCount: 1,
 };
 
 const detailFields = {
@@ -134,6 +135,7 @@ const detailFields = {
   isLike: 1,
   authorName: 1,
   originalArticleId: 1,
+  readCount: 1,
 };
 
 const userFields = {
