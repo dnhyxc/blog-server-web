@@ -33,13 +33,13 @@ router.post("/checkCollectionStatus", checkCollectionStatusCtr);
 // 取消收藏
 router.post("/cancelCollected", auth, cancelCollectedCtr);
 
-// 取消收藏
+// 获取收藏集数
 router.post("/getCollectedTotal", auth, getCollectedTotalCtr);
 
 // 删除收藏集
 router.post("/delCollection", auth, delCollectionCtr);
 
-// 删除收藏集
+// 更新收藏集
 router.post("/updateCollection", auth, updateCollectionCtr);
 
 // 获取收藏集详情
@@ -48,7 +48,7 @@ router.post("/getCollectInfo", auth, getCollectInfoCtr);
 // 获取收藏集详情
 router.post("/getCollectArticles", auth, getCollectArticlesCtr);
 
-// 获取收藏集详情
+// 删除收藏集文章
 router.post("/removeCollectArticle", auth, removeCollectArticleCtr);
 
 // 获取收藏集总数

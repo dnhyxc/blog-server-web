@@ -70,6 +70,7 @@ class classifyServer {
           likeCount: "$likeCount",
           createTime: "$createTime",
           replyCount: "$replyCount",
+          readCount: "$readCount",
         },
       },
       {
@@ -90,6 +91,7 @@ class classifyServer {
               likeCount: "$likeCount",
               createTime: "$createTime",
               replyCount: "$replyCount",
+              readCount: "$readCount",
             },
           },
         },

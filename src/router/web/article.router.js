@@ -48,7 +48,7 @@ router.post("/getPrevArticle", getPrevArticleCtr);
 // 获取下一篇文章
 router.post("/getNextArticle", getNextArticleCtr);
 
-// 获取下一篇文章
+// 高级搜索
 router.post("/advancedSearch", advancedSearchCtr);
 
 // 删除所有文章
