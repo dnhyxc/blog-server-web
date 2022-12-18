@@ -86,7 +86,14 @@ const TokenExpiredError = {
 const JsonWebTokenError = {
   code: "10102",
   success: false,
-  message: "请登录后再试",
+  message: "登录已失效，请重新登录后再试",
+  data: new Date().valueOf(),
+};
+
+const DetailTokenExpiredError = {
+  code: "10103",
+  success: false,
+  message: "登录已过期，请重新登录",
   data: new Date().valueOf(),
 };
 
@@ -178,6 +185,7 @@ module.exports = {
   pwdNotChange,
   TokenExpiredError,
   JsonWebTokenError,
+  DetailTokenExpiredError,
   fileUploadError,
   fieldFormateError,
   userNotExist,

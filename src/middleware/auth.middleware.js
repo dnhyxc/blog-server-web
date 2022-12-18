@@ -4,11 +4,14 @@ const { findUserById, adminFindUserById } = require("../service")
 const {
   TokenExpiredError,
   JsonWebTokenError,
+  DetailTokenExpiredError,
   databaseError,
   userNotFind
 } = require("../constant");
 
 const auth = async (ctx, next) => {
+  const { fromDetail } = ctx.request.body
+
   try {
     const { authorization } = ctx.request.header;
     const token = authorization.replace("Bearer ", "");
@@ -18,6 +21,7 @@ const auth = async (ctx, next) => {
     if (!res) {
       return ctx.app.emit('error', userNotFind, ctx)
     }
+
     const user = {
       id: userId,
       username,
@@ -28,10 +32,10 @@ const auth = async (ctx, next) => {
     switch (error.name) {
       case "TokenExpiredError":
         // console.error("token已过期", error);
-        return ctx.app.emit("error", TokenExpiredError, ctx);
+        return ctx.app.emit("error", !fromDetail ? JsonWebTokenError : DetailTokenExpiredError, ctx);
       case "JsonWebTokenError":
         // console.error("无效的token", error);
-        return ctx.app.emit("error", JsonWebTokenError, ctx);
+        return ctx.app.emit("error", !fromDetail ? JsonWebTokenError : DetailTokenExpiredError, ctx);
       default:
         return ctx.app.emit("error", databaseError, ctx);
     }
