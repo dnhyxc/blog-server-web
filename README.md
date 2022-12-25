@@ -73,3 +73,21 @@ blog-server-web
 │     └─ index.js
 └─ yarn.lock
 ```
+
+### 启动本地 mongodb
+
+进入到 mongodb 文件目录：/usr/local/mongodb。
+
+后台启动运行：mongod --fork --dbpath data --logpath log/mongo.log --logappend。
+
+新开一个终端
+
+- 运行命令：mongo。
+
+终止 mongo：
+
+- 运行： use admin
+
+- 运行：db.shutdownServer()
+
+- 再执行一次 ctrl + c 即可
