@@ -8,6 +8,7 @@ const {
   adminUpdateUser,
   adminGetArticleTotal,
   adminGetUserList,
+  adminUpdateUsers,
   adminBatchDeleteUser,
   adminSetAuth,
 } = require("../../service");
@@ -143,6 +144,23 @@ class UserController {
       };
     } catch (error) {
       console.error("adminGetUserListCtr", error);
+      ctx.app.emit("error", databaseError, ctx);
+    }
+  }
+
+  // 获取用户列表
+  async adminUpdateUsersCtr(ctx, next) {
+    try {
+      const { pageNo, pageSize } = ctx.request.body;
+      const res = await adminUpdateUsers({ pageNo, pageSize });
+      ctx.body = {
+        code: 200,
+        success: true,
+        message: "删除成功",
+        data: res,
+      };
+    } catch (error) {
+      console.error("adminUpdateUsersCtr", error);
       ctx.app.emit("error", databaseError, ctx);
     }
   }

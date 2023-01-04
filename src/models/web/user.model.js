@@ -16,6 +16,7 @@ const userSchema = new mongoose.Schema({
   auth: Number,
   logout: String,
   registerTime: Number,
+  isDelete: Boolean,
 });
 
 const User = mongoose.model("users", userSchema);

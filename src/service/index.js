@@ -72,6 +72,7 @@ const {
   adminGetUserList,
   adminBatchDeleteUser,
   adminSetAuth,
+  adminUpdateUsers,
 } = require("./admin/user.service");
 
 const {
@@ -150,6 +151,7 @@ module.exports = {
   adminGetUserList,
   adminBatchDeleteUser,
   adminSetAuth,
+  adminUpdateUsers,
   // 后台文章
   adminCreateArticle,
   adminUpdateArticle,

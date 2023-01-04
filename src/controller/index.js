@@ -82,6 +82,7 @@ const {
   adminGetUserListCtr,
   adminBatchDeleteUserCtr,
   adminSetAuthCtr,
+  adminUpdateUsersCtr,
 } = adminUserController;
 // 后台文章控制器
 const {
@@ -158,6 +159,7 @@ module.exports = {
   adminGetUserListCtr,
   adminBatchDeleteUserCtr,
   adminSetAuthCtr,
+  adminUpdateUsersCtr,
   // 后台文章控制器
   adminCreateArticleCtr,
   adminUpdateArticleCtr,

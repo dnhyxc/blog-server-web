@@ -4,7 +4,11 @@ const { userFields } = require("../../constant");
 class UserServer {
   // 注册用户
   async adminCreateUserServer({ username, password }) {
-    return await AdminUsers.create({ username, password });
+    return await AdminUsers.create({
+      username,
+      password,
+      registerTime: new Date().valueOf(),
+    });
   }
 
   // 用户登录
@@ -44,7 +48,7 @@ class UserServer {
                 ...userFields,
               },
             },
-            // { $sort: { createTime: -1, likeCount: -1 } },
+            { $sort: { registerTime: -1 } },
             { $skip: (pageNo - 1) * pageSize },
             { $limit: pageSize },
           ],
@@ -88,6 +92,21 @@ class UserServer {
   async adminBatchDeleteUser({ userIds }) {
     const res = await User.deleteMany({ _id: { $in: userIds } });
     return res.deletedCount;
+  }
+
+  // 批量为用户添加删除标识
+  async adminUpdateUsers({ userIds }) {
+    const res = await User.updateMany(
+      { _id: { $in: userIds } },
+      {
+        $set: {
+          isDelete: true,
+        },
+      }
+    );
+    console.log(res, "res");
+
+    return userIds;
   }
 
   // 设置为博主

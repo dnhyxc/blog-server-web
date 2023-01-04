@@ -8,6 +8,7 @@ const {
   adminGetUserListCtr,
   adminBatchDeleteUserCtr,
   adminSetAuthCtr,
+  adminUpdateUsersCtr,
 } = require("../../controller");
 const {
   userValidator,
@@ -63,6 +64,9 @@ router.post("/getUserList", adminAuth, adminGetUserListCtr);
 
 // 批量删除用户
 router.post("/batchDeleteUser", adminAuth, adminBatchDeleteUserCtr);
+
+// 批量为用户增加删除标识
+router.post("/deleteUsers", adminAuth, adminUpdateUsersCtr);
 
 // 设置用户权限
 router.post("/setAuth", adminAuth, adminSetAuthCtr);
