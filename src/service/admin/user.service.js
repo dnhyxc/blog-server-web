@@ -95,17 +95,15 @@ class UserServer {
   }
 
   // 批量为用户添加删除标识
-  async adminUpdateUsers({ userIds }) {
-    const res = await User.updateMany(
+  async adminUpdateUsers({ userIds, type }) {
+    await User.updateMany(
       { _id: { $in: userIds } },
       {
         $set: {
-          isDelete: true,
+          isDelete: type ? true : false,
         },
       }
     );
-    console.log(res, "res");
-
     return userIds;
   }
 

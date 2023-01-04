@@ -148,15 +148,15 @@ class UserController {
     }
   }
 
-  // 获取用户列表
+  // 批量为用户设置删除标识
   async adminUpdateUsersCtr(ctx, next) {
     try {
-      const { pageNo, pageSize } = ctx.request.body;
-      const res = await adminUpdateUsers({ pageNo, pageSize });
+      const { userIds, type } = ctx.request.body;
+      const res = await adminUpdateUsers({ userIds, type });
       ctx.body = {
         code: 200,
         success: true,
-        message: "删除成功",
+        message: type ? "删除成功" : '恢复成功',
         data: res,
       };
     } catch (error) {
@@ -182,7 +182,7 @@ class UserController {
     }
   }
 
-  // 批量删除用户
+  // 设置权限
   async adminSetAuthCtr(ctx, next) {
     try {
       const { auth, userId } = ctx.request.body;

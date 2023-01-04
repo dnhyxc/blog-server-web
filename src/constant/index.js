@@ -158,6 +158,7 @@ const userFields = {
   mainCover: 1,
   auth: 1,
   registerTime: 1,
+  isDelete: 1,
 };
 
 // 收藏集response

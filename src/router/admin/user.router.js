@@ -66,7 +66,7 @@ router.post("/getUserList", adminAuth, adminGetUserListCtr);
 router.post("/batchDeleteUser", adminAuth, adminBatchDeleteUserCtr);
 
 // 批量为用户增加删除标识
-router.post("/deleteUsers", adminAuth, adminUpdateUsersCtr);
+router.post("/updateUsers", adminAuth, adminUpdateUsersCtr);
 
 // 设置用户权限
 router.post("/setAuth", adminAuth, adminSetAuthCtr);
