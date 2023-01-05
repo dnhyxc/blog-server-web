@@ -8,6 +8,7 @@ const {
   adminUpdateUser,
   adminGetArticleTotal,
   adminGetUserList,
+  adminGetAdminUserList,
   adminUpdateUsers,
   adminBatchDeleteUser,
   adminSetAuth,
@@ -73,6 +74,7 @@ class UserController {
         }));
 
       const res = await adminFindUserById(filter);
+
       if (!res) {
         ctx.app.emit("error", userNotExist, ctx);
         return;
@@ -131,7 +133,7 @@ class UserController {
     }
   }
 
-  // 获取用户列表
+  // 获取前台用户列表
   async adminGetUserListCtr(ctx, next) {
     try {
       const { pageNo, pageSize } = ctx.request.body;
@@ -148,6 +150,23 @@ class UserController {
     }
   }
 
+  // 获取后台用户列表
+  async adminGetAdminUserListCtr(ctx, next) {
+    try {
+      const { pageNo, pageSize } = ctx.request.body;
+      const res = await adminGetAdminUserList({ pageNo, pageSize });
+      ctx.body = {
+        code: 200,
+        success: true,
+        message: "用户列表获取成功",
+        data: res,
+      };
+    } catch (error) {
+      console.error("adminGetAdminUserListCtr", error);
+      ctx.app.emit("error", databaseError, ctx);
+    }
+  }
+
   // 批量为用户设置删除标识
   async adminUpdateUsersCtr(ctx, next) {
     try {
@@ -156,7 +175,7 @@ class UserController {
       ctx.body = {
         code: 200,
         success: true,
-        message: type ? "删除成功" : '恢复成功',
+        message: type ? "删除成功" : "恢复成功",
         data: res,
       };
     } catch (error) {

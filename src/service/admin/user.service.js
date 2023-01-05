@@ -34,8 +34,8 @@ class UserServer {
   }
 
   // 获取用户列表同时返回文章总条数
-  async adminGetUserListWithTotal({ filterKey, pageNo, pageSize }) {
-    const users = await User.aggregate([
+  async adminGetUserListWithTotal({ filterKey, pageNo, pageSize, searchType }) {
+    const aggregateData = [
       { $match: filterKey || {} },
       {
         $facet: {
@@ -54,7 +54,12 @@ class UserServer {
           ],
         },
       },
-    ]);
+    ];
+
+    const users =
+      searchType === 1
+        ? await User.aggregate(aggregateData)
+        : await AdminUsers.aggregate(aggregateData);
 
     if (users?.length) {
       const { total, data } = users[0];
@@ -69,12 +74,24 @@ class UserServer {
     };
   }
 
-  // 查询用户列表
+  // 查询前台用户列表
   async adminGetUserList({ filterKey, pageNo, pageSize }) {
     const res = await new UserServer().adminGetUserListWithTotal({
       filterKey,
       pageNo,
       pageSize,
+      searchType: 1, // 1：查前台用户列表  2：查后台用户列表
+    });
+    return res;
+  }
+
+  // 查询后台用户列表
+  async adminGetAdminUserList({ filterKey, pageNo, pageSize }) {
+    const res = await new UserServer().adminGetUserListWithTotal({
+      filterKey,
+      pageNo,
+      pageSize,
+      searchType: 2, // 1：查前台用户列表  2：查后台用户列表
     });
     return res;
   }

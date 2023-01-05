@@ -6,6 +6,7 @@ const {
   adminUpdateInfoCtr,
   adminVerifyTokenCtr,
   adminGetUserListCtr,
+  adminGetAdminUserListCtr,
   adminBatchDeleteUserCtr,
   adminSetAuthCtr,
   adminUpdateUsersCtr,
@@ -59,8 +60,11 @@ router.put(
 // 校验token是否过期
 router.post("/verify", adminAuth, adminVerifyTokenCtr);
 
-// 获取用户列表
+// 获取前台用户列表
 router.post("/getUserList", adminAuth, adminGetUserListCtr);
+
+// 获取后台用户列表
+router.post("/getAdminUserList", adminAuth, adminGetAdminUserListCtr);
 
 // 批量删除用户
 router.post("/batchDeleteUser", adminAuth, adminBatchDeleteUserCtr);
