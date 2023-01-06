@@ -91,6 +91,8 @@ const {
   adminRestoreComment,
 } = require("./admin/article.service");
 
+const { adminCreateConfig } = require("./admin/config.service");
+
 module.exports = {
   // 前台用户
   findOneUser,
@@ -156,6 +158,7 @@ module.exports = {
   adminSetAuth,
   adminUpdateUsers,
   bindAccount,
+  adminCreateConfig,
   // 后台文章
   adminCreateArticle,
   adminUpdateArticle,

@@ -160,7 +160,7 @@ const userFields = {
   registerTime: 1,
   isDelete: 1,
   bindUserId: 1,
-  bindUsernames: 1,
+  bindUserIds: 1,
 };
 
 // 收藏集response

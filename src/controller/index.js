@@ -10,6 +10,7 @@ const collectionController = require("./web/collection.controller");
 // 后台用户控制器
 const adminUserController = require("./admin/user.controller");
 const adminArticleController = require("./admin/article.controller");
+const adminPageConfigController = require("./admin/config.controller");
 
 // 前台控制器
 const {
@@ -100,6 +101,8 @@ const {
   adminDeleteCommentCtr,
   adminRestoreCommentCtr,
 } = adminArticleController;
+// 主题设置控制器
+const { adminCreateConfigCtr } = adminPageConfigController;
 
 module.exports = {
   // 前台控制器
@@ -176,4 +179,6 @@ module.exports = {
   adminFindCommentsByIdCtr,
   adminDeleteCommentCtr,
   adminRestoreCommentCtr,
+  // 主题设置控制器
+  adminCreateConfigCtr,
 };

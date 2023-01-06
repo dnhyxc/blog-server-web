@@ -1,12 +1,12 @@
 const mongoose = require("mongoose");
 
 const pageConfigSchema = new mongoose.Schema({
-  userId: String,
+  adminUserId: String,
+  bindUserId: String,
   username: String,
   layout: Number,
   layoutSet: Number,
   cardLayout: Number,
-  logout: String,
   coverImg: [String],
 });
 

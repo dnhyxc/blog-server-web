@@ -135,40 +135,60 @@ class UserServer {
   async bindAccount({ userId, usernames }) {
     const findUsers = await User.find(
       { username: { $in: usernames } },
-      { username: 1, _id: 0 }
+      { username: 1 }
     );
+
     const findUsernames = findUsers.map((i) => i.username);
+    const findUserIds = findUsers.map((i) => i._id);
     const notFindUsers = usernames.filter((i) => !findUsernames.includes(i));
 
     if (notFindUsers.length) {
       return {
         notFindUsers,
         findUsernames,
-      };
-    } else {
-      await AdminUsers.updateOne(
-        { _id: userId },
-        {
-          $set: {
-            bindUsernames: usernames,
-          },
-        }
-      );
-
-      await User.updateMany(
-        { username: { $in: usernames } },
-        {
-          $set: {
-            bindUserId: userId,
-          },
-        }
-      );
-
-      return {
-        notFindUsers,
-        findUsernames,
+        bindUserIds: findUserIds,
       };
     }
+
+    // const bindedUser = await AdminUsers.findOne(
+    //   {
+    //     bindUserIds: { $in: findUserIds },
+    //   },
+    //   { username: 1 }
+    // );
+
+    // if (bindedUser?.username) {
+    //   return {
+    //     notFindUsers,
+    //     findUsernames,
+    //     bindUserIds: findUserIds,
+    //     bindedUsername: bindedUser.username,
+    //   };
+    // }
+
+    await AdminUsers.updateOne(
+      { _id: userId },
+      {
+        $set: {
+          bindUserIds: findUserIds,
+        },
+      }
+    );
+
+    await User.updateMany(
+      { username: { $in: usernames } },
+      {
+        $set: {
+          bindUserId: userId,
+        },
+      }
+    );
+
+    return {
+      notFindUsers,
+      findUsernames,
+      bindUserIds: findUserIds,
+    };
   }
 }
 
