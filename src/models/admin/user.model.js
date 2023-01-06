@@ -7,6 +7,7 @@ const userSchema = new mongoose.Schema({
   auth: Number,
   registerTime: Number,
   logout: String,
+  bindUsernames: [String],
 });
 
 const AdminUsers = mongoose.model("adminUsers", userSchema);

@@ -159,6 +159,8 @@ const userFields = {
   auth: 1,
   registerTime: 1,
   isDelete: 1,
+  bindUserId: 1,
+  bindUsernames: 1,
 };
 
 // 收藏集response

@@ -48,6 +48,29 @@ const verifyUser = async (ctx, next) => {
   await next();
 };
 
+// 校验用户名是否存在
+const verifyAdminUser = async (ctx, next) => {
+  const { username } = ctx.request.body;
+
+  if (!username) {
+    ctx.app.emit("error", fieldFormateError, ctx);
+    return;
+  }
+
+  if (username) {
+    try {
+      const filter = { username };
+      if (await adminFindOneUser(filter)) {
+        return ctx.app.emit("error", userAlreadyExited, ctx);
+      }
+    } catch (error) {
+      ctx.app.emit("error", databaseError, ctx);
+    }
+  }
+
+  await next();
+};
+
 // 校验用户是否存在
 const verifyUserExists = async (ctx, next) => {
   const { userId } = ctx.request.body;
@@ -79,7 +102,7 @@ const verifyUserExistsByUsername = async (ctx, next) => {
   }
 
   try {
-    const user = await findOneUser({ username })
+    const user = await findOneUser({ username });
     if (!user) {
       return ctx.app.emit("error", userNotExist, ctx);
     }
@@ -190,4 +213,5 @@ module.exports = {
   // 后台中间件
   verifyAdminLogin,
   verifyAdminUpdateInfo,
+  verifyAdminUser,
 };

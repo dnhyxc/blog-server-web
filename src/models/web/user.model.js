@@ -17,6 +17,7 @@ const userSchema = new mongoose.Schema({
   logout: String,
   registerTime: Number,
   isDelete: Boolean,
+  bindUserId: String,
 });
 
 const User = mongoose.model("users", userSchema);

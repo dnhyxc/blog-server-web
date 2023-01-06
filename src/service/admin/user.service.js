@@ -130,6 +130,46 @@ class UserServer {
     const data = await User.updateOne({ _id: userId }, { $set: { auth } });
     return data.modifiedCount;
   }
+
+  // 前后台账户绑定
+  async bindAccount({ userId, usernames }) {
+    const findUsers = await User.find(
+      { username: { $in: usernames } },
+      { username: 1, _id: 0 }
+    );
+    const findUsernames = findUsers.map((i) => i.username);
+    const notFindUsers = usernames.filter((i) => !findUsernames.includes(i));
+
+    if (notFindUsers.length) {
+      return {
+        notFindUsers,
+        findUsernames,
+      };
+    } else {
+      await AdminUsers.updateOne(
+        { _id: userId },
+        {
+          $set: {
+            bindUsernames: usernames,
+          },
+        }
+      );
+
+      await User.updateMany(
+        { username: { $in: usernames } },
+        {
+          $set: {
+            bindUserId: userId,
+          },
+        }
+      );
+
+      return {
+        notFindUsers,
+        findUsernames,
+      };
+    }
+  }
 }
 
 module.exports = new UserServer();

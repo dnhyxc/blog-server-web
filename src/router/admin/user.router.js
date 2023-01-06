@@ -10,6 +10,7 @@ const {
   adminBatchDeleteUserCtr,
   adminSetAuthCtr,
   adminUpdateUsersCtr,
+  bindAccountCtr,
 } = require("../../controller");
 const {
   userValidator,
@@ -17,6 +18,7 @@ const {
   bcryptPassword,
   verifyUserExists,
   verifyAdminLogin,
+  verifyAdminUser,
   auth,
   adminAuth,
 } = require("../../middleware");
@@ -27,7 +29,7 @@ const router = new Router({ prefix: "/admin" });
 router.post(
   "/register",
   userValidator, // 检验用户名或密码是否为空中间件
-  verifyUser, // 检验用户名是否存在中间件
+  verifyAdminUser, // 检验用户名是否存在中间件
   bcryptPassword, // 密码加密中间件
   adminRegisterCtr
 );
@@ -74,5 +76,8 @@ router.post("/updateUsers", adminAuth, adminUpdateUsersCtr);
 
 // 设置用户权限
 router.post("/setAuth", adminAuth, adminSetAuthCtr);
+
+// 绑定账户
+router.post("/bindAccount", adminAuth, bindAccountCtr);
 
 module.exports = router;

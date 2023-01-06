@@ -74,6 +74,7 @@ const {
   adminBatchDeleteUser,
   adminSetAuth,
   adminUpdateUsers,
+  bindAccount,
 } = require("./admin/user.service");
 
 const {
@@ -154,6 +155,7 @@ module.exports = {
   adminBatchDeleteUser,
   adminSetAuth,
   adminUpdateUsers,
+  bindAccount,
   // 后台文章
   adminCreateArticle,
   adminUpdateArticle,

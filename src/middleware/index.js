@@ -8,6 +8,7 @@ const {
   verifyUserExistsByUsername,
   verifyAdminLogin,
   verifyAdminUpdateInfo,
+  verifyAdminUser,
 } = require("./user.middleware");
 
 const { auth, adminAuth } = require("./auth.middleware");
@@ -27,4 +28,5 @@ module.exports = {
   auth,
   adminAuth,
   verifyCollection,
+  verifyAdminUser,
 };

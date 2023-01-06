@@ -12,6 +12,7 @@ const {
   adminUpdateUsers,
   adminBatchDeleteUser,
   adminSetAuth,
+  bindAccount,
 } = require("../../service");
 
 class UserController {
@@ -214,6 +215,33 @@ class UserController {
       };
     } catch (error) {
       console.error("adminSetAuthCtr", error);
+      ctx.app.emit("error", databaseError, ctx);
+    }
+  }
+
+  // 绑定账户
+  async bindAccountCtr(ctx, next) {
+    try {
+      const { userId, usernames } = ctx.request.body;
+      const res = await bindAccount({ userId, usernames });
+
+      if (res.notFindUsers.length) {
+        ctx.body = {
+          code: 201,
+          success: false,
+          message: `绑定失败 ${res.notFindUsers.join("，")} 账号不存在`,
+          data: res,
+        };
+      } else {
+        ctx.body = {
+          code: 200,
+          success: true,
+          message: "绑定成功",
+          data: res,
+        };
+      }
+    } catch (error) {
+      console.error("bindAccountCtr", error);
       ctx.app.emit("error", databaseError, ctx);
     }
   }
