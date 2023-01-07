@@ -8,6 +8,7 @@ const pageConfigSchema = new mongoose.Schema({
   layoutSet: Number,
   cardLayout: Number,
   coverImg: [String],
+  createTime: Number,
 });
 
 const PageConfig = mongoose.model("pageConfig", pageConfigSchema);

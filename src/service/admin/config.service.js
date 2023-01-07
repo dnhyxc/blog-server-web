@@ -19,18 +19,16 @@ class PageConfigServer {
       layoutSet, // 是否开启布局切换：1 开启，2 不开启
       cardLayout, // 卡片展示控制：1 左右布局模式，2 上下布局模式
       coverImgs, // 首页封面图（默认选择两张）
+      createTime: new Date().valueOf(),
     }));
-
-    console.log(configList, "configList");
 
     const findBinds = await PageConfig.find({
       adminUserId: userId,
       bindUserId: { $in: bindUserIds },
     });
 
-    console.log(findBinds, "findBinds");
     if (findBinds.length) {
-      return await PageConfig.updateMany(
+      await PageConfig.updateMany(
         { adminUserId: userId, bindUserId: { $in: bindUserIds } },
         {
           $set: {
@@ -38,11 +36,12 @@ class PageConfigServer {
             layoutSet, // 是否开启布局切换：1 开启，2 不开启
             cardLayout, // 卡片展示控制：1 左右布局模式，2 上下布局模式
             coverImgs, // 首页封面图（默认选择两张）
+            createTime: new Date().valueOf(),
           },
         }
       );
     } else {
-      return await PageConfig.create(configList);
+      await PageConfig.create(configList);
     }
   }
 }

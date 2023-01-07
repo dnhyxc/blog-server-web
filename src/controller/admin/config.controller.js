@@ -5,15 +5,12 @@ class PageConfigController {
   async adminCreateConfigCtr(ctx, next) {
     try {
       const params = ctx.request.body;
-      const res = await adminCreateConfig(params);
-
-      console.log(res, "res>>>>>>res");
-
+      await adminCreateConfig(params);
       ctx.body = {
         code: 200,
         message: "主题设置成功",
         success: true,
-        data: true,
+        data: params.bindUserIds,
       };
     } catch (error) {
       console.error("adminCreateConfigCtr", error);
