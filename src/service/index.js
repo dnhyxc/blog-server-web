@@ -75,6 +75,7 @@ const {
   adminSetAuth,
   adminUpdateUsers,
   bindAccount,
+  findBindUsers,
 } = require("./admin/user.service");
 
 const {
@@ -159,6 +160,7 @@ module.exports = {
   adminUpdateUsers,
   bindAccount,
   adminCreateConfig,
+  findBindUsers,
   // 后台文章
   adminCreateArticle,
   adminUpdateArticle,

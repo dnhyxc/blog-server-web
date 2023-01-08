@@ -190,6 +190,17 @@ class UserServer {
       bindUserIds: findUserIds,
     };
   }
+
+  // 查找绑定的前台账号列表
+  async findBindUsers({ userIds }) {
+    const res = await User.find({
+      _id: { $in: userIds }
+    }, {
+      username: 1, userId: '$_id', _id: 0
+    })
+
+    return res
+  }
 }
 
 module.exports = new UserServer();

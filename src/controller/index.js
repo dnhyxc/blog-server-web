@@ -86,6 +86,7 @@ const {
   adminSetAuthCtr,
   adminUpdateUsersCtr,
   bindAccountCtr,
+  findBindUsersCtr,
 } = adminUserController;
 // 后台文章控制器
 const {
@@ -167,6 +168,7 @@ module.exports = {
   adminSetAuthCtr,
   adminUpdateUsersCtr,
   bindAccountCtr,
+  findBindUsersCtr,
   // 后台文章控制器
   adminCreateArticleCtr,
   adminUpdateArticleCtr,

@@ -13,6 +13,7 @@ const {
   adminBatchDeleteUser,
   adminSetAuth,
   bindAccount,
+  findBindUsers,
 } = require("../../service");
 
 class UserController {
@@ -242,6 +243,23 @@ class UserController {
       }
     } catch (error) {
       console.error("bindAccountCtr", error);
+      ctx.app.emit("error", databaseError, ctx);
+    }
+  }
+
+  // 查找绑定的前台账户信息
+  async findBindUsersCtr(ctx, next) {
+    try {
+      const params = ctx.request.body;
+      const res = await findBindUsers(params);
+      ctx.body = {
+        code: 200,
+        success: true,
+        message: "获取绑定账号信息成功",
+        data: res,
+      };
+    } catch (error) {
+      console.error("findBindUsersCtr", error);
       ctx.app.emit("error", databaseError, ctx);
     }
   }

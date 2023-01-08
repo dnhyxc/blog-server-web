@@ -3,11 +3,11 @@ const mongoose = require("mongoose");
 const pageConfigSchema = new mongoose.Schema({
   adminUserId: String,
   bindUserId: String,
-  username: String,
+  usernames: String,
   layout: Number,
   layoutSet: Number,
   cardLayout: Number,
-  coverImg: [String],
+  coverImgs: [String],
   createTime: Number,
 });
 
