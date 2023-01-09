@@ -36,7 +36,7 @@ router.post("/searchArticle", adminAuth, adminSearchArticleCtr);
 // 获取文章详情
 router.post("/articleDetail", adminAuth, adminGetArticleByIdCtr);
 
-// 删除所有文章
+// 批量删除文章
 router.post("/batchDelArticle", adminAuth, adminBatchDeleteArticleCtr);
 
 // 下架文章
