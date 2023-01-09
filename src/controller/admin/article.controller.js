@@ -6,6 +6,7 @@ const {
   adminFindArticleById,
   adminBatchDeleteArticle,
   adminShelvesArticle,
+  adminRemoveArticle,
   adminFindCommentById,
   adminDeleteComment,
   adminRestoreComment,
@@ -167,6 +168,23 @@ class ArticleController {
       };
     } catch (error) {
       console.error("adminBatchDeleteArticleCtr", error);
+      ctx.app.emit("error", databaseError, ctx);
+    }
+  }
+
+  // 下架文章
+  async adminRemoveArticleCtr(ctx, next) {
+    try {
+      const params = ctx.request.body;
+      const res = await adminRemoveArticle(params);
+      ctx.body = {
+        code: 200,
+        success: true,
+        message: "下架成功",
+        data: res.modifiedCount,
+      };
+    } catch (error) {
+      console.error("adminRemoveArticleCtr", error);
       ctx.app.emit("error", databaseError, ctx);
     }
   }

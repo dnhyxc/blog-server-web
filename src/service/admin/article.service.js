@@ -126,6 +126,19 @@ class articleServer {
     return res.deletedCount;
   }
 
+  // 下架文章
+  async adminRemoveArticle({ articleIds }) {
+    const res = await Article.updateMany(
+      { _id: { $in: articleIds } },
+      {
+        $set: {
+          isDelete: true,
+        },
+      }
+    );
+    return res;
+  }
+
   // 重新上架文章
   async adminShelvesArticle({ articleIds }) {
     const res = await Article.updateMany(
@@ -145,22 +158,22 @@ class articleServer {
   async adminDeleteComment(commentId, fromCommentId, articleId) {
     const filter = fromCommentId
       ? {
-        "replyList._id": fromCommentId, // 选择数组replyList中某个对象中的_id属性
-      }
+          "replyList._id": fromCommentId, // 选择数组replyList中某个对象中的_id属性
+        }
       : { _id: commentId };
-    let count = 0
+    let count = 0;
     // fromCommentId有值说明是子级评论，直接减一就行
     if (fromCommentId) {
-      count = 1
+      count = 1;
     }
-    const res = await Comments.findOne({ _id: commentId, articleId })
+    const res = await Comments.findOne({ _id: commentId, articleId });
     // fromCommentId没有值说明是最上层父级评论，删除时需要加上底下所有子级的评论数及自身数量1，并且需要排除之前删除的replyList中的子级评论
     if (res && !fromCommentId) {
-      const notDel = res.replyList.filter(i => !i.isDelete)
-      count = notDel.length + 1
+      const notDel = res.replyList.filter((i) => !i.isDelete);
+      count = notDel.length + 1;
     }
     // 删除评论时，为当前文章评论数 - 1
-    await updateReplyCount({ articleId: articleId, count, type: 'del' })
+    await updateReplyCount({ articleId: articleId, count, type: "del" });
     if (fromCommentId) {
       const delComment = await Comments.updateOne(
         {
@@ -171,11 +184,9 @@ class articleServer {
       );
       return delComment;
     } else {
-      const delComment = await Comments.deleteOne(
-        {
-          $and: [filter],
-        },
-      );
+      const delComment = await Comments.deleteOne({
+        $and: [filter],
+      });
       return delComment;
     }
   }
@@ -184,26 +195,26 @@ class articleServer {
   async adminRestoreComment(commentId, fromCommentId, articleId) {
     const filter = fromCommentId
       ? {
-        "replyList._id": fromCommentId, // 选择数组replyList中某个对象中的_id属性
-      }
+          "replyList._id": fromCommentId, // 选择数组replyList中某个对象中的_id属性
+        }
       : { _id: commentId };
 
-    let count = 0
+    let count = 0;
 
     // fromCommentId有值说明是子级评论，直接减一就行
     if (fromCommentId) {
-      count = 1
+      count = 1;
     }
 
-    const res = await Comments.findOne({ _id: commentId, articleId })
+    const res = await Comments.findOne({ _id: commentId, articleId });
     // fromCommentId没有值说明是最上层父级评论，删除时需要加上底下所有子级的评论数及自身数量1，并且需要排除之前删除的replyList中的子级评论
     if (res && !fromCommentId) {
-      const notDel = res.replyList.filter(i => !i.isDelete)
-      count = notDel.length + 1
+      const notDel = res.replyList.filter((i) => !i.isDelete);
+      count = notDel.length + 1;
     }
 
     // 删除评论时，为当前文章评论数 - 1
-    await updateReplyCount({ articleId: articleId, count, type: 'add' })
+    await updateReplyCount({ articleId: articleId, count, type: "add" });
 
     const comment = await Comments.updateOne(
       {
@@ -213,11 +224,11 @@ class articleServer {
       {
         $unset: fromCommentId
           ? {
-            "replyList.$.isDelete": true,
-          }
+              "replyList.$.isDelete": true,
+            }
           : {
-            isDelete: true,
-          },
+              isDelete: true,
+            },
       }
     );
 

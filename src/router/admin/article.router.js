@@ -8,6 +8,7 @@ const {
   adminGetArticleByIdCtr,
   adminBatchDeleteArticleCtr,
   adminShelvesArticleCtr,
+  adminRemoveArticleCtr,
   adminFindCommentsByIdCtr,
   adminDeleteCommentCtr,
   adminRestoreCommentCtr,
@@ -37,6 +38,9 @@ router.post("/articleDetail", adminAuth, adminGetArticleByIdCtr);
 
 // 删除所有文章
 router.post("/batchDelArticle", adminAuth, adminBatchDeleteArticleCtr);
+
+// 下架文章
+router.post("/removeArticle", adminAuth, adminRemoveArticleCtr);
 
 // 上架文章
 router.post("/shelvesArticle", adminAuth, adminShelvesArticleCtr);
