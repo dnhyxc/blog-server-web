@@ -33,7 +33,7 @@ class UserServer {
     return user;
   }
 
-  // 获取用户列表同时返回文章总条数
+  // 获取用户列表同时返回总条数
   async adminGetUserListWithTotal({ filterKey, pageNo, pageSize, searchType }) {
     const aggregateData = [
       { $match: filterKey || {} },
@@ -111,9 +111,28 @@ class UserServer {
     return res.deletedCount;
   }
 
+  // 批量删除后台用户
+  async adminDeleteAdminUsers({ userIds }) {
+    const res = await AdminUsers.deleteMany({ _id: { $in: userIds } });
+    return res.deletedCount;
+  }
+
   // 批量为用户添加删除标识
   async adminUpdateUsers({ userIds, type }) {
     await User.updateMany(
+      { _id: { $in: userIds } },
+      {
+        $set: {
+          isDelete: type ? true : false,
+        },
+      }
+    );
+    return userIds;
+  }
+
+  // 批量为后台用户添加删除标识
+  async adminUpdateAdminUsers({ userIds, type }) {
+    await AdminUsers.updateMany(
       { _id: { $in: userIds } },
       {
         $set: {
@@ -128,6 +147,13 @@ class UserServer {
   async adminSetAuth({ auth, userId }) {
     await User.updateOne({ auth }, { $unset: { auth } });
     const data = await User.updateOne({ _id: userId }, { $set: { auth } });
+    return data.modifiedCount;
+  }
+
+  // 设置后台账号权限
+  async adminSetAdminUserAuth({ auth, userId }) {
+    await AdminUsers.updateOne({ auth }, { $unset: { auth } });
+    const data = await AdminUsers.updateOne({ _id: userId }, { $set: { auth } });
     return data.modifiedCount;
   }
 

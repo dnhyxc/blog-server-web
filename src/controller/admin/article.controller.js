@@ -197,7 +197,7 @@ class ArticleController {
       ctx.body = {
         code: 200,
         success: true,
-        message: "删除成功",
+        message: "上架成功",
         data: res.modifiedCount,
       };
     } catch (error) {

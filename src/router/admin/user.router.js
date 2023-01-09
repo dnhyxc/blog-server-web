@@ -8,7 +8,10 @@ const {
   adminGetUserListCtr,
   adminGetAdminUserListCtr,
   adminBatchDeleteUserCtr,
+  adminUpdateAdminUsersCtr,
+  adminDeleteAdminUsersCtr,
   adminSetAuthCtr,
+  adminSetAdminUserAuthCtr,
   adminUpdateUsersCtr,
   bindAccountCtr,
   findBindUsersCtr,
@@ -75,8 +78,17 @@ router.post("/batchDeleteUser", adminAuth, adminBatchDeleteUserCtr);
 // 批量为用户增加删除标识
 router.post("/updateUsers", adminAuth, adminUpdateUsersCtr);
 
+// 批量删除后台用户
+router.post("/deleteAdminUsers", adminAuth, adminDeleteAdminUsersCtr);
+
+// 批量为后台用户增加删除标识
+router.post("/manageAdminUsers", adminAuth, adminUpdateAdminUsersCtr);
+
 // 设置用户权限
 router.post("/setAuth", adminAuth, adminSetAuthCtr);
+
+// 设置权限
+router.post("/setAdminUserAuth", adminAuth, adminSetAdminUserAuthCtr);
 
 // 绑定账户
 router.post("/bindAccount", adminAuth, bindAccountCtr);

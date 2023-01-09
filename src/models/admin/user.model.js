@@ -8,6 +8,7 @@ const userSchema = new mongoose.Schema({
   registerTime: Number,
   logout: String,
   bindUserIds: [String],
+  isDelete: Boolean,
 });
 
 const AdminUsers = mongoose.model("adminUsers", userSchema);

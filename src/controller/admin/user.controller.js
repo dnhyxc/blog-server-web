@@ -10,8 +10,11 @@ const {
   adminGetUserList,
   adminGetAdminUserList,
   adminUpdateUsers,
+  adminDeleteAdminUsers,
+  adminUpdateAdminUsers,
   adminBatchDeleteUser,
   adminSetAuth,
+  adminSetAdminUserAuth,
   bindAccount,
   findBindUsers,
 } = require("../../service");
@@ -177,11 +180,28 @@ class UserController {
       ctx.body = {
         code: 200,
         success: true,
-        message: type ? "删除成功" : "恢复成功",
+        message: type ? "作废成功" : "恢复成功",
         data: res,
       };
     } catch (error) {
       console.error("adminUpdateUsersCtr", error);
+      ctx.app.emit("error", databaseError, ctx);
+    }
+  }
+
+  // 批量为后台用户设置删除标识
+  async adminUpdateAdminUsersCtr(ctx, next) {
+    try {
+      const { userIds, type } = ctx.request.body;
+      const res = await adminUpdateAdminUsers({ userIds, type });
+      ctx.body = {
+        code: 200,
+        success: true,
+        message: type ? "作废成功" : "恢复成功",
+        data: res,
+      };
+    } catch (error) {
+      console.error("adminUpdateAdminUsersCtr", error);
       ctx.app.emit("error", databaseError, ctx);
     }
   }
@@ -203,11 +223,28 @@ class UserController {
     }
   }
 
+  // 批量删除后台用户
+  async adminDeleteAdminUsersCtr(ctx, next) {
+    try {
+      const { userIds } = ctx.request.body;
+      const res = await adminDeleteAdminUsers({ userIds });
+      ctx.body = {
+        code: 200,
+        success: true,
+        message: "删除成功",
+        data: res,
+      };
+    } catch (error) {
+      console.error("adminDeleteAdminUsersCtr", error);
+      ctx.app.emit("error", databaseError, ctx);
+    }
+  }
+
   // 设置权限
   async adminSetAuthCtr(ctx, next) {
     try {
       const { auth, userId } = ctx.request.body;
-      const res = await adminSetAuth({ auth, userId });
+      await adminSetAuth({ auth, userId });
       ctx.body = {
         code: 200,
         success: true,
@@ -216,6 +253,23 @@ class UserController {
       };
     } catch (error) {
       console.error("adminSetAuthCtr", error);
+      ctx.app.emit("error", databaseError, ctx);
+    }
+  }
+
+  // 设置后台账号权限
+  async adminSetAdminUserAuthCtr(ctx, next) {
+    try {
+      const { auth, userId } = ctx.request.body;
+      await adminSetAdminUserAuth({ auth, userId });
+      ctx.body = {
+        code: 200,
+        success: true,
+        message: "权限设置成功",
+        data: userId,
+      };
+    } catch (error) {
+      console.error("adminSetAdminUserAuthCtr", error);
       ctx.app.emit("error", databaseError, ctx);
     }
   }
