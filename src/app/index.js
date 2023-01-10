@@ -1,13 +1,26 @@
+const http = require("http");
 const Koa = require("koa");
 const koaBody = require("koa-body");
 const koaStatic = require("koa-static");
 const path = require("path");
+const WebSocket = require("ws");
 const router = require("../router/web");
 const routerAdmin = require("../router/admin");
 const connectMongodb = require("../db");
 const { errorHandler } = require("../utils");
 
 const app = new Koa();
+
+const WebSocketApi = require("../ws"); //引入封装的ws模块
+
+const server = http.createServer(app.callback());
+
+const wss = new WebSocket.Server({
+  // 同一个端口监听不同的服务
+  server,
+});
+
+WebSocketApi(wss);
 
 // 链接数据库
 connectMongodb();
