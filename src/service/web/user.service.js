@@ -13,12 +13,15 @@ class UserServer {
 
   // 用户登录
   async findOneUser(filter) {
-    const user = await User.findOne(filter, {
-      userId: `${"$_id".toString()}`,
-      _id: 1,
-      password: 1,
-      ...userFields,
-    });
+    const user = await User.findOne(
+      { ...filter, isDelete: { $nin: [true] } },
+      {
+        userId: `${"$_id".toString()}`,
+        _id: 1,
+        password: 1,
+        ...userFields,
+      }
+    );
     return user;
   }
 

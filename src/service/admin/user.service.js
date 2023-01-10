@@ -13,12 +13,15 @@ class UserServer {
 
   // 用户登录
   async adminFindOneUser(filter) {
-    const user = await AdminUsers.findOne(filter, {
-      userId: `${"$_id".toString()}`,
-      _id: 1,
-      password: 1,
-      ...userFields,
-    });
+    const user = await AdminUsers.findOne(
+      { ...filter, isDelete: { $nin: [true] } },
+      {
+        userId: `${"$_id".toString()}`,
+        _id: 1,
+        password: 1,
+        ...userFields,
+      }
+    );
     return user;
   }
 
@@ -153,7 +156,10 @@ class UserServer {
   // 设置后台账号权限
   async adminSetAdminUserAuth({ auth, userId }) {
     await AdminUsers.updateOne({ auth }, { $unset: { auth } });
-    const data = await AdminUsers.updateOne({ _id: userId }, { $set: { auth } });
+    const data = await AdminUsers.updateOne(
+      { _id: userId },
+      { $set: { auth } }
+    );
     return data.modifiedCount;
   }
 
@@ -219,13 +225,18 @@ class UserServer {
 
   // 查找绑定的前台账号列表
   async findBindUsers({ userIds }) {
-    const res = await User.find({
-      _id: { $in: userIds }
-    }, {
-      username: 1, userId: '$_id', _id: 0
-    })
+    const res = await User.find(
+      {
+        _id: { $in: userIds },
+      },
+      {
+        username: 1,
+        userId: "$_id",
+        _id: 0,
+      }
+    );
 
-    return res
+    return res;
   }
 }
 
