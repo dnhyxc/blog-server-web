@@ -1,4 +1,12 @@
 module.exports = (wss) => {
+  wss.on('open', function open() {
+    console.log('wss is open');
+  })
+
+  wss.on('close', function close() {
+    console.log('wss is close');
+  })
+
   wss.on("connection", function connection(ws) {
     console.log("WS Server is running");
 
