@@ -26,7 +26,7 @@ class WS {
         ws.id = query.id; // 添加ws实例的唯一标识
         const obj = {
           message: `连接成功${query.id}${this.online}`,
-          retCode: 200,
+          code: 200,
         };
         ws.send(JSON.stringify(obj));
       } catch (error) {
@@ -37,7 +37,10 @@ class WS {
       ws.on("message", (msg) => {
         try {
           const data = msg && JSON.parse(msg);
-          this.sendMessage(data);
+          this.sendMessage({
+            ...data,
+            code: 200
+          });
         } catch (error) {
           console.error("websocket on message error", error);
           return ws.close();
