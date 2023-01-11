@@ -108,8 +108,27 @@ const getSortType = (filterList) => {
   return sortType;
 };
 
+// 解析 ws query 参数
+const parseQuery = (url) => {
+  const lastIndex = url.lastIndexOf("?");
+
+  if (lastIndex > -1) {
+    const search = url.substring(lastIndex + 1, url.length);
+    const pairs = search ? search.split("&") : [];
+    const query = {};
+    for (let i = 0; i < pairs.length; ++i) {
+      const [key, value] = pairs[i].split("=");
+      query[key] = value;
+    }
+    return query;
+  } else {
+    return { id: "" };
+  }
+};
+
 module.exports = {
   errorHandler,
   getAdvancedSearchFilter,
   getSortType,
+  parseQuery,
 };

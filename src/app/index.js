@@ -1,16 +1,20 @@
+const http = require("http");
+const path = require("path");
 const Koa = require("koa");
 const koaBody = require("koa-body");
 const koaStatic = require("koa-static");
-const path = require("path");
 const router = require("../router/web");
 const routerAdmin = require("../router/admin");
 const connectMongodb = require("../db");
 const { errorHandler } = require("../utils");
-
-const app = new Koa();
+const WS = require("../socket");
 
 // 链接数据库
 connectMongodb();
+
+const app = new Koa();
+
+WS.init();
 
 // 注册解析参数的中间件
 app.use(
