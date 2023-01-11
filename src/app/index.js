@@ -1,36 +1,16 @@
-// const http = require("http");
 const Koa = require("koa");
 const koaBody = require("koa-body");
 const koaStatic = require("koa-static");
 const path = require("path");
-// const WebSocket = require("ws");
-const webSocket = require('koa-websocket')
-const cors = require('@koa/cors')
+const websockify = require("koa-websocket");
 const router = require("../router/web");
 const routerAdmin = require("../router/admin");
-const routerWs = require("../router/ws");
-const connectMongodb = require("../db");
 const { errorHandler } = require("../utils");
+const routerWs = require("../router/ws");
 
-const app = webSocket(new Koa())
+const app = websockify(new Koa());
 
-// const WebSocketApi = require("../ws"); //引入封装的ws模块
-
-// const server = http.createServer(app.callback());
-
-// const wss = new WebSocket.Server({
-//   // 同一个端口监听不同的服务
-//   server,
-// });
-
-// WebSocketApi(wss);
-
-// 链接数据库
-connectMongodb();
-
-// app.use(cors())
-
-app.proxy = true
+app.use(koaStatic(path.join(__dirname, "../upload")));
 
 // 注册解析参数的中间件
 app.use(
@@ -48,15 +28,18 @@ app.use(
   })
 );
 
-app.use(koaStatic(path.join(__dirname, "../upload")));
+app.ws.use((ctx, next) => {
+  console.log(ctx, "ctx");
+  return next(ctx);
+});
+
+app.ws.use(routerWs.routes()).use(routerWs.allowedMethods());
 
 // 前台路由注册
 app.use(router.routes()).use(router.allowedMethods());
 
 // 后台路由注册
 app.use(routerAdmin.routes()).use(routerAdmin.allowedMethods());
-
-app.use(routerWs.routes());
 
 app.on("error", errorHandler);
 
