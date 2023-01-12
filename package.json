@@ -20,7 +20,6 @@
     "koa-combine-routers": "^4.0.2",
     "koa-router": "^11.0.1",
     "koa-static": "^5.0.0",
-    "koa2-cors": "^2.0.6",
     "mongoose": "^6.4.4",
     "ts-node": "^10.8.2",
     "tslib": "^2.4.0",
