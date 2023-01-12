@@ -30,7 +30,7 @@ class ArticleController {
         },
       };
     } catch (error) {
-      console.error("createArticleCtr", error);
+      console.error("adminCreateArticleCtr", error);
       ctx.app.emit("error", databaseError, ctx);
     }
   }

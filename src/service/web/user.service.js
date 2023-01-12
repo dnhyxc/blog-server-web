@@ -1,4 +1,4 @@
-const { User } = require("../../models");
+const { User, AdminUsers } = require("../../models");
 const { userFields } = require("../../constant");
 
 class UserServer {
@@ -22,7 +22,22 @@ class UserServer {
         ...userFields,
       }
     );
-    return user;
+
+    // 如果前台账户没有找到，则取后台账户中查找，用户针对后台用户发布文章
+    if (!user) {
+      const adminUser = await AdminUsers.findOne(
+        { ...filter, isDelete: { $nin: [true] } },
+        {
+          userId: `${"$_id".toString()}`,
+          _id: 1,
+          password: 1,
+          ...userFields,
+        }
+      );
+      return adminUser;
+    } else {
+      return user;
+    }
   }
 
   // 根据id查找用户
