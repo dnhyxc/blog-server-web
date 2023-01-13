@@ -93,6 +93,7 @@ const {
   adminRemoveArticle,
   adminFindCommentById,
   adminDeleteComment,
+  adminRemoveComment,
   adminRestoreComment,
 } = require("./admin/article.service");
 
@@ -180,5 +181,6 @@ module.exports = {
   adminRemoveArticle,
   adminFindCommentById,
   adminDeleteComment,
+  adminRemoveComment,
   adminRestoreComment,
 };

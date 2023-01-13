@@ -9,6 +9,7 @@ const {
   adminRemoveArticle,
   adminFindCommentById,
   adminDeleteComment,
+  adminRemoveComment,
   adminRestoreComment,
 } = require("../../service");
 const { databaseError, fieldFormateError } = require("../../constant");
@@ -257,6 +258,24 @@ class ArticleController {
       };
     } catch (error) {
       console.error("adminDeleteCommentCtr", error);
+      ctx.app.emit("error", databaseError, ctx);
+    }
+  }
+
+  // 删除评论
+  async adminRemoveCommentCtr(ctx, next) {
+    try {
+      const { commentId, fromCommentId, articleId } = ctx.request.body;
+      // 判断当前用户是否对当前评论点过赞
+      await adminRemoveComment(commentId, fromCommentId, articleId);
+      ctx.body = {
+        code: 200,
+        success: true,
+        message: "作废评论成功",
+        data: commentId,
+      };
+    } catch (error) {
+      console.error("adminRemoveCommentCtr", error);
       ctx.app.emit("error", databaseError, ctx);
     }
   }

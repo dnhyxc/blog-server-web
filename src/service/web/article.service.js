@@ -313,6 +313,7 @@ class articleServer {
     }
   };
 
+  // 更新文章评论数
   async updateReplyCount({ articleId: _id, type, count }) {
     await Article.updateOne(
       { _id },

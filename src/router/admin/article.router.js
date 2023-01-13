@@ -11,6 +11,7 @@ const {
   adminRemoveArticleCtr,
   adminFindCommentsByIdCtr,
   adminDeleteCommentCtr,
+  adminRemoveCommentCtr,
   adminRestoreCommentCtr,
 } = require("../../controller");
 
@@ -50,6 +51,9 @@ router.post("/getCommentList", adminAuth, adminFindCommentsByIdCtr);
 
 // 删除文章评论
 router.post("/deleteComment", adminAuth, adminDeleteCommentCtr);
+
+// 作废文章评论
+router.post("/removeComment", adminAuth, adminRemoveCommentCtr);
 
 // 恢复前台删除的文章评论
 router.post("/restoreComment", adminAuth, adminRestoreCommentCtr);
