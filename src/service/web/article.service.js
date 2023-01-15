@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { Article, LikeArticle } = require("../../models");
+const { Article, LikeArticle, Comments } = require("../../models");
 const { findUserById, findOneUser } = require("./user.service");
 const { anotherFields, detailFields } = require("../../constant");
 const { getAdvancedSearchFilter, getSortType } = require("../../utils");
@@ -193,6 +193,53 @@ class articleServer {
     return likes;
   };
 
+  // 获取评论列表
+  async getArticleCommentList(articleIds) {
+    const commentList = await Comments.aggregate([
+      { $match: { articleId: { $in: articleIds }, isDelete: { $nin: [true] } } },
+      {
+        $project: {
+          id: '$_id',
+          articleId: "$articleId",
+          replyList: '$replyList'
+        },
+      },
+      {
+        $group: {
+          _id: "$articleId",
+          comments: {
+            $push: {
+              id: "$_id",
+              articleId: '$articleId',
+              replyList: '$replyList'
+            },
+          },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          articleId: "$_id",
+          comments: 1,
+        },
+      },
+    ]);
+
+    commentList.forEach((i) => {
+      i.comments.forEach(k => {
+        if (k.replyList?.length) {
+          k.replyList.forEach((h, index) => {
+            if (h.isDelete) {
+              k.replyList.splice(index, 1)
+            }
+          })
+        }
+      })
+    })
+
+    return commentList
+  }
+
   // 获取文章列表同时返回文章总条数
   getArticleListWithTotal = async ({
     filterKey,
@@ -237,6 +284,31 @@ class articleServer {
     ]);
     if (list?.length) {
       const { total, data } = list[0];
+
+      const articleIds = data.map(i => i.id.toString())
+
+      const comments = await new articleServer().getArticleCommentList(articleIds)
+
+      // 计算评论数
+      const getCommentCount = (comments) => {
+        let count = 0;
+        comments.forEach((i) => {
+          const length = i.replyList?.length || 0;
+          count += length + 1;
+        });
+
+        return count;
+      };
+
+      data.forEach(i => {
+        comments.forEach(j => {
+          if (j.articleId === i.id.toString()) {
+            const count = getCommentCount(j.comments)
+            i.commentCount = count
+          }
+        })
+      })
+
       return {
         total: total[0]?.count || 0,
         list: data || [],
