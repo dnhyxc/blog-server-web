@@ -106,6 +106,7 @@ const {
   adminDeleteCommentCtr,
   adminRemoveCommentCtr,
   adminRestoreCommentCtr,
+  adminGetArticlesCommentsCtr,
 } = adminArticleController;
 // 主题设置控制器
 const { adminCreateConfigCtr } = adminPageConfigController;
@@ -191,6 +192,7 @@ module.exports = {
   adminDeleteCommentCtr,
   adminRemoveCommentCtr,
   adminRestoreCommentCtr,
+  adminGetArticlesCommentsCtr,
   // 主题设置控制器
   adminCreateConfigCtr,
 };

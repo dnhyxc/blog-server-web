@@ -13,6 +13,7 @@ const {
   adminDeleteCommentCtr,
   adminRemoveCommentCtr,
   adminRestoreCommentCtr,
+  adminGetArticlesCommentsCtr,
 } = require("../../controller");
 
 const { adminAuth } = require("../../middleware");
@@ -57,5 +58,8 @@ router.post("/removeComment", adminAuth, adminRemoveCommentCtr);
 
 // 恢复前台删除的文章评论
 router.post("/restoreComment", adminAuth, adminRestoreCommentCtr);
+
+// 获取评论列表
+router.post("/getArticlesComments", adminAuth, adminGetArticlesCommentsCtr);
 
 module.exports = router;

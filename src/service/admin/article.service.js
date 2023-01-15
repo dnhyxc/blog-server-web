@@ -156,24 +156,49 @@ class articleServer {
 
   // 删除评论
   async adminDeleteComment(commentId, fromCommentId, articleId) {
+    console.log(fromCommentId, 'fromCommentId', commentId);
+    // console.log(commentId, 'commentId', articleId, 'articleId', fromCommentId);
+    const replyComment = await Comments.findOne(
+      { articleId, "replyList._id": fromCommentId, 'replyList.isDelete': true },
+      { replyList: { $elemMatch: { "isDelete": true } } }
+    );
+
+    console.log(replyComment, 'replyComment');
+
+    const res = await Comments.findOne({ _id: commentId, articleId, isDelete: { $nin: [true] } });
+
+    // console.log(res, '>>>>>>res>>>>>resresresresres');
+
     const filter = fromCommentId
       ? {
-          "replyList._id": fromCommentId, // 选择数组replyList中某个对象中的_id属性
-        }
+        "replyList._id": fromCommentId, // 选择数组replyList中某个对象中的_id属性
+      }
       : { _id: commentId };
     let count = 0;
     // fromCommentId有值说明是子级评论，直接减一就行
     if (fromCommentId) {
-      count = 1;
+      count = replyComment ? 0 : 1;
     }
-    const res = await Comments.findOne({ _id: commentId, articleId });
+
+    // const replyList = await Comments.findOne(
+    //   { _id: commentId, articleId, 'replyList.isDelete': { $nin: [true] } },
+    //   { replyList: { $elemMatch: { "replyList.isDelete": { $nin: [true] } } } }, { replyList: 1, _id: 0 }
+    // );
+
+    // console.log(replyList.replyList, 'replyList');
+    // console.log(replyList.replyList?.length, 'length');
+
     // fromCommentId没有值说明是最上层父级评论，删除时需要加上底下所有子级的评论数及自身数量1，并且需要排除之前删除的replyList中的子级评论
     if (res && !fromCommentId) {
       const notDel = res.replyList.filter((i) => !i.isDelete);
       count = notDel.length + 1;
     }
+
+    console.log(count, 'count');
+
     // 删除评论时，为当前文章评论数 - 1
     await updateReplyCount({ articleId: articleId, count, type: "del" });
+
     if (fromCommentId) {
       const delComment = await Comments.updateOne(
         {
@@ -195,8 +220,8 @@ class articleServer {
   async adminRemoveComment(commentId, fromCommentId, articleId) {
     const filter = fromCommentId
       ? {
-          "replyList._id": fromCommentId, // 选择数组replyList中某个对象中的_id属性
-        }
+        "replyList._id": fromCommentId, // 选择数组replyList中某个对象中的_id属性
+      }
       : { _id: commentId };
 
     let count = 0;
@@ -207,11 +232,16 @@ class articleServer {
     }
 
     const res = await Comments.findOne({ _id: commentId, articleId });
+
+    console.log(res, 'res>>>>>>>>>>>replyList.isDelete');
     // fromCommentId没有值说明是最上层父级评论，删除时需要加上底下所有子级的评论数及自身数量1，并且需要排除之前删除的replyList中的子级评论
     if (res && !fromCommentId) {
       const notDel = res.replyList.filter((i) => !i.isDelete);
-      count = notDel.length + 1;
+      // count = notDel.length + 1;
+      count = 1;
     }
+
+    console.log(count, 'count>>>作废');
 
     // 删除评论时，为当前文章评论数 - 1
     await updateReplyCount({ articleId: articleId, count, type: "del" });
@@ -224,11 +254,11 @@ class articleServer {
       {
         $set: fromCommentId
           ? {
-              "replyList.$.isDelete": true,
-            }
+            "replyList.$.isDelete": true,
+          }
           : {
-              isDelete: true,
-            },
+            isDelete: true,
+          },
       }
     );
 
@@ -239,8 +269,8 @@ class articleServer {
   async adminRestoreComment(commentId, fromCommentId, articleId) {
     const filter = fromCommentId
       ? {
-          "replyList._id": fromCommentId, // 选择数组replyList中某个对象中的_id属性
-        }
+        "replyList._id": fromCommentId, // 选择数组replyList中某个对象中的_id属性
+      }
       : { _id: commentId };
 
     let count = 0;
@@ -250,12 +280,12 @@ class articleServer {
       count = 1;
     }
 
-    const res = await Comments.findOne({ _id: commentId, articleId });
     // fromCommentId没有值说明是最上层父级评论，删除时需要加上底下所有子级的评论数及自身数量1，并且需要排除之前删除的replyList中的子级评论
-    if (res && !fromCommentId) {
-      const notDel = res.replyList.filter((i) => !i.isDelete);
-      count = notDel.length + 1;
+    if (!fromCommentId) {
+      count = 1;
     }
+
+    console.log(count, 'count>>>恢复');
 
     // 删除评论时，为当前文章评论数 - 1
     await updateReplyCount({ articleId: articleId, count, type: "add" });
@@ -268,15 +298,135 @@ class articleServer {
       {
         $unset: fromCommentId
           ? {
-              "replyList.$.isDelete": true,
-            }
+            "replyList.$.isDelete": true,
+          }
           : {
-              isDelete: true,
-            },
+            isDelete: true,
+          },
       }
     );
 
     return comment;
+  }
+
+  // 后台评论管理评论列表
+  async getArticleCommentList(articleIds) {
+    const commentList = await Comments.aggregate([
+      { $match: { articleId: { $in: articleIds } } },
+      {
+        $project: {
+          id: '$_id',
+          articleId: "$articleId",
+          userId: 1,
+          username: 1,
+          avatarUrl: 1,
+          date: 1,
+          content: 1,
+          fromUserId: 1,
+          likeCount: 1,
+          replyCount: 1,
+          isLike: 1,
+          isDelete: 1,
+          headUrl: 1,
+          replyList: 1,
+        },
+      },
+      {
+        $group: {
+          _id: "$articleId",
+          count: { $sum: 1 },
+          comments: {
+            $push: {
+              id: "$_id",
+              articleId: '$articleId',
+              userId: '$userId',
+              username: '$username',
+              avatarUrl: '$avatarUrl',
+              date: '$date',
+              content: '$content',
+              fromUserId: '$fromUserId',
+              likeCount: '$likeCount',
+              replyCount: '$replyCount',
+              isLike: '$isLike',
+              isDelete: '$isDelete',
+              headUrl: '$headUrl',
+              replyList: '$replyList',
+            },
+          },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          articleId: "$_id",
+          count: 1,
+          comments: 1,
+        },
+      },
+      { $sort: { date: -1 } },
+    ]);
+
+    return commentList
+  }
+
+
+  // 获取文章评论列表
+  async adminGetArticlesComments({ pageNo, pageSize }) {
+    const list = await Article.aggregate([
+      // {
+      //   $lookup: {
+      //     from: "comments",
+      //     localField: "articleId",
+      //     foreignField: "_id",
+      //     as: "comments"
+      //   }
+      // },
+      {
+        $facet: {
+          total: [{ $count: "count" }],
+          data: [
+            {
+              $project: {
+                _id: 0, // 默认情况下_id是包含的，将_id设置为0|false，则选择不包含_id，其他字段也可以这样选择是否显示。
+                id: "$_id", // 将_id更名为classify
+                title: 1,
+                authorId: 1,
+                isDelete: 1,
+                createTime: 1,
+              },
+            },
+            { $sort: { createTime: -1, likeCount: -1 } },
+            { $skip: (pageNo - 1) * pageSize },
+            { $limit: pageSize },
+          ],
+        },
+      },
+    ]);
+
+    if (list?.length) {
+      const { total, data } = list[0];
+
+      const articleIds = data.map(i => i.id.toString())
+
+      const comments = await new articleServer().getArticleCommentList(articleIds)
+
+      data.forEach(i => {
+        comments.forEach(j => {
+          if (j.articleId === i.id.toString()) {
+            i.commentList = j
+          }
+        })
+      })
+
+      return {
+        total: total[0]?.count || 0,
+        list: data || [],
+      };
+    }
+    return {
+      total: 0,
+      list: [],
+    };
   }
 }
 

@@ -95,6 +95,7 @@ const {
   adminDeleteComment,
   adminRemoveComment,
   adminRestoreComment,
+  adminGetArticlesComments,
 } = require("./admin/article.service");
 
 const { adminCreateConfig } = require("./admin/config.service");
@@ -183,4 +184,5 @@ module.exports = {
   adminDeleteComment,
   adminRemoveComment,
   adminRestoreComment,
+  adminGetArticlesComments,
 };

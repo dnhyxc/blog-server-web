@@ -26,9 +26,9 @@ const ArticleSchema = new mongoose.Schema({
   isLike: Boolean,
   likeCount: Number,
   replyCount: Number,
-  readCount: Number
+  readCount: Number,
 });
 
-const Article = mongoose.model("articles", ArticleSchema);
+const Article = mongoose.model("articles", ArticleSchema, 'articles');
 
 module.exports = Article;

@@ -318,7 +318,7 @@ class articleServer {
     await Article.updateOne(
       { _id },
       {
-        $inc: { replyCount: type === "add" ? 1 : -count },
+        $inc: { replyCount: type === "add" ? count || 1 : -count },
       }
     );
   }

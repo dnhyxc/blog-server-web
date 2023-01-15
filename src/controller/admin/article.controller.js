@@ -11,6 +11,7 @@ const {
   adminDeleteComment,
   adminRemoveComment,
   adminRestoreComment,
+  adminGetArticlesComments,
 } = require("../../service");
 const { databaseError, fieldFormateError } = require("../../constant");
 
@@ -250,6 +251,8 @@ class ArticleController {
       const { commentId, fromCommentId, articleId } = ctx.request.body;
       // 判断当前用户是否对当前评论点过赞
       await adminDeleteComment(commentId, fromCommentId, articleId);
+
+      console.log('1111111');
       ctx.body = {
         code: 200,
         success: true,
@@ -294,6 +297,23 @@ class ArticleController {
       };
     } catch (error) {
       console.error("adminDeleteCommentCtr", error);
+      ctx.app.emit("error", databaseError, ctx);
+    }
+  }
+
+  // 删除评论
+  async adminGetArticlesCommentsCtr(ctx, next) {
+    try {
+      const params = ctx.request.body;
+      const res = await adminGetArticlesComments(params);
+      ctx.body = {
+        code: 200,
+        success: true,
+        message: "获取评论列表成功",
+        data: res,
+      };
+    } catch (error) {
+      console.error("adminGetArticlesCommentsCtr", error);
       ctx.app.emit("error", databaseError, ctx);
     }
   }
