@@ -16,7 +16,6 @@ const DraftSchema = new mongoose.Schema({
   isDelete: Boolean,
   isLike: Boolean,
   likeCount: Number,
-  replyCount: Number,
   originalArticleId: String | Number,
 });
 

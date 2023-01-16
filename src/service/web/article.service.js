@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
-const { Article, LikeArticle, Comments } = require("../../models");
+const { Article, LikeArticle } = require("../../models");
 const { findUserById, findOneUser } = require("./user.service");
+const { findCommentById } = require("./comments.service");
 const { anotherFields, detailFields } = require("../../constant");
 const { getAdvancedSearchFilter, getSortType } = require("../../utils");
 
@@ -11,7 +12,6 @@ class articleServer {
     return await Article.create({
       ...params,
       likeCount: 0,
-      replyCount: 0,
       readCount: 0,
       authorName: userInfo.username,
     });
@@ -193,52 +193,33 @@ class articleServer {
     return likes;
   };
 
-  // 获取评论列表
-  async getArticleCommentList(articleIds) {
-    const commentList = await Comments.aggregate([
-      { $match: { articleId: { $in: articleIds }, isDelete: { $nin: [true] } } },
-      {
-        $project: {
-          id: '$_id',
-          articleId: "$articleId",
-          replyList: '$replyList'
-        },
-      },
-      {
-        $group: {
-          _id: "$articleId",
-          comments: {
-            $push: {
-              id: "$_id",
-              articleId: '$articleId',
-              replyList: '$replyList'
-            },
-          },
-        },
-      },
-      {
-        $project: {
-          _id: 0,
-          articleId: "$_id",
-          comments: 1,
-        },
-      },
-    ]);
-
-    commentList.forEach((i) => {
-      i.comments.forEach(k => {
-        if (k.replyList?.length) {
-          k.replyList.forEach((h, index) => {
-            if (h.isDelete) {
-              k.replyList.splice(index, 1)
-            }
-          })
-        }
-      })
-    })
-
-    return commentList
-  }
+  // 计算文章评论数
+  computeReplyCount = async (list, format) => {
+    const articleIds = list.map((i) => i.id.toString());
+    const res = await findCommentById(articleIds);
+    const filterDelComments = res?.length > 0 && res.filter((i) => !i.isDelete);
+    const comments =
+      filterDelComments?.length > 0 &&
+      filterDelComments.map((i) => {
+        const comment = { ...i._doc };
+        const filterReplyList = comment.replyList.filter((i) => !i.isDelete);
+        comment.commentCount = filterReplyList.length + 1;
+        return comment;
+      });
+    list.forEach((i) => {
+      i.commentCount = 0;
+      comments?.length > 0 &&
+        comments.forEach((j) => {
+          if (format) {
+            i.createDate = new Date(i.createTime).getFullYear();
+          }
+          if (j.articleId === i.id.toString()) {
+            i.commentCount += j.commentCount;
+          }
+        });
+    });
+    return list;
+  };
 
   // 获取文章列表同时返回文章总条数
   getArticleListWithTotal = async ({
@@ -267,7 +248,6 @@ class articleServer {
                 likeCount: 1,
                 createTime: 1,
                 authorName: 1,
-                replyCount: 1,
                 readCount: 1,
               },
             },
@@ -282,36 +262,14 @@ class articleServer {
         },
       },
     ]);
+
     if (list?.length) {
       const { total, data } = list[0];
-
-      const articleIds = data.map(i => i.id.toString())
-
-      const comments = await new articleServer().getArticleCommentList(articleIds)
-
-      // 计算评论数
-      const getCommentCount = (comments) => {
-        let count = 0;
-        comments.forEach((i) => {
-          const length = i.replyList?.length || 0;
-          count += length + 1;
-        });
-
-        return count;
-      };
-
-      data.forEach(i => {
-        comments.forEach(j => {
-          if (j.articleId === i.id.toString()) {
-            const count = getCommentCount(j.comments)
-            i.commentCount = count
-          }
-        })
-      })
-
+      // 获取文章评论数
+      const res = await this.computeReplyCount(data);
       return {
         total: total[0]?.count || 0,
-        list: data || [],
+        list: res || [],
       };
     } else {
       return {
@@ -385,16 +343,6 @@ class articleServer {
     }
   };
 
-  // 更新文章评论数
-  async updateReplyCount({ articleId: _id, type, count }) {
-    await Article.updateOne(
-      { _id },
-      {
-        $inc: { replyCount: type === "add" ? count || 1 : -count },
-      }
-    );
-  }
-
   // 根据文章id查找文章详情
   async likeArticle({ id: _id, likeStatus }) {
     await Article.updateOne(
@@ -418,7 +366,7 @@ class articleServer {
         $match: {
           isDelete: { $nin: [true] },
           // 匹配点赞大于等一1或者评论大于等于1的数据
-          $or: [{ likeCount: { $gte: 1 } }, { replyCount: { $gte: 1 } }],
+          $or: [{ likeCount: { $gte: 1 } }, { readCount: { $gte: 1 } }],
         },
       },
       // 随机获取5条数据

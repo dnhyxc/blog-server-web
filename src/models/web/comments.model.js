@@ -9,7 +9,6 @@ const CommentsSchema = new mongoose.Schema({
   content: String,
   fromUserId: String,
   likeCount: Number,
-  replyCount: Number,
   isLike: Boolean,
   isDelete: Boolean,
   headUrl: String,
@@ -25,7 +24,6 @@ const CommentsSchema = new mongoose.Schema({
       content: String,
       likeCount: Number,
       isLike: Boolean,
-      replyCount: Number,
       fromCommentId: String,
       isDelete: Boolean,
       headUrl: String,
@@ -33,6 +31,6 @@ const CommentsSchema = new mongoose.Schema({
   ],
 });
 
-const Comments = mongoose.model("comments", CommentsSchema, 'comments');
+const Comments = mongoose.model("comments", CommentsSchema);
 
 module.exports = Comments;

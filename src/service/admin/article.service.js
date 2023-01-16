@@ -1,6 +1,5 @@
 const { Article, Comments } = require("../../models");
 const { findUserById } = require("../web/user.service");
-const { updateReplyCount } = require("../web/article.service");
 const { detailFields } = require("../../constant");
 
 class articleServer {
@@ -10,7 +9,6 @@ class articleServer {
     return await Article.create({
       ...params,
       likeCount: 0,
-      replyCount: 0,
       authorName: userInfo.username,
     });
   }
@@ -54,7 +52,6 @@ class articleServer {
                 likeCount: 1,
                 createTime: 1,
                 authorName: 1,
-                replyCount: 1,
                 isDelete: 1,
               },
             },
@@ -156,18 +153,12 @@ class articleServer {
 
   // 删除评论
   async adminDeleteComment(commentId, fromCommentId, articleId) {
-    console.log(fromCommentId, 'fromCommentId', commentId);
-    // console.log(commentId, 'commentId', articleId, 'articleId', fromCommentId);
     const replyComment = await Comments.findOne(
       { articleId, "replyList._id": fromCommentId, 'replyList.isDelete': true },
       { replyList: { $elemMatch: { "isDelete": true } } }
     );
 
-    console.log(replyComment, 'replyComment');
-
     const res = await Comments.findOne({ _id: commentId, articleId, isDelete: { $nin: [true] } });
-
-    // console.log(res, '>>>>>>res>>>>>resresresresres');
 
     const filter = fromCommentId
       ? {
@@ -180,24 +171,11 @@ class articleServer {
       count = replyComment ? 0 : 1;
     }
 
-    // const replyList = await Comments.findOne(
-    //   { _id: commentId, articleId, 'replyList.isDelete': { $nin: [true] } },
-    //   { replyList: { $elemMatch: { "replyList.isDelete": { $nin: [true] } } } }, { replyList: 1, _id: 0 }
-    // );
-
-    // console.log(replyList.replyList, 'replyList');
-    // console.log(replyList.replyList?.length, 'length');
-
     // fromCommentId没有值说明是最上层父级评论，删除时需要加上底下所有子级的评论数及自身数量1，并且需要排除之前删除的replyList中的子级评论
     if (res && !fromCommentId) {
       const notDel = res.replyList.filter((i) => !i.isDelete);
       count = notDel.length + 1;
     }
-
-    console.log(count, 'count');
-
-    // 删除评论时，为当前文章评论数 - 1
-    await updateReplyCount({ articleId: articleId, count, type: "del" });
 
     if (fromCommentId) {
       const delComment = await Comments.updateOne(
@@ -233,18 +211,12 @@ class articleServer {
 
     const res = await Comments.findOne({ _id: commentId, articleId });
 
-    console.log(res, 'res>>>>>>>>>>>replyList.isDelete');
     // fromCommentId没有值说明是最上层父级评论，删除时需要加上底下所有子级的评论数及自身数量1，并且需要排除之前删除的replyList中的子级评论
     if (res && !fromCommentId) {
       const notDel = res.replyList.filter((i) => !i.isDelete);
       // count = notDel.length + 1;
       count = 1;
     }
-
-    console.log(count, 'count>>>作废');
-
-    // 删除评论时，为当前文章评论数 - 1
-    await updateReplyCount({ articleId: articleId, count, type: "del" });
 
     const comment = await Comments.updateOne(
       {
@@ -285,11 +257,6 @@ class articleServer {
       count = 1;
     }
 
-    console.log(count, 'count>>>恢复');
-
-    // 删除评论时，为当前文章评论数 - 1
-    await updateReplyCount({ articleId: articleId, count, type: "add" });
-
     const comment = await Comments.updateOne(
       {
         $and: [filter],
@@ -324,7 +291,6 @@ class articleServer {
           content: 1,
           fromUserId: 1,
           likeCount: 1,
-          replyCount: 1,
           isLike: 1,
           isDelete: 1,
           headUrl: 1,
@@ -346,7 +312,6 @@ class articleServer {
               content: '$content',
               fromUserId: '$fromUserId',
               likeCount: '$likeCount',
-              replyCount: '$replyCount',
               isLike: '$isLike',
               isDelete: '$isDelete',
               headUrl: '$headUrl',

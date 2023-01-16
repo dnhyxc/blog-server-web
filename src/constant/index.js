@@ -123,7 +123,6 @@ const anotherFields = {
   authorName: 1,
   coverImage: 1,
   likeCount: 1,
-  replyCount: 1,
   readCount: 1,
 };
 

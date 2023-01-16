@@ -9,7 +9,6 @@ class draftServer {
     return await Draft.create({
       ...params,
       likeCount: 0,
-      replyCount: 0,
       authorName: userInfo.username,
     });
   };

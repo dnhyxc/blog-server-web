@@ -101,9 +101,6 @@ const getSortType = (filterList) => {
   if (filterList.includes("likeCount")) {
     sortType.likeCount = -1;
   }
-  if (filterList.includes("replyCount")) {
-    sortType.replyCount = -1;
-  }
 
   return sortType;
 };
@@ -126,9 +123,34 @@ const parseQuery = (url) => {
   }
 };
 
+// 数组根据某相同字段进行分组
+const formateArrData = (initialArr, name) => {
+  //先获取一下这个数组中有多少个"name"
+  let nameArr = [];
+  for (let i in initialArr) {
+    if (nameArr.indexOf(initialArr[i][`${name}`]) === -1) {
+      nameArr.push(initialArr[i][`${name}`]);
+    }
+  }
+  //新建一个包含多个list的结果对象
+  let tempObj = {};
+  // 根据不同的"name"生成多个数组
+  for (let k in nameArr) {
+    for (let j in initialArr) {
+      if (initialArr[j][`${name}`] == nameArr[k]) {
+        // 每次外循环时新建一个对应"name"的数组, 内循环时当前数组不变
+        tempObj[nameArr[k]] = tempObj[nameArr[k]] || [];
+        tempObj[nameArr[k]].push(initialArr[j]);
+      }
+    }
+  }
+  return tempObj;
+};
+
 module.exports = {
   errorHandler,
   getAdvancedSearchFilter,
   getSortType,
   parseQuery,
+  formateArrData,
 };

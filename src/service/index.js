@@ -19,7 +19,6 @@ const {
   getPrevArticle,
   getNextArticle,
   getArticleTotal,
-  updateReplyCount,
   updateAuthorName,
   searchArticles,
 } = require("./web/article.service");
@@ -133,7 +132,6 @@ module.exports = {
   getPrevArticle,
   getNextArticle,
   getArticleTotal,
-  updateReplyCount,
   updateAuthorName,
   createDraft,
   updateDraft,

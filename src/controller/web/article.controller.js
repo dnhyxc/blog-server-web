@@ -11,6 +11,7 @@ const {
   getPrevArticle,
   getNextArticle,
   searchArticles,
+  findCommentById,
 } = require("../../service");
 const {
   databaseError,
@@ -84,8 +85,9 @@ class ArticleController {
     }
   }
 
+
   // 获取文章列表
-  async getArticleListCtr(ctx, next) {
+  getArticleListCtr = async (ctx, next) => {
     try {
       const { pageNo, pageSize, userId } = ctx.request.body;
       // 操作数据库
@@ -94,20 +96,19 @@ class ArticleController {
         pageSize,
         userId,
       });
+
       // 返回结果
-      if (res) {
-        ctx.body = {
-          code: 200,
-          success: true,
-          message: "获取文章列表成功",
-          data: res,
-        };
-      }
+      ctx.body = {
+        code: 200,
+        success: true,
+        message: "获取文章列表成功",
+        data: res,
+      };
     } catch (error) {
       console.error("getArticleListCtr", error);
       ctx.app.emit("error", databaseError, ctx);
     }
-  }
+  };
 
   // 搜索文章列表
   async searchArticleCtr(ctx, next) {

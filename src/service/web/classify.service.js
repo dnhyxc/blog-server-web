@@ -2,7 +2,9 @@ const { Article } = require("../../models");
 const {
   checkLikeStatus,
   getArticleListWithTotal,
+  computeReplyCount,
 } = require("./article.service");
+const { formateArrData } = require("../../utils");
 
 class classifyServer {
   // 获取文章分类
@@ -41,9 +43,29 @@ class classifyServer {
     return list;
   }
 
+  // 获取对应的评论数
+  getCommentCount = async (list) => {
+    let articles = [];
+    list.forEach((i) => {
+      articles = [...articles, ...i.articles];
+    });
+
+    articles = await computeReplyCount(articles, true); // 第二个参数控制是否要对createTime进行时间转换
+
+    const formatData = formateArrData(articles, "createDate");
+
+    list.forEach((i) => {
+      return {
+        ...i,
+        articles: formatData[i.date],
+      };
+    });
+
+    return list;
+  };
+
   // 获取时间轴文章列表
-  async getTimelineList({ userId }) {
-    // 返回文章前，首先根据userId检测点赞状态
+  getTimelineList = async ({ userId }) => {
     const list = await Article.aggregate([
       {
         $match: {
@@ -69,8 +91,8 @@ class classifyServer {
           isLike: "$isLike",
           likeCount: "$likeCount",
           createTime: "$createTime",
-          replyCount: "$replyCount",
           readCount: "$readCount",
+          comments: "$comments",
         },
       },
       {
@@ -90,8 +112,8 @@ class classifyServer {
               isLike: "$isLike",
               likeCount: "$likeCount",
               createTime: "$createTime",
-              replyCount: "$replyCount",
               readCount: "$readCount",
+              comments: "$comments",
             },
           },
         },
@@ -106,8 +128,11 @@ class classifyServer {
       },
       { $sort: { date: -1 } },
     ]);
-    return list;
-  }
+
+    const data = this.getCommentCount(list);
+
+    return data;
+  };
 }
 
 module.exports = new classifyServer();

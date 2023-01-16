@@ -1,12 +1,9 @@
 const { Comments, Like } = require("../../models");
 const { findUserById } = require("./user.service");
-const { updateReplyCount } = require("./article.service");
 
 class commentServer {
   // 创建评论
   async createComments({ params }) {
-    // 发表评论时，为当前文章评论数 + 1
-    await updateReplyCount({ articleId: params.articleId, type: "add" });
     const userInfo = await findUserById(params.userId);
     const comment = await Comments.create({
       ...params,
@@ -92,17 +89,19 @@ class commentServer {
 
   // 根据文章id查找评论
   async findCommentById(articleId, userId) {
-    await commentServer.checkLikeStatus(userId, articleId);
-    const comment = await Comments.find({ articleId });
-    return comment;
+    if (Array.isArray(articleId)) {
+      const comment = await Comments.find({ articleId });
+      return comment;
+    } else {
+      await commentServer.checkLikeStatus(userId, articleId);
+      const comment = await Comments.find({ articleId: { $in: articleId } });
+      return comment;
+    }
   }
 
   // 回复评论
   async updateComments(commentId, params) {
     const { fromCommentId } = params;
-
-    // 回复评论时，为当前文章评论数 + 1
-    await updateReplyCount({ articleId: params.articleId, type: "add" });
 
     const userInfo = await findUserById(params.userId);
 
@@ -194,9 +193,6 @@ class commentServer {
       const notDel = res.replyList.filter((i) => !i.isDelete);
       count = notDel.length + 1;
     }
-
-    // 删除评论时，为当前文章评论数 - 1
-    await updateReplyCount({ articleId: articleId, count, type: "del" });
 
     const comment = await Comments.updateOne(
       {

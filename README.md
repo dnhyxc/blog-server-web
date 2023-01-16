@@ -1,79 +1,3 @@
-### 文件结构说明
-
-```
-blog-server-web
-├─ .gitignore
-├─ package.json
-├─ README.md
-├─ src
-│  ├─ app 路由、数据库、第三方库注册文件
-│  │  └─ index.js
-│  ├─ config 全局通用配置文件
-│  │  └─ index.js
-│  ├─ constant 全局接口返回报错定义
-│  │  └─ index.js
-│  ├─ controller
-│  │  ├─ admin 后台接口控制器
-│  │  │  ├─ article.controller.js
-│  │  │  └─ user.controller.js
-│  │  ├─ index.js
-│  │  └─ web 前台接口控制器
-│  │     ├─ article.controller.js
-│  │     ├─ classify.controller.js
-│  │     ├─ comments.controller.js
-│  │     ├─ upload.controller.js
-│  │     ├─ user.controller.js
-│  │     └─ userInfo.controller.js
-│  ├─ db 数据口配置文件
-│  │  └─ index.js
-│  ├─ main.js 入口文件
-│  ├─ middleware 中间件
-│  │  ├─ auth.middleware.js
-│  │  ├─ index.js
-│  │  └─ user.middleware.js
-│  ├─ models
-│  │  ├─ admin 前台文档Schema
-│  │  │  ├─ article.model.js
-│  │  │  ├─ index.js
-│  │  │  └─ user.model.js
-│  │  ├─ index.js
-│  │  └─ web 后台文档Schema
-│  │     ├─ article.model.js
-│  │     ├─ comments.model.js
-│  │     ├─ like.model.js
-│  │     ├─ likeArticle.model.js
-│  │     └─ user.model.js
-│  ├─ router
-│  │  ├─ admin 后台路由配置
-│  │  │  ├─ article.router.js
-│  │  │  ├─ index.js
-│  │  │  └─ user.router.js
-│  │  └─ web 前台路由配置
-│  │     ├─ article.router.js
-│  │     ├─ classify.router.js
-│  │     ├─ comments.router.js
-│  │     ├─ index.js
-│  │     ├─ upload.router.js
-│  │     ├─ user.router.js
-│  │     └─ userInfo.router.js
-│  ├─ service
-│  │  ├─ admin 后台数据库操作文件
-│  │  │  ├─ article.service.js
-│  │  │  └─ user.service.js
-│  │  ├─ index.js
-│  │  └─ web 前台数据库操作文件
-│  │     ├─ article.service.js
-│  │     ├─ classify.service.js
-│  │     ├─ comments.service.js
-│  │     ├─ like.service.js
-│  │     ├─ likeArticle.service.js
-│  │     ├─ user.service.js
-│  │     └─ userInfo.service.js
-│  └─ utils 全局状态码配置
-│     └─ index.js
-└─ yarn.lock
-```
-
 ### 启动本地 mongodb
 
 进入到 mongodb 文件目录：/usr/local/mongodb。
@@ -91,3 +15,89 @@ blog-server-web
 - 运行：db.shutdownServer()
 
 - 再执行一次 ctrl + c 即可
+
+### [(#unwind 操作符](https://mongodb.net.cn/manual/reference/operator/aggregation/unwind/)
+
+该操作符用于从输入文档中解构一个数组字段，以输出每个元素的文档。
+
+```json
+{
+  $unwind:
+    {
+      // 数组字段的字段路径。要指定字段路径，请在字段名称前加一个美元符号$并用引号引起来。
+      path: "$需要查询数组对象",
+      // 可选的。一个新字段的名称，用于保存元素的数组索引。名称不能以$开头。
+      includeArrayIndex: <string>,
+      /**
+        可选的。
+        如果为true，则如果path为null，丢失或为空数组，则$unwind输出文档。
+        如果为false，如果path为null，缺少或为空数组，$unwind则不会输出文档。
+        默认值为false。
+      */
+      preserveNullAndEmptyArrays: <boolean>
+    }
+}
+```
+
+具体示例：
+
+```js
+// 创建一个inventory2示例集合
+db.inventory2.insertMany([
+  { _id: 1, item: "ABC", price: NumberDecimal("80"), sizes: ["S", "M", "L"] },
+  { _id: 2, item: "EFG", price: NumberDecimal("120"), sizes: [] },
+  { _id: 3, item: "IJK", price: NumberDecimal("160"), sizes: "M" },
+  { _id: 4, item: "LMN", price: NumberDecimal("10") },
+  { _id: 5, item: "XYZ", price: NumberDecimal("5.75"), sizes: null },
+]);
+
+// 以下$unwind操作是等效的，并为该sizes字段中的每个元素返回一个文档。如果该sizes 字段不能解析为数组但不丢失，为null或为空数组，$unwind则将非数组操作数视为单个元素数组。
+
+// 第一种写法
+db.inventory2.aggregate([{ $unwind: "$sizes" }]);
+
+// 第二种写法
+db.inventory2.aggregate([{ $unwind: { path: "$sizes" } }]);
+
+// 该操作返回以下文档：
+{ "_id" : 1, "item" : "ABC", "price" : NumberDecimal("80"), "sizes" : "S" }
+{ "_id" : 1, "item" : "ABC", "price" : NumberDecimal("80"), "sizes" : "M" }
+{ "_id" : 1, "item" : "ABC", "price" : NumberDecimal("80"), "sizes" : "L" }
+{ "_id" : 3, "item" : "IJK", "price" : NumberDecimal("160"), "sizes" : "M" }
+```
+
+### 聚合管道
+
+$lookup：用于多表联合查询。
+
+$project：修改输入文档的结构。可以用来重命名、增加或删除域，也可以用于创建计算结果以及嵌套文档。对应 project() 方法。
+
+$match：用于过滤数据，只输出符合条件的文档。$match 使用 MongoDB 的标准查询操作。对应 match()。
+
+$limit：用来限制 MongoDB 聚合管道返回的文档数。对应 limit() 方法。
+
+$skip：在聚合管道中跳过指定数量的文档，并返回余下的文档。对应 skip()。
+
+$unwind：将文档中的某一个数组类型字段拆分成多条，每条包含数组中的一个值。对应 unwind() 方法。
+
+$group：将集合中的文档分组，可用于统计结果。对应 group()方法。
+
+$sort：将输入文档排序后输出。对应 sort() 方法。
+
+$geoNear：输出接近某一地理位置的有序文档。对应 near()。
+
+### 表达式说明
+
+$sum：计算总和。
+
+$avg：计算平均值。
+
+$min：获取每一组集合中所有文档对应值得最小值。
+
+$max：获取每一组集合中所有文档对应值得最大值。
+
+$push：在结果文档中插入值到一个数组中。
+
+$addToSet：在结果文档中插入值到一个数组中，但不创建副本。
+
+$first：根据资源文档的排序获取第一个文档数据。
