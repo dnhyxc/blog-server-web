@@ -18,6 +18,7 @@ const {
   loginCtr,
   updateInfoCtr,
   resetPwdCtr,
+  logoutCtr,
   getUserInfoCtr,
   verifyTokenCtr,
 } = userController;
@@ -117,6 +118,7 @@ module.exports = {
   loginCtr,
   updateInfoCtr,
   resetPwdCtr,
+  logoutCtr,
   getUserInfoCtr,
   uploadFileCtr,
   createArticleCtr,

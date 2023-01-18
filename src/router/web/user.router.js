@@ -4,6 +4,7 @@ const {
   loginCtr,
   updateInfoCtr,
   resetPwdCtr,
+  logoutCtr,
   getUserInfoCtr,
   verifyTokenCtr,
 } = require("../../controller");
@@ -34,6 +35,9 @@ router.post("/login", userValidator, verifyLogin, loginCtr);
 
 // 获取用户信息
 router.post("/getUserInfo", getUserInfoCtr);
+
+// 注销
+router.post("/logout", auth, verifyUserExists, logoutCtr);
 
 // 修改用户信息接口
 router.put(

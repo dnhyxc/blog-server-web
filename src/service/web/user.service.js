@@ -1,4 +1,4 @@
-const { User, AdminUsers } = require("../../models");
+const { User } = require("../../models");
 const { userFields } = require("../../constant");
 
 class UserServer {
@@ -43,6 +43,15 @@ class UserServer {
       $set: newUserInfo,
     });
     return res.modifiedCount > 0 ? true : false;
+  }
+
+  // 注销账号
+  async logout({ userId }) {
+    const res = await User.deleteOne({ _id: userId })
+    if (res.deletedCount) {
+      return true
+    }
+    return false
   }
 }
 

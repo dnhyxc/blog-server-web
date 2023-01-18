@@ -115,7 +115,7 @@ class collectionController {
       const params = ctx.request.body;
       const res = await getCollectedTotal(params);
       const collectedList = res?.length && res.filter((i) => i.total);
-      const total = collectedList.reduce((prev, cur) => (prev += cur.total), 0);
+      const total = collectedList?.length && collectedList.reduce((prev, cur) => (prev += cur.total), 0) || 0;
       ctx.body = {
         code: 200,
         success: true,

@@ -5,6 +5,7 @@ const {
   createUserServer,
   findOneUser,
   updateUser,
+  logout,
   findUserById,
   getArticleTotal,
   updateAuthorName,
@@ -154,6 +155,32 @@ class UserController {
       };
     } catch (error) {
       console.error("verifyTokenCtr", error);
+      ctx.app.emit("error", databaseError, ctx);
+    }
+  }
+
+  // 注销用户
+  async logoutCtr(ctx, next) {
+    try {
+      const params = ctx.request.body
+      const res = await logout(params)
+      if (res) {
+        ctx.body = {
+          code: 200,
+          success: true,
+          message: "注销成功",
+          data: params.userId,
+        };
+      } else {
+        ctx.body = {
+          code: 200,
+          success: false,
+          message: "注销失败",
+          data: params.userId,
+        };
+      }
+    } catch (error) {
+      console.error("logout", error);
       ctx.app.emit("error", databaseError, ctx);
     }
   }
