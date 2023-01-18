@@ -130,9 +130,13 @@ class collectionServer {
   };
 
   // 获取我的收藏文章总数
-  getCollectedTotal = async ({ userId }) => {
-    const res = Collection.aggregate([
-      { $match: { userId } },
+  getCollectedTotal = async ({ userId, status }) => {
+    // 如果有status，则说明只查公开的收藏集
+    const match = status ? { userId, status: status } : { userId };
+    const res = await Collection.aggregate([
+      {
+        $match: match,
+      },
       {
         $project: {
           _id: 0,
@@ -142,6 +146,14 @@ class collectionServer {
       },
     ]);
     return res;
+  };
+
+  // 获取收藏集的总数
+  getCollectTotal = async ({ userId, status }) => {
+    // 如果有status，则说明只查公开的收藏集
+    const filter = status ? { userId, status } : { userId };
+    const total = await Collection.find(filter).count();
+    return total;
   };
 
   // 删除收藏集
@@ -179,6 +191,7 @@ class collectionServer {
     const ids = articleIds.map((i) => new mongoose.Types.ObjectId(i));
     const filterKey = {
       _id: { $in: ids },
+      isDelete: { $nin: [true] },
     };
     return await getArticleListWithTotal({
       filterKey,
@@ -202,12 +215,6 @@ class collectionServer {
       }
     );
     return res;
-  };
-
-  // 获取收藏集的总数
-  getCollectTotal = async ({ userId }) => {
-    const total = Collection.find({ userId }).count();
-    return total;
   };
 }
 

@@ -115,7 +115,9 @@ class collectionController {
       const params = ctx.request.body;
       const res = await getCollectedTotal(params);
       const collectedList = res?.length && res.filter((i) => i.total);
-      const total = collectedList.reduce((prev, cur) => (prev += cur.total), 0);
+      const total = collectedList?.length
+        ? collectedList.reduce((prev, cur) => (prev += cur.total), 0)
+        : 0;
       ctx.body = {
         code: 200,
         success: true,
@@ -124,6 +126,23 @@ class collectionController {
       };
     } catch (error) {
       console.error("getCollectedTotalCtr", error);
+      ctx.app.emit("error", databaseError, ctx);
+    }
+  }
+
+  // 获取收藏集收藏文章列表
+  async getCollectTotalCtr(ctx, next) {
+    try {
+      const params = ctx.request.body;
+      const res = await getCollectTotal(params);
+      ctx.body = {
+        code: 200,
+        success: true,
+        message: "获取收藏集总数成功",
+        data: res,
+      };
+    } catch (error) {
+      console.error("getCollectTotalCtr", error);
       ctx.app.emit("error", databaseError, ctx);
     }
   }
@@ -209,23 +228,6 @@ class collectionController {
       };
     } catch (error) {
       console.error("removeCollectArticleCtr", error);
-      ctx.app.emit("error", databaseError, ctx);
-    }
-  }
-
-  // 获取收藏集收藏文章列表
-  async getCollectTotalCtr(ctx, next) {
-    try {
-      const params = ctx.request.body;
-      const res = await getCollectTotal(params);
-      ctx.body = {
-        code: 200,
-        success: true,
-        message: "获取收藏集总数成功",
-        data: res,
-      };
-    } catch (error) {
-      console.error("getCollectTotalCtr", error);
       ctx.app.emit("error", databaseError, ctx);
     }
   }
