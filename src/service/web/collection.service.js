@@ -80,7 +80,7 @@ class collectionServer {
 
   // 收藏文章
   collectArticles = async ({ ids, articleId, userId }) => {
-    const res = Collection.updateMany(
+    const res = await Collection.updateMany(
       { _id: { $in: ids }, userId },
       {
         $set: {
@@ -89,12 +89,11 @@ class collectionServer {
         // 注意：如果要使用排序，$sort必须与$each一起使用才会生效
         // $addToSet会进行去重添加操作，$push不会进行去重添加操作
         $addToSet: {
-          articleIds: { $each: [articleId] },
+          articleIds: { $each: [{ articleId, isDelete: false }] },
           $sort: { date: -1 },
         },
       }
     );
-
     return res;
   };
 
@@ -103,7 +102,7 @@ class collectionServer {
     if (!userId) return;
     const res = await Collection.find(
       // 查询字段中的数组中是否包含某值，找出articleIds数组中是否包含当前的articleId
-      { userId, articleIds: { $elemMatch: { $eq: articleId } } },
+      { userId, articleIds: { $elemMatch: { articleId } } },
       collectionRes
     );
     return res;
@@ -113,14 +112,11 @@ class collectionServer {
   cancelCollected = async ({ articleId, userId }) => {
     const res = Collection.updateMany(
       // 查询条件为，查找当前用户下的，并且articleIds数组中包含articleId的所有数据
-      { userId, articleIds: { $elemMatch: { $eq: articleId } } },
+      { userId, articleIds: { $elemMatch: { articleId } } },
       // 向查找到的Collection中的articleIdst数组中插入一篇文章
       // 注意：如果要使用排序，$sort必须与$each一起使用才会生效
       {
-        $pull: { articleIds: articleId },
-        $inc: {
-          count: -1,
-        },
+        $pull: { articleIds: { articleId } },
         $set: {
           createTime: new Date().valueOf(),
         },
@@ -188,7 +184,7 @@ class collectionServer {
     // 返回文章列表前，首先根据userId检测点赞状态
     await checkLikeStatus(userId);
     // 需要将字符串id转为mongoose中的id类型才能查到对应的文章
-    const ids = articleIds.map((i) => new mongoose.Types.ObjectId(i));
+    const ids = articleIds.map((i) => new mongoose.Types.ObjectId(i.articleId));
     const filterKey = {
       _id: { $in: ids },
       isDelete: { $nin: [true] },
@@ -208,10 +204,7 @@ class collectionServer {
       // 向查找到的Collection中的articleIdst数组中插入一篇文章
       // 注意：如果要使用排序，$sort必须与$each一起使用才会生效
       {
-        $pull: { articleIds: articleId },
-        $inc: {
-          count: -1,
-        },
+        $pull: { articleIds: { articleId } },
       }
     );
     return res;

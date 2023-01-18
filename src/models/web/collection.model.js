@@ -6,7 +6,7 @@ const CollectionSchema = new mongoose.Schema({
   desc: String,
   status: Number, // 1: 公开，2：私有
   createTime: Number,
-  articleIds: [String],
+  articleIds: [{}],
   userId: String,
 });
 

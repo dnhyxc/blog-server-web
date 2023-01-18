@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { Article, LikeArticle } = require("../../models");
+const { Article, LikeArticle, Collection } = require("../../models");
 const { findUserById, findOneUser } = require("./user.service");
 const { findCommentById } = require("./comments.service");
 const { anotherFields, detailFields } = require("../../constant");
