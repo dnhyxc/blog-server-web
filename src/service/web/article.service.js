@@ -249,6 +249,7 @@ class articleServer {
                 createTime: 1,
                 authorName: 1,
                 readCount: 1,
+                isDelete: 1,
               },
             },
             {

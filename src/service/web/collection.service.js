@@ -191,7 +191,6 @@ class collectionServer {
     const ids = articleIds.map((i) => new mongoose.Types.ObjectId(i));
     const filterKey = {
       _id: { $in: ids },
-      isDelete: { $nin: [true] },
     };
     return await getArticleListWithTotal({
       filterKey,
