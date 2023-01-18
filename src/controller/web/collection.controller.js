@@ -128,6 +128,23 @@ class collectionController {
     }
   }
 
+  // 获取收藏集收藏文章列表
+  async getCollectTotalCtr(ctx, next) {
+    try {
+      const params = ctx.request.body;
+      const res = await getCollectTotal(params);
+      ctx.body = {
+        code: 200,
+        success: true,
+        message: "获取收藏集总数成功",
+        data: res,
+      };
+    } catch (error) {
+      console.error("getCollectTotalCtr", error);
+      ctx.app.emit("error", databaseError, ctx);
+    }
+  }
+
   // 删除收藏集
   async delCollectionCtr(ctx, next) {
     try {
@@ -209,23 +226,6 @@ class collectionController {
       };
     } catch (error) {
       console.error("removeCollectArticleCtr", error);
-      ctx.app.emit("error", databaseError, ctx);
-    }
-  }
-
-  // 获取收藏集收藏文章列表
-  async getCollectTotalCtr(ctx, next) {
-    try {
-      const params = ctx.request.body;
-      const res = await getCollectTotal(params);
-      ctx.body = {
-        code: 200,
-        success: true,
-        message: "获取收藏集总数成功",
-        data: res,
-      };
-    } catch (error) {
-      console.error("getCollectTotalCtr", error);
       ctx.app.emit("error", databaseError, ctx);
     }
   }
