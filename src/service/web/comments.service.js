@@ -94,7 +94,9 @@ class commentServer {
       return comment;
     } else {
       await commentServer.checkLikeStatus(userId, articleId);
-      const comment = await Comments.find({ articleId: { $in: articleId } });
+      const comment = await Comments.find({
+        articleId: { $in: articleId },
+      }).sort({ date: -1 });
       return comment;
     }
   }
