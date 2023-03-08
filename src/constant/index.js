@@ -174,6 +174,7 @@ const collectionRes = {
   createTime: 1,
   articleIds: 1,
   userId: 1,
+  collectUserIds: 1,
 };
 
 module.exports = {

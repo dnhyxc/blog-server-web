@@ -90,6 +90,7 @@ class collectionServer {
         // $addToSet会进行去重添加操作，$push不会进行去重添加操作
         $addToSet: {
           articleIds: { $each: [articleId] },
+          collectUserIds: { $each: [userId] },
           $sort: { date: -1 },
         },
       }
@@ -106,7 +107,9 @@ class collectionServer {
       { userId, articleIds: { $elemMatch: { $eq: articleId } } },
       collectionRes
     );
-    return res;
+    if (res?.length) {
+      return res[0];
+    }
   };
 
   // 取消收藏

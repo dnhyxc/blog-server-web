@@ -60,7 +60,8 @@ class collectionController {
   async collectArticlesCtr(ctx, next) {
     try {
       const params = ctx.request.body;
-      await collectArticles(params);
+      const res = await collectArticles(params);
+      console.log(res, "res");
       ctx.body = {
         code: 200,
         success: true,
@@ -78,12 +79,14 @@ class collectionController {
     try {
       const params = ctx.request.body;
       const res = await checkCollectionStatus(params);
+      console.log(res, "res");
       ctx.body = {
         code: 200,
         success: true,
         message: "获取收藏状态成功",
         data: {
-          collected: res?.length ? true : false,
+          ...res?._doc,
+          collected: !!res,
         },
       };
     } catch (error) {
@@ -115,7 +118,10 @@ class collectionController {
       const params = ctx.request.body;
       const res = await getCollectedTotal(params);
       const collectedList = res?.length && res.filter((i) => i.total);
-      const total = collectedList?.length && collectedList.reduce((prev, cur) => (prev += cur.total), 0) || 0;
+      const total =
+        (collectedList?.length &&
+          collectedList.reduce((prev, cur) => (prev += cur.total), 0)) ||
+        0;
       ctx.body = {
         code: 200,
         success: true,
