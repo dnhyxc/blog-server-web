@@ -8,7 +8,6 @@ const CollectionSchema = new mongoose.Schema({
   createTime: Number,
   articleIds: [String],
   userId: String,
-  collectUserIds: [String],
 });
 
 const Collection = mongoose.model("collections", CollectionSchema);

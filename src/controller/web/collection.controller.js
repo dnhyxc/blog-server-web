@@ -61,7 +61,6 @@ class collectionController {
     try {
       const params = ctx.request.body;
       const res = await collectArticles(params);
-      console.log(res, "res");
       ctx.body = {
         code: 200,
         success: true,
@@ -79,7 +78,6 @@ class collectionController {
     try {
       const params = ctx.request.body;
       const res = await checkCollectionStatus(params);
-      console.log(res, "res");
       ctx.body = {
         code: 200,
         success: true,

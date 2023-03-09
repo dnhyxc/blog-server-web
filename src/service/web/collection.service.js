@@ -4,6 +4,7 @@ const { collectionRes } = require("../../constant");
 const {
   getArticleListWithTotal,
   checkLikeStatus,
+  updateCollectCount,
 } = require("./article.service");
 
 class collectionServer {
@@ -80,6 +81,7 @@ class collectionServer {
 
   // 收藏文章
   collectArticles = async ({ ids, articleId, userId }) => {
+    await updateCollectCount({ articleId, type: true });
     const res = Collection.updateMany(
       { _id: { $in: ids }, userId },
       {
@@ -90,7 +92,6 @@ class collectionServer {
         // $addToSet会进行去重添加操作，$push不会进行去重添加操作
         $addToSet: {
           articleIds: { $each: [articleId] },
-          collectUserIds: { $each: [userId] },
           $sort: { date: -1 },
         },
       }
@@ -114,6 +115,7 @@ class collectionServer {
 
   // 取消收藏
   cancelCollected = async ({ articleId, userId }) => {
+    await updateCollectCount({ articleId, type: false });
     const res = Collection.updateMany(
       // 查询条件为，查找当前用户下的，并且articleIds数组中包含articleId的所有数据
       { userId, articleIds: { $elemMatch: { $eq: articleId } } },

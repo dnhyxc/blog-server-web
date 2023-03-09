@@ -13,6 +13,7 @@ class articleServer {
       ...params,
       likeCount: 0,
       readCount: 0,
+      collectCount: 0,
       authorName: userInfo.username,
     });
   }
@@ -504,6 +505,19 @@ class articleServer {
     } else {
       return res;
     }
+  };
+
+  // 设置文章收藏数
+  updateCollectCount = async ({ articleId, type }) => {
+    await Article.updateOne(
+      { _id: articleId },
+      // $inc：自增自减运算符，传入正值为自增，负值为自减
+      {
+        $inc: {
+          collectCount: type ? 1 : -1,
+        },
+      }
+    );
   };
 }
 

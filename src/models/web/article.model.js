@@ -26,6 +26,7 @@ const ArticleSchema = new mongoose.Schema({
   isLike: Boolean,
   likeCount: Number,
   readCount: Number,
+  collectCount: Number,
 });
 
 const Article = mongoose.model("articles", ArticleSchema);

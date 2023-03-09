@@ -143,6 +143,7 @@ const detailFields = {
   originalArticleId: 1,
   readCount: 1,
   isDelete: 1,
+  collectCount: 1,
 };
 
 const userFields = {
