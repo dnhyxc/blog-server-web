@@ -11,7 +11,6 @@ const {
   getPrevArticle,
   getNextArticle,
   searchArticles,
-  findCommentById,
 } = require("../../service");
 const {
   databaseError,
@@ -24,17 +23,32 @@ class ArticleController {
   async createArticleCtr(ctx, next) {
     try {
       const params = ctx.request.body;
-      // 操作数据库
-      const res = await createArticle({ ...params });
-      // 返回结果
-      ctx.body = {
-        code: 200,
-        success: true,
-        message: "发布成功",
-        data: {
-          id: res.id,
-        },
-      };
+      const { articleId } = params;
+      if (articleId) {
+        // 操作数据库
+        await updateArticle({ ...params });
+        // 返回结果
+        ctx.body = {
+          code: 200,
+          success: true,
+          message: "文章更新成功",
+          data: {
+            id: params.articleId,
+          },
+        };
+      } else {
+        // 操作数据库
+        const res = await createArticle({ ...params });
+        // 返回结果
+        ctx.body = {
+          code: 200,
+          success: true,
+          message: "发布成功",
+          data: {
+            id: res.id,
+          },
+        };
+      }
     } catch (error) {
       console.error("createArticleCtr", error);
       ctx.app.emit("error", databaseError, ctx);
@@ -84,7 +98,6 @@ class ArticleController {
       ctx.app.emit("error", databaseError, ctx);
     }
   }
-
 
   // 获取文章列表
   getArticleListCtr = async (ctx, next) => {
