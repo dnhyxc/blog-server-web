@@ -220,7 +220,7 @@ class ArticleController {
       ctx.body = {
         code: 200,
         success: true,
-        message: "为文章点赞成功",
+        message: "点赞成功",
         data: {
           id,
           isLike: res,
