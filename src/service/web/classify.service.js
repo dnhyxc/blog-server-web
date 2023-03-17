@@ -17,19 +17,17 @@ class classifyServer {
   };
 
   // 获取标签
-  async getTagList({ pageNo = 1, pageSize = 20 }) {
+  async getTagList({ pageNo = 1, pageSize = 20, type }) {
     const list = await Article.aggregate([
       {
         $match: {
-          isDelete: { $nin: [true] },
+          isDelete: { $ne: true }, // 等价于 $nin: [true]
         },
       },
       {
         $group: {
-          _id: "$tag",
+          _id: type === "classify" ? "$classify" : "$tag",
           value: { $sum: 1 },
-          // 使用$push存在一个问题，如果是存在重复的数据，重复的数据也会一起放入到返回的结果中，对于这样子的情况使用以下操作：
-          // articles: { $push: "$title" },
         },
       },
       {
@@ -39,6 +37,7 @@ class classifyServer {
           value: 1,
         },
       },
+      { $sort: { value: -1 } },
     ]);
     return list;
   }

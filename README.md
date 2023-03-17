@@ -86,6 +86,29 @@ $sort：将输入文档排序后输出。对应 sort() 方法。
 
 $geoNear：输出接近某一地理位置的有序文档。对应 near()。
 
+### 查询字段不包含某个属性或该属性不存在的值
+
+```js
+// 查询集合c中y的值为null或者不存在
+db.c.find({y: null})
+
+// 查询集合c中y的值为null，（仅返回y的值为null的数据，不会返回不存在的）
+db.c.find({y: {$type : 10}}) // $type为10表示Null
+
+// 或者
+db.c.find({y: {“$in”: [null], “$exists”: true}})
+
+
+// 查询集合c中y的值不存在（不会返回y的值为null的数据）
+db.c.find({y: {$exists: false}})
+
+// 查询集合c中y的值不为null且存在的记录
+db.c.find({y: {"$ne": null, $exists: true}})
+
+// 或者
+db.c.find({y: {"$ne":null}})
+```
+
 ### 表达式说明
 
 $sum：计算总和。
