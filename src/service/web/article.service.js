@@ -228,6 +228,7 @@ class articleServer {
     pageNo,
     pageSize,
     sortType = {},
+    hot,
   }) => {
     const list = await Article.aggregate([
       { $match: filterKey },
@@ -255,7 +256,9 @@ class articleServer {
             },
             {
               $sort: Object.keys(sortType).length
-                ? sortType
+                ? sortType // 如果有 sortType，则按照 sortType 排序
+                : hot // 如果有 hot，则按照最热（readCount）排序
+                ? { readCount: -1 }
                 : { createTime: -1, likeCount: -1 },
             },
             { $skip: (pageNo - 1) * pageSize },
@@ -285,10 +288,11 @@ class articleServer {
   findArticles = async ({
     pageNo = 1,
     pageSize = 20,
-    filter,
+    filter, // keyword 关键词搜索
     userId,
     tagName,
     sortType,
+    hot, // 是否查最热文章
   }) => {
     // 获取文章列表时，需要先根据userId判断文章点赞状态
     await this.checkLikeStatus(userId);
@@ -314,6 +318,7 @@ class articleServer {
       pageNo,
       pageSize,
       sortType,
+      hot,
     });
   };
 

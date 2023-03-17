@@ -102,12 +102,14 @@ class ArticleController {
   // 获取文章列表
   getArticleListCtr = async (ctx, next) => {
     try {
-      const { pageNo, pageSize, userId } = ctx.request.body;
+      const { pageNo, pageSize, userId, filter, hot } = ctx.request.body;
       // 操作数据库
       const res = await findArticles({
         pageNo,
         pageSize,
         userId,
+        filter,
+        hot,
       });
 
       // 返回结果
