@@ -8,16 +8,38 @@ const { formateArrData } = require("../../utils");
 
 class classifyServer {
   // 获取文章分类
-  getClassifyList = async ({ pageNo = 1, pageSize = 20, classify, userId }) => {
+  getClassifyList = async ({
+    pageNo = 1,
+    pageSize = 20,
+    classify,
+    userId,
+    filter, // 搜索关键词
+  }) => {
+    // 不区分大小写
+    const reg = (filter && new RegExp(filter, "i")) || "";
     // 返回文章列表前，首先根据userId检测点赞状态
     await checkLikeStatus(userId);
-    const filterKey = { $and: [{ isDelete: { $nin: [true] }, classify }] };
+    const filterKey = {
+      $and: [
+        {
+          isDelete: { $nin: [true] },
+          classify,
+          $or: [
+            { title: { $regex: reg } },
+            { classify: { $regex: reg } },
+            { tag: { $regex: reg } },
+            { authorId: { $regex: reg } },
+            { authorName: { $regex: reg } },
+          ],
+        },
+      ],
+    };
     const res = await getArticleListWithTotal({ filterKey, pageNo, pageSize });
     return res;
   };
 
   // 获取标签
-  async getTagList({ pageNo = 1, pageSize = 20, type }) {
+  async getTagList({ type }) {
     const list = await Article.aggregate([
       {
         $match: {

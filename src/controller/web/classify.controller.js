@@ -9,13 +9,19 @@ const { databaseError, userFormateError } = require("../../constant");
 class classifyController {
   // 获取文章分类
   async getClassifyListCtr(ctx, next) {
-    const { pageNo, pageSize, classify, userId } = ctx.request.body;
+    const { pageNo, pageSize, classify, userId, filter } = ctx.request.body;
     if (!classify) {
       return ctx.app.emit("error", userFormateError, ctx);
     }
     try {
       // 操作数据库
-      const res = await getClassifyList({ pageNo, pageSize, classify, userId });
+      const res = await getClassifyList({
+        pageNo,
+        pageSize,
+        classify,
+        userId,
+        filter, // 搜索关键词
+      });
       // 返回结果
       ctx.body = {
         code: 200,
