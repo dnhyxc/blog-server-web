@@ -36,7 +36,7 @@ class articleServer {
     type,
     userId,
     tagName, // 表示标签页查询条件
-    keyword, // 首页输入的内容
+    keyword, // 头部搜索框输入的搜索关键字
     classify, // 分类页面删除时选中的分类
     accessUserId, // 访问别人的主页时，需要使用accessUserId去检查点赞状态
     delType, // delType 为 '2' 时，说明删除的点赞文章
@@ -44,6 +44,19 @@ class articleServer {
     authorLike, // 表示博主主页点赞列表
     filterList, // 高级搜索条件
   }) => {
+    // 头部搜索关键字不区分大小写
+    const reg = (keyword && new RegExp(keyword, "i")) || "";
+    // 处理头部搜索关键字
+    const searchKey = {
+      $or: [
+        { title: { $regex: reg } },
+        { tag: { $regex: reg } },
+        { classify: { $regex: reg } },
+        { authorId: { $regex: reg } },
+        { authorName: { $regex: reg } },
+      ],
+    };
+
     // home 页面获取下一页第一条数据筛选条件
     const filters = {
       pageNo: pageNo + 1,
@@ -59,13 +72,22 @@ class articleServer {
     if (accessUserId) {
       await this.checkLikeStatus(accessUserId);
       filterKey = {
-        $and: [{ isDelete: { $nin: [true] }, authorId: userId }],
+        $and: [{ isDelete: { $nin: [true] }, authorId: userId, ...searchKey }],
       };
     }
 
+    // 删除文章分类数据
     if (classify) {
       await this.checkLikeStatus(userId);
-      filterKey = { $and: [{ isDelete: { $nin: [true] }, classify }] };
+      filterKey = {
+        $and: [
+          {
+            isDelete: { $nin: [true] },
+            classify,
+            ...searchKey,
+          },
+        ],
+      };
     }
 
     // 我的主页详情
@@ -77,7 +99,13 @@ class articleServer {
         return new mongoose.Types.ObjectId(i.articleId);
       });
       filterKey = {
-        $and: [{ isDelete: { $nin: [true] }, _id: { $in: articleIds } }],
+        $and: [
+          {
+            isDelete: { $nin: [true] },
+            _id: { $in: articleIds },
+            ...searchKey,
+          },
+        ],
       };
     }
 
@@ -88,7 +116,11 @@ class articleServer {
       const authorInfo = await findOneUser({ auth: 1 });
       filterKey = {
         $and: [
-          { isDelete: { $nin: [true] }, authorId: authorInfo?._id?.toString() },
+          {
+            isDelete: { $nin: [true] },
+            authorId: authorInfo?._id?.toString(),
+            ...searchKey,
+          },
         ],
       };
     }
@@ -108,6 +140,7 @@ class articleServer {
           {
             isDelete: { $nin: [true] },
             _id: { $in: articleIds },
+            ...searchKey,
           },
         ],
       };
@@ -290,28 +323,29 @@ class articleServer {
     pageSize = 20,
     filter, // keyword 关键词搜索
     userId,
-    tagName,
+    tagName, // 选择的标签
     sortType,
     hot, // 是否查最热文章
   }) => {
     // 获取文章列表时，需要先根据userId判断文章点赞状态
     await this.checkLikeStatus(userId);
     let filterKey;
+    const reg = (filter && new RegExp(filter, "i")) || "";
+    // 不区分大小写
+    filterKey = {
+      $or: [
+        { title: { $regex: reg } },
+        { tag: { $regex: reg } },
+        { classify: { $regex: reg } },
+        { authorId: { $regex: reg } },
+        { authorName: { $regex: reg } },
+      ],
+      isDelete: { $nin: [true] },
+    };
+
+    // 查询对应标签文章
     if (tagName) {
-      filterKey = { tag: tagName, isDelete: { $nin: [true] } };
-    } else {
-      // 不区分大小写
-      const reg = (filter && new RegExp(filter, "i")) || "";
-      filterKey = {
-        $or: [
-          { title: { $regex: reg } },
-          { tag: { $regex: reg } },
-          { classify: { $regex: reg } },
-          { authorId: { $regex: reg } },
-          { authorName: { $regex: reg } },
-        ],
-        isDelete: { $nin: [true] },
-      };
+      filterKey.tag = tagName;
     }
     return await this.getArticleListWithTotal({
       filterKey,
