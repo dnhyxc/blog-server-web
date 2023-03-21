@@ -216,13 +216,26 @@ class ArticleController {
   // 文章点赞
   async likeArticleCtr(ctx, next) {
     try {
-      const { id, userId } = ctx.request.body;
+      const { id, userId, authorId, pageNo, pageSize } = ctx.request.body;
       const likeStatus = await checkLikeArticle(id, userId);
-      const res = await likeArticle({ id, likeStatus });
+      const res = await likeArticle({
+        id,
+        likeStatus,
+        // userId,
+        // authorId,
+        // pageNo,
+        // pageSize,
+      });
       ctx.body = {
         code: 200,
         success: true,
         message: "点赞成功",
+        // data: {
+        //   id,
+        //   isLike: res?.likeStatus,
+        //   nextPageOne: res?.nextPageOne,
+        //   total: res?.total,
+        // },
         data: {
           id,
           isLike: res,

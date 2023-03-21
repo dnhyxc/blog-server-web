@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const { Article, LikeArticle } = require("../../models");
 const { findUserById, findOneUser } = require("./user.service");
+// const { getLikeArticleList } = require("./userInfo.service");
 const { findCommentById } = require("./comments.service");
 const { anotherFields, detailFields } = require("../../constant");
 const { getAdvancedSearchFilter, getSortType } = require("../../utils");
@@ -159,7 +160,6 @@ class articleServer {
     let nextPageOne;
     if (!type) {
       if (classify || accessUserId || authorPage || authorLike) {
-        // 返回文章列表前，首先根据userId检测点赞状态
         const res = await this.getArticleListWithTotal({
           filterKey,
           pageNo: pageNo + 1,
@@ -384,8 +384,36 @@ class articleServer {
     }
   };
 
+  // 获取点赞文章
+  // async getLikeArticleList({ pageNo = 1, pageSize = 20, userId }) {
+  //   // 返回文章列表前，首先根据userId检测点赞状态
+  //   const likes = await this.getLikeArticles(userId);
+  //   const articleIds = likes.map((i) => {
+  //     return new mongoose.Types.ObjectId(i.articleId);
+  //   });
+
+  //   const filterKey = {
+  //     $and: [{ isDelete: { $nin: [true] }, _id: { $in: articleIds } }],
+  //   };
+  //   const sortType = { createTime: -1 };
+  //   const nextPageOne = await this.getArticleListWithTotal({
+  //     filterKey,
+  //     pageNo,
+  //     pageSize,
+  //     sortType,
+  //   });
+  //   return nextPageOne;
+  // }
+
   // 根据文章id查找文章详情
-  async likeArticle({ id: _id, likeStatus }) {
+  async likeArticle({
+    id: _id,
+    likeStatus,
+    // userId,
+    // authorId,
+    // pageNo,
+    // pageSize,
+  }) {
     await Article.updateOne(
       { _id },
       {
@@ -395,7 +423,26 @@ class articleServer {
         },
       }
     );
+
     return likeStatus ? false : true;
+
+    // //如果authorId有值，说明是从博主主页进行点赞的操作，likeStatus是true，说明是需要取消点赞
+    // if (authorId && likeStatus) {
+    //   const res = await new articleServer().getLikeArticleList({
+    //     pageNo: pageNo + 1,
+    //     pageSize,
+    //     userId: authorId,
+    //   });
+    //   return {
+    //     nextPageOne: res.list,
+    //     total: res.total + 1,
+    //     likeStatus: likeStatus ? false : true,
+    //   };
+    // } else {
+    //   return {
+    //     likeStatus: likeStatus ? false : true,
+    //   };
+    // }
   }
 
   // 随机获取文章
