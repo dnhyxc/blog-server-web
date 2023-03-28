@@ -35,15 +35,19 @@ class UserController {
     // 1. 获取用户信息（在token的playload中，记录id，username）
     try {
       const { password, ...props } = (await findOneUser({ username })) || {};
+      const userInfo = JSON.parse(JSON.stringify(props?._doc));
       delete props?._doc.password;
       delete props?._doc._id;
+      // 删除图片，防止生成的token过大
+      delete userInfo?._doc?.headUrl;
+      delete userInfo?._doc?.mainCover;
       ctx.body = {
         code: 201,
         success: true,
         message: "登录成功",
         data: {
           ...props?._doc,
-          token: jwt.sign(props, JWT_SECRET, { expiresIn: "1d" }),
+          token: jwt.sign(userInfo, JWT_SECRET, { expiresIn: "1d" }),
         },
       };
     } catch (error) {
@@ -162,8 +166,8 @@ class UserController {
   // 注销用户
   async logoutCtr(ctx, next) {
     try {
-      const params = ctx.request.body
-      const res = await logout(params)
+      const params = ctx.request.body;
+      const res = await logout(params);
       if (res) {
         ctx.body = {
           code: 200,

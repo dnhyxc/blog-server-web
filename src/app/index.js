@@ -1,6 +1,7 @@
 const path = require("path");
 const Koa = require("koa");
 const koaBody = require("koa-body");
+const bodyParser = require("koa-bodyparser");
 const koaStatic = require("koa-static");
 const router = require("../router/web");
 const routerAdmin = require("../router/admin");
@@ -20,6 +21,8 @@ app.use(
   koaBody({
     // // 支持文件上传
     multipart: true,
+    formLimit: "10mb",
+    jsonLimit: "10mb",
     formidable: {
       // 图片保存的静态资源文件路径
       uploadDir: path.join(__dirname, "../upload/image"),
@@ -28,6 +31,13 @@ app.use(
       // 文件上传大小
       maxFieldsSize: 20 * 1024 * 1024,
     },
+  })
+);
+
+app.use(
+  bodyParser({
+    formLimit: "10mb",
+    jsonLimit: "10mb",
   })
 );
 
