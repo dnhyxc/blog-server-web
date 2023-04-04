@@ -477,7 +477,7 @@ class articleServer {
     if (from === "classify" && classify) {
       return { _id: id, isDelete: { $nin: [true] }, classify };
     }
-    if (from === "tag" && tagName) {
+    if ((from === "tag" || from === "tagList") && tagName) {
       return { _id: id, isDelete: { $nin: [true] }, tag: tagName };
     }
     if (from === "timeline" && userId) {
