@@ -472,8 +472,8 @@ class articleServer {
   }
 
   // 处理上下页参数
-  getParams = async (id, props) => {
-    const { classify, userId, tagName, from, selectKey } = props;
+  getParams = async (id, props, articleId) => {
+    const { classify, userId, tagName, from, selectKey, articleIds } = props;
     if (from === "classify" && classify) {
       return { _id: id, isDelete: { $nin: [true] }, classify };
     }
@@ -507,7 +507,7 @@ class articleServer {
       };
     }
     if (from === "author" && selectKey === "2") {
-      // 查询 auth 为1 的博主信息
+      // 查询 auth 为1 的博主点赞
       const authorInfo = await findOneUser({ auth: 1 });
       const userId = authorInfo?._id?.toString();
       const likes = await this.getLikeArticles(userId);
@@ -524,12 +524,29 @@ class articleServer {
       const userId = authorInfo?._id?.toString();
       return { _id: id, isDelete: { $nin: [true] }, authorId: userId };
     }
+    if (from === "collect") {
+      const index = articleIds.findIndex((i) => i === articleId);
+      
+      if (id.$gt === articleId) {
+        return {
+          _id: articleIds[index - 1],
+          isDelete: { $nin: [true] },
+        };
+      }
+
+      if (id.$lt === articleId) {
+        return {
+          _id: articleIds[index + 1],
+          isDelete: { $nin: [true] },
+        };
+      }
+    }
     return { _id: id, isDelete: { $nin: [true] } };
   };
 
   // 获取上一篇文章
   getPrevArticle = async (id, props) => {
-    const filter = await this.getParams({ $gt: id }, props);
+    const filter = await this.getParams({ $gt: id }, props, id);
     const res = Article.findOne(filter, anotherFields)
       // 获取上一篇需要注意排序，需要将createTime设置为正序排列
       .sort({ _id: 1, createTime: 1 })
@@ -540,7 +557,7 @@ class articleServer {
 
   // 获取下一篇文章
   getNextArticle = async (id, props) => {
-    const filter = await this.getParams({ $lt: id }, props);
+    const filter = await this.getParams({ $lt: id }, props, id);
     const res = Article.findOne(filter, anotherFields)
       // 获取上一篇需要注意排序，需要将createTime设置为倒叙序排列
       .sort({ _id: -1, createTime: -1 })
