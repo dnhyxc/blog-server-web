@@ -10,8 +10,8 @@ const { databaseError } = require("../../constant");
 class userInfoController {
   // 获取我的文章
   async getMyArticleListCtr(ctx, next) {
-    const params = ctx.request.body;
     try {
+      const params = ctx.request.body;
       // accessUserId有值，说明是访问别人的主页，需要通过accessUserId去获取点赞状态
       await checkLikeStatus(params.accessUserId);
       const res = await getMyArticleList(params);

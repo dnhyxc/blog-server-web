@@ -9,11 +9,11 @@ const { databaseError, userFormateError } = require("../../constant");
 class classifyController {
   // 获取文章分类
   async getClassifyListCtr(ctx, next) {
-    const { pageNo, pageSize, classify, userId, filter } = ctx.request.body;
-    if (!classify) {
-      return ctx.app.emit("error", userFormateError, ctx);
-    }
     try {
+      const { pageNo, pageSize, classify, userId, filter } = ctx.request.body;
+      if (!classify) {
+        return ctx.app.emit("error", userFormateError, ctx);
+      }
       // 操作数据库
       const res = await getClassifyList({
         pageNo,
@@ -36,8 +36,8 @@ class classifyController {
   }
   // 获取文章分类、标签列表
   async getTagListCtr(ctx, next) {
-    const { pageNo, pageSize, type } = ctx.request.body;
     try {
+      const { pageNo, pageSize, type } = ctx.request.body;
       // 操作数据库
       const res = await getTagList({ pageNo, pageSize, type });
       // 返回结果

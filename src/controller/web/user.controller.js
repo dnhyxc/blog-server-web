@@ -14,8 +14,8 @@ const {
 class UserController {
   // 账号注册
   async registerCtr(ctx, next) {
-    const { username, password } = ctx.request.body;
     try {
+      const { username, password } = ctx.request.body;
       const res = await createUserServer({ username, password });
       ctx.body = {
         code: 200,
@@ -31,9 +31,9 @@ class UserController {
 
   // 账号登录
   async loginCtr(ctx, next) {
-    const { username } = ctx.request.body;
     // 1. 获取用户信息（在token的playload中，记录id，username）
     try {
+      const { username } = ctx.request.body;
       const { password, ...props } = (await findOneUser({ username })) || {};
       delete props?._doc.password;
       delete props?._doc._id;
@@ -54,17 +54,17 @@ class UserController {
 
   // 获取用户信息
   async getUserInfoCtr(ctx, next) {
-    const { userId, auth, needTotal } = ctx.request.body;
-    const authorInfo = auth && (await findOneUser({ auth: 1 }));
-
-    let filter = "";
-    if (auth) {
-      filter = authorInfo?._id?.toString();
-    } else {
-      filter = userId;
-    }
-
     try {
+      const { userId, auth, needTotal } = ctx.request.body;
+      const authorInfo = auth && (await findOneUser({ auth: 1 }));
+
+      let filter = "";
+      if (auth) {
+        filter = authorInfo?._id?.toString();
+      } else {
+        filter = userId;
+      }
+
       const articleTotal =
         needTotal &&
         (await getArticleTotal({
@@ -94,12 +94,12 @@ class UserController {
 
   // 更新用户信息
   async updateInfoCtr(ctx, next) {
-    const { userId, ...params } = ctx.request.body;
-    if (!userId) {
-      ctx.app.emit("error", fieldFormateError, ctx);
-      return;
-    }
     try {
+      const { userId, ...params } = ctx.request.body;
+      if (!userId) {
+        ctx.app.emit("error", fieldFormateError, ctx);
+        return;
+      }
       // 更新用户名称时，需要同时更新当前用户的所有文章中的作者名称
       await updateAuthorName(userId, params.username);
       const filter = { _id: userId };
@@ -121,12 +121,12 @@ class UserController {
 
   // 重置密码
   async resetPwdCtr(ctx, next) {
-    const { password, username } = ctx.request.body;
-    if (!password || !username) {
-      ctx.app.emit("error", fieldFormateError, ctx);
-      return;
-    }
     try {
+      const { password, username } = ctx.request.body;
+      if (!password || !username) {
+        ctx.app.emit("error", fieldFormateError, ctx);
+        return;
+      }
       const filter = { username };
       await updateUser(filter, { password });
       const { ...props } = (await findOneUser({ username })) || {};

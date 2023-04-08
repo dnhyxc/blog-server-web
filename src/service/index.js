@@ -64,6 +64,15 @@ const {
   getCollectTotal,
 } = require("./web/collection.service");
 
+const {
+  createMessage,
+  getMessageList,
+  setMessageOfReaded,
+  getNoReadMsgCount,
+  deleteMessage,
+  deleteAllMessage,
+} = require("./web/message.service");
+
 // 后台数据库接口
 const {
   adminFindOneUser,
@@ -155,6 +164,12 @@ module.exports = {
   getCollectArticles,
   removeCollectArticle,
   getCollectTotal,
+  createMessage,
+  getMessageList,
+  setMessageOfReaded,
+  getNoReadMsgCount,
+  deleteMessage,
+  deleteAllMessage,
 
   // 后台
   adminFindOneUser,

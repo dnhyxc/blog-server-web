@@ -1,5 +1,6 @@
 const WebSocket = require("ws");
 const { parseQuery } = require("../utils");
+const { createMessage } = require("../service");
 
 class WS {
   static online = 0; // 在线连接
@@ -36,11 +37,20 @@ class WS {
 
       ws.on("message", (msg) => {
         try {
-          const data = msg && JSON.parse(msg);
-          this.sendMessage({
-            ...data,
-            code: 200
-          });
+          const messages = msg && JSON.parse(msg);
+          if (messages.action === "push") {
+            // 创建消息，保存到数据库
+            createMessage(messages);
+            this.sendMessage({
+              ...messages,
+              data: {
+                ...messages.data,
+                isReaded: false,
+              },
+
+              code: 200,
+            });
+          }
         } catch (error) {
           console.error("websocket on message error", error);
           return ws.close();

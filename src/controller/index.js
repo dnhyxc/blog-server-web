@@ -6,6 +6,7 @@ const classifyController = require("./web/classify.controller");
 const userInfoController = require("./web/userInfo.controller");
 const draftController = require("./web/draft.controller");
 const collectionController = require("./web/collection.controller");
+const messageController = require("./web/message.controller");
 
 // 后台用户控制器
 const adminUserController = require("./admin/user.controller");
@@ -22,6 +23,7 @@ const {
   getUserInfoCtr,
   verifyTokenCtr,
 } = userController;
+
 const {
   createArticleCtr,
   getArticleListCtr,
@@ -36,15 +38,19 @@ const {
   getNextArticleCtr,
   advancedSearchCtr,
 } = articleController;
+
 const { uploadFileCtr } = uploadController;
+
 const {
   createCommentsCtr,
   findCommentsByIdCtr,
   giveLikeCtr,
   deleteCommentCtr,
 } = commentsController;
+
 const { getClassifyListCtr, getTagListCtr, getTimelineListCtr } =
   classifyController;
+
 const {
   getMyArticleListCtr,
   getLikeArticleListCtr,
@@ -52,6 +58,7 @@ const {
   getAuthorLikeArticlesCtr,
   getAuthorTimelineCtr,
 } = userInfoController;
+
 const {
   createDraftCtr,
   updateDraftCtr,
@@ -59,6 +66,7 @@ const {
   getDraftListCtr,
   getDraftByIdCtr,
 } = draftController;
+
 const {
   createCollectionCtr,
   getCollectionListCtr,
@@ -73,6 +81,14 @@ const {
   removeCollectArticleCtr,
   getCollectTotalCtr,
 } = collectionController;
+
+const {
+  getMessageListCtr,
+  setReadStatusCtr,
+  getNoReadMsgCountCtr,
+  deleteMessageCtr,
+  deleteAllMessageCtr,
+} = messageController;
 
 // 后台控制器
 const {
@@ -92,6 +108,7 @@ const {
   bindAccountCtr,
   findBindUsersCtr,
 } = adminUserController;
+
 // 后台文章控制器
 const {
   adminCreateArticleCtr,
@@ -109,6 +126,7 @@ const {
   adminRestoreCommentCtr,
   adminGetArticlesCommentsCtr,
 } = adminArticleController;
+
 // 主题设置控制器
 const { adminCreateConfigCtr } = adminPageConfigController;
 
@@ -163,6 +181,11 @@ module.exports = {
   getCollectArticlesCtr,
   removeCollectArticleCtr,
   getCollectTotalCtr,
+  getMessageListCtr,
+  setReadStatusCtr,
+  getNoReadMsgCountCtr,
+  deleteMessageCtr,
+  deleteAllMessageCtr,
 
   // 后台用户控制器
   adminRegisterCtr,
