@@ -46,7 +46,7 @@ class messageController {
     }
   }
 
-  // 设置消息已读
+  // 获取未读消息数
   async getNoReadMsgCountCtr(ctx, next) {
     try {
       const { userId } = ctx.request.body;
