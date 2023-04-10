@@ -44,6 +44,7 @@ class messageServer {
                 isReaded: 1,
                 // readCount: 1,
                 isRemove: 1,
+                toUserId: 1,
               },
             },
             {
