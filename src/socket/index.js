@@ -67,7 +67,7 @@ class WS {
       return success;
     }
     this.ws.clients.forEach((client) => {
-      if (client.readyState === WebSocket.OPEN && client.id === data.userId) {
+      if (client.readyState === WebSocket.OPEN) {
         client.send(JSON.stringify(data));
         success = true;
       }

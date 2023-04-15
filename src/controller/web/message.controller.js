@@ -8,7 +8,7 @@ const {
 const { databaseError } = require("../../constant");
 
 class messageController {
-  // 获取文章分类、标签列表
+  // 获取消息列表
   async getMessageListCtr(ctx, next) {
     try {
       const { pageNo, pageSize, userId } = ctx.request.body;

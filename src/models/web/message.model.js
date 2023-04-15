@@ -22,6 +22,7 @@ const messageSchema = new mongoose.Schema({
   pushDate: Number,
   isReaded: Boolean,
   isRemove: Boolean,
+  articleId: String,
 });
 
 const Message = mongoose.model("messages", messageSchema);

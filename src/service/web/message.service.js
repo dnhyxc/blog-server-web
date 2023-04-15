@@ -42,7 +42,7 @@ class messageServer {
                 fromUserId: 1,
                 action: 1,
                 isReaded: 1,
-                // readCount: 1,
+                articleId: 1,
                 isRemove: 1,
                 toUserId: 1,
               },
