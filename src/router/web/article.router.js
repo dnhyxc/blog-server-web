@@ -12,6 +12,7 @@ const {
   getPrevArticleCtr,
   getNextArticleCtr,
   advancedSearchCtr,
+  getLikenessArticlesCtr,
 } = require("../../controller");
 
 const { auth } = require("../../middleware");
@@ -53,5 +54,8 @@ router.post("/advancedSearch", advancedSearchCtr);
 
 // 删除所有文章
 // router.del("/delAllArticle", delAllArticleCtr);
+
+// 获取相似的文章
+router.post("/getLikenessArticles", getLikenessArticlesCtr);
 
 module.exports = router;

@@ -23,6 +23,7 @@ const {
   updateAuthorName,
   searchArticles,
   updateCollectCount,
+  getLikenessArticles,
 } = require("./web/article.service");
 const {
   createComments,
@@ -152,6 +153,7 @@ module.exports = {
   findDraftById,
   searchArticles,
   updateCollectCount,
+  getLikenessArticles,
   createCollection,
   findOneCollection,
   getCollectionList,

@@ -11,6 +11,7 @@ const {
   getPrevArticle,
   getNextArticle,
   searchArticles,
+  getLikenessArticles,
 } = require("../../service");
 const {
   databaseError,
@@ -310,6 +311,23 @@ class ArticleController {
       };
     } catch (error) {
       console.error("getNextArticleCtr", error);
+      ctx.app.emit("error", databaseError, ctx);
+    }
+  }
+
+  // 获取下一篇文章
+  async getLikenessArticlesCtr(ctx, next) {
+    try {
+      const params = ctx.request.body;
+      const res = await getLikenessArticles(params);
+      ctx.body = {
+        code: 200,
+        success: true,
+        message: "获取类似的文章成功",
+        data: res,
+      };
+    } catch (error) {
+      console.error("getLikenessArticlesCtr", error);
       ctx.app.emit("error", databaseError, ctx);
     }
   }

@@ -526,7 +526,7 @@ class articleServer {
     }
     if (from === "collect") {
       const index = articleIds.findIndex((i) => i === articleId);
-      
+
       if (id.$gt === articleId) {
         return {
           _id: articleIds[index - 1],
@@ -620,6 +620,32 @@ class articleServer {
         },
       }
     );
+  };
+
+  // 获取分类及标签相似的文章
+  getLikenessArticles = async ({ classify, tag, id }) => {
+    const classifyReg = (classify && new RegExp(classify, "i")) || "";
+    const tagReg = (tag && new RegExp(tag, "i")) || "";
+
+    const res = await Article.aggregate([
+      {
+        $match: {
+          $or: [
+            { classify: { $regex: classifyReg } },
+            { tag: { $regex: tagReg } },
+          ],
+          _id: { $nin: [new mongoose.Types.ObjectId(id)] },
+          isDelete: { $nin: [true] },
+        },
+      },
+      // 随机获取2条数据
+      { $sample: { size: 2 } },
+      {
+        $project: anotherFields,
+      },
+    ]);
+
+    return res;
   };
 }
 
