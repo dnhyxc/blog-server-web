@@ -13,6 +13,7 @@ const {
   getNextArticleCtr,
   advancedSearchCtr,
   getLikenessArticlesCtr,
+  checkArticleLikeStatusCtr,
 } = require("../../controller");
 
 const { auth } = require("../../middleware");
@@ -57,5 +58,8 @@ router.post("/advancedSearch", advancedSearchCtr);
 
 // 获取相似的文章
 router.post("/getLikenessArticles", getLikenessArticlesCtr);
+
+// 校验文章点赞状态
+router.post("/checkArticleLikeStatus", checkArticleLikeStatusCtr);
 
 module.exports = router;

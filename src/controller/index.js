@@ -38,6 +38,7 @@ const {
   getNextArticleCtr,
   advancedSearchCtr,
   getLikenessArticlesCtr,
+  checkArticleLikeStatusCtr,
 } = articleController;
 
 const { uploadFileCtr } = uploadController;
@@ -165,6 +166,7 @@ module.exports = {
   getNextArticleCtr,
   advancedSearchCtr,
   getLikenessArticlesCtr,
+  checkArticleLikeStatusCtr,
   verifyTokenCtr,
   createDraftCtr,
   updateDraftCtr,

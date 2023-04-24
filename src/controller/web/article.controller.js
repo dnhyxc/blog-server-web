@@ -12,6 +12,7 @@ const {
   getNextArticle,
   searchArticles,
   getLikenessArticles,
+  checkArticleLikeStatus,
 } = require("../../service");
 const {
   databaseError,
@@ -324,6 +325,23 @@ class ArticleController {
         code: 200,
         success: true,
         message: "获取类似的文章成功",
+        data: res,
+      };
+    } catch (error) {
+      console.error("getLikenessArticlesCtr", error);
+      ctx.app.emit("error", databaseError, ctx);
+    }
+  }
+
+  // 校验文章点赞状态
+  async checkArticleLikeStatusCtr(ctx, next) {
+    try {
+      const params = ctx.request.body;
+      const res = await checkArticleLikeStatus(params);
+      ctx.body = {
+        code: 200,
+        success: true,
+        message: "获取文章点赞状态成功",
         data: res,
       };
     } catch (error) {

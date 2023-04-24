@@ -637,7 +637,6 @@ class articleServer {
         },
       }
     );
-    console.log(res, "res");
     return res;
   };
 
@@ -665,6 +664,21 @@ class articleServer {
     ]);
 
     return res;
+  };
+
+  // 获取文章的点赞状态
+  checkArticleLikeStatus = async ({ userId, id }) => {
+    const likeArticle = await LikeArticle.findOne({ userId, articleId: id });
+    if (likeArticle) {
+      return {
+        id,
+        isLike: true,
+      };
+    }
+    return {
+      id,
+      isLike: false,
+    };
   };
 }
 

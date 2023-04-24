@@ -24,6 +24,7 @@ const {
   searchArticles,
   updateCollectCount,
   getLikenessArticles,
+  checkArticleLikeStatus,
 } = require("./web/article.service");
 const {
   createComments,
@@ -154,6 +155,7 @@ module.exports = {
   searchArticles,
   updateCollectCount,
   getLikenessArticles,
+  checkArticleLikeStatus,
   createCollection,
   findOneCollection,
   getCollectionList,
