@@ -611,8 +611,10 @@ class articleServer {
 
   // 设置文章收藏数
   updateCollectCount = async ({ articleId, type }) => {
-    await Article.updateOne(
-      { _id: articleId },
+    const filter = Array.isArray(articleId) ? articleId : [articleId];
+
+    const res = await Article.updateMany(
+      { _id: filter },
       // $inc：自增自减运算符，传入正值为自增，负值为自减
       {
         $inc: {
@@ -620,6 +622,23 @@ class articleServer {
         },
       }
     );
+
+    return res;
+  };
+
+  // 批量设置文章收藏数
+  updateArticlesCollectCount = async ({ articleIds, type }) => {
+    const res = await Article.updateMany(
+      { _id: { $in: articleIds } },
+      // $inc：自增自减运算符，传入正值为自增，负值为自减
+      {
+        $inc: {
+          collectCount: type ? 1 : -1,
+        },
+      }
+    );
+    console.log(res, "res");
+    return res;
   };
 
   // 获取分类及标签相似的文章

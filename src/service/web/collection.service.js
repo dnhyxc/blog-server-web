@@ -17,7 +17,7 @@ class collectionServer {
     });
   };
 
-  // 根据收藏集名称查询
+  // 根据收藏集名称查询 filter: {_id: params.id}
   findOneCollection = async (filter) => {
     const res = await Collection.findOne(filter, collectionRes);
     return res;
@@ -80,8 +80,11 @@ class collectionServer {
   };
 
   // 收藏文章
-  collectArticles = async ({ ids, articleId, userId }) => {
-    await updateCollectCount({ articleId, type: true });
+  collectArticles = async ({ ids, articleId, userId, isMove = false }) => {
+    // 如果isMove是true，说明是转移文章，收藏数不需要变更
+    if (!isMove) {
+      await updateCollectCount({ articleId, type: true });
+    }
     const res = Collection.updateMany(
       { _id: { $in: ids }, userId },
       {
@@ -163,6 +166,33 @@ class collectionServer {
 
   // 删除收藏集
   delCollection = async ({ userId, id, pageNo, pageSize }) => {
+    const res = await this.findOneCollection({ _id: id });
+
+    res.articleIds.forEach(async (articleId) => {
+      // 查找所有包含articleId的收藏集
+      const collectIds = await Collection.find(
+        {
+          articleIds: { $elemMatch: { $eq: articleId } },
+        },
+        { _id: 1 }
+      );
+
+      // 过滤掉当前需要删除的收藏集id
+      if (collectIds?.length) {
+        const filterCollectIds = collectIds.filter(
+          (i) => i._id?.toString() !== id // 需要删除的收藏集id
+        );
+
+        // 判断是否还有包含该articleId的收藏集，如果没有则，articleId这篇文章需要更改收藏数量
+        if (!filterCollectIds?.length) {
+          await updateCollectCount({
+            articleId: articleId,
+            type: false,
+          });
+        }
+      }
+    });
+
     // 删除时先获取下一页的第一条数据，防止删除当前数据后，下一页第一条数据跑到上一页无法获取到
     if (pageNo && pageSize) {
       const nextPageOne = await this.getCollectionWithTotal({
@@ -205,11 +235,20 @@ class collectionServer {
   };
 
   // 移除指定收藏集中的文章
-  removeCollectArticle = async ({ articleId, userId, id }) => {
-    const res = Collection.updateOne(
-      // 查询条件为，查找当前用户下的，并且articleIds数组中包含articleId的所有数据
-      { _id: id, articleIds: { $elemMatch: { $eq: articleId } } },
-      // 向查找到的Collection中的articleIdst数组中插入一篇文章
+  removeCollectArticle = async ({ articleId, userId, id, isMove = false }) => {
+    // 查询条件为，查找当前用户下的，并且articleIds数组中包含articleId的所有数据
+    let filters = { _id: id, articleIds: { $elemMatch: { $eq: articleId } } };
+
+    if (!isMove) {
+      // 如果是点击的是移除的话，需要将所有收藏集中收藏的该文章都统统移除掉，因此，需要把唯一的id查找条件删除
+      filters = { articleIds: { $elemMatch: { $eq: articleId } } };
+      // 更改该文章的收藏次数
+      await updateCollectCount({ articleId, type: false });
+    }
+
+    const res = await Collection.updateMany(
+      filters,
+      // 向查找到的Collection中的articleIdst数组中删除一篇文章
       // 注意：如果要使用排序，$sort必须与$each一起使用才会生效
       {
         $pull: { articleIds: articleId },
@@ -218,6 +257,7 @@ class collectionServer {
         },
       }
     );
+
     return res;
   };
 }
