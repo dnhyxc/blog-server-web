@@ -1,5 +1,6 @@
 const { User } = require("../../models");
 const { userFields } = require("../../constant");
+const WS = require("../../socket");
 
 class UserServer {
   // 注册用户
@@ -22,6 +23,15 @@ class UserServer {
         ...userFields,
       }
     );
+
+    if (user) {
+      WS.singleSendMessage({
+        action: "logout",
+        userId: user._id.toString(),
+        data: {},
+      });
+      console.log(user._id.toString(), "singleSendMessage");
+    }
 
     return user;
   }
@@ -47,11 +57,11 @@ class UserServer {
 
   // 注销账号
   async logout({ userId }) {
-    const res = await User.deleteOne({ _id: userId })
+    const res = await User.deleteOne({ _id: userId });
     if (res.deletedCount) {
-      return true
+      return true;
     }
-    return false
+    return false;
   }
 }
 

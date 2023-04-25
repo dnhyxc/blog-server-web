@@ -74,6 +74,23 @@ class WS {
     });
     return success;
   }
+
+  // 单点发送消息
+  static singleSendMessage(data) {
+    // success 控制是否发送成功
+    let success = false;
+    if (!(this.ws instanceof WebSocket.Server)) {
+      return success;
+    }
+    this.ws.clients.forEach((client) => {
+      if (client.readyState === WebSocket.OPEN && client.id === data.userId) {
+        console.log(data, "data>>>>>>>>>>>>>>>>>");
+        client.send(JSON.stringify(data));
+        success = true;
+      }
+    });
+    return success;
+  }
 }
 
 module.exports = WS;
