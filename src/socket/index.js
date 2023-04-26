@@ -1,6 +1,6 @@
 const WebSocket = require("ws");
 const { parseQuery } = require("../utils");
-const { createMessage } = require("../service");
+const messageServer = require("../service/web/message.service");
 
 class WS {
   static online = 0; // 在线连接
@@ -40,14 +40,13 @@ class WS {
           const messages = msg && JSON.parse(msg);
           if (messages.action === "push") {
             // 创建消息，保存到数据库
-            createMessage(messages);
+            messageServer.createMessage(messages);
             this.sendMessage({
               ...messages,
               data: {
                 ...messages.data,
                 isReaded: false,
               },
-
               code: 200,
             });
           }
@@ -82,13 +81,14 @@ class WS {
     if (!(this.ws instanceof WebSocket.Server)) {
       return success;
     }
+
     this.ws.clients.forEach((client) => {
       if (client.readyState === WebSocket.OPEN && client.id === data.userId) {
-        console.log(data, "data>>>>>>>>>>>>>>>>>");
         client.send(JSON.stringify(data));
         success = true;
       }
     });
+
     return success;
   }
 }

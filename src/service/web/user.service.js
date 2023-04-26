@@ -28,9 +28,8 @@ class UserServer {
       WS.singleSendMessage({
         action: "logout",
         userId: user._id.toString(),
-        data: {},
+        code: 200,
       });
-      console.log(user._id.toString(), "singleSendMessage");
     }
 
     return user;
