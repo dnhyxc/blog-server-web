@@ -104,6 +104,13 @@ const fileUploadError = {
   data: "",
 };
 
+const fileNotFound = {
+  code: "10202",
+  success: false,
+  message: "文件不存在",
+  data: "",
+};
+
 const collectionAlreadyExited = {
   code: "10002",
   success: false,
@@ -199,4 +206,5 @@ module.exports = {
   userFields,
   collectionAlreadyExited,
   collectionRes,
+  fileNotFound,
 };
