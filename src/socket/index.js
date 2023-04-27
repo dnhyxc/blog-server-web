@@ -93,7 +93,6 @@ class WS {
       );
     client && client.send(JSON.stringify(data));
     success = true;
-    console.log(client, "clientclientclientclient");
     return success;
 
     // this.ws.clients.forEach((client) => {
