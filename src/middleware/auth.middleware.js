@@ -1,25 +1,25 @@
 const jwt = require("jsonwebtoken");
 const { JWT_SECRET } = require("../config");
-const { findUserById, adminFindUserById } = require("../service")
+const { findUserById, adminFindUserById } = require("../service");
 const {
   TokenExpiredError,
   JsonWebTokenError,
   DetailTokenExpiredError,
   databaseError,
-  userNotFind
+  userNotFind,
 } = require("../constant");
 
 const auth = async (ctx, next) => {
-  const { fromDetail } = ctx.request.body
+  const { fromDetail } = ctx.request.body;
 
   try {
     const { authorization } = ctx.request.header;
     const token = authorization.replace("Bearer ", "");
     const userInfo = jwt.verify(token, JWT_SECRET);
     const { userId, username, password } = userInfo._doc;
-    const res = await findUserById(userId)
+    const res = await findUserById(userId);
     if (!res) {
-      return ctx.app.emit('error', userNotFind, ctx)
+      return ctx.app.emit("error", userNotFind, ctx);
     }
 
     const user = {
@@ -32,10 +32,18 @@ const auth = async (ctx, next) => {
     switch (error.name) {
       case "TokenExpiredError":
         // console.error("token已过期", error);
-        return ctx.app.emit("error", !fromDetail ? JsonWebTokenError : DetailTokenExpiredError, ctx);
+        return ctx.app.emit(
+          "error",
+          !fromDetail ? JsonWebTokenError : DetailTokenExpiredError,
+          ctx
+        );
       case "JsonWebTokenError":
         // console.error("无效的token", error);
-        return ctx.app.emit("error", !fromDetail ? JsonWebTokenError : DetailTokenExpiredError, ctx);
+        return ctx.app.emit(
+          "error",
+          !fromDetail ? JsonWebTokenError : DetailTokenExpiredError,
+          ctx
+        );
       default:
         return ctx.app.emit("error", databaseError, ctx);
     }
@@ -50,9 +58,9 @@ const adminAuth = async (ctx, next) => {
     const token = authorization.replace("Bearer ", "");
     const userInfo = jwt.verify(token, JWT_SECRET);
     const { userId, username, password } = userInfo._doc;
-    const res = await adminFindUserById(userId)
+    const res = await adminFindUserById(userId);
     if (!res) {
-      return ctx.app.emit('error', userNotFind, ctx)
+      return ctx.app.emit("error", userNotFind, ctx);
     }
     const user = {
       id: userId,

@@ -10,6 +10,7 @@ const {
   getArticleTotal,
   updateAuthorName,
 } = require("../../service");
+const WS = require("../../socket");
 
 class UserController {
   // 账号注册
@@ -43,9 +44,23 @@ class UserController {
         message: "登录成功",
         data: {
           ...props?._doc,
-          token: jwt.sign(props, JWT_SECRET, { expiresIn: "1d" }),
+          token: jwt.sign(
+            {
+              ...props,
+              time: new Date().getTime(),
+              timeout: 1000 * 60 * 60 * 1,
+            },
+            JWT_SECRET,
+            { expiresIn: "1d" }
+          ),
         },
       };
+
+      WS.singleSendMessage({
+        action: "logout",
+        userId: props._doc.userId.toString(),
+        code: 200,
+      });
     } catch (error) {
       console.error("loginCtr", error);
       ctx.app.emit("error", databaseError, ctx);

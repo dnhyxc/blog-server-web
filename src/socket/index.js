@@ -82,14 +82,28 @@ class WS {
       return success;
     }
 
-    this.ws.clients.forEach((client) => {
-      if (client.readyState === WebSocket.OPEN && client.id === data.userId) {
-        client.send(JSON.stringify(data));
-        success = true;
-      }
-    });
+    const clients = this.ws.clients.values();
 
+    const clientList = Array.from(clients);
+
+    const client =
+      clientList?.length &&
+      Array.from(clientList).find(
+        (i) => i.readyState === WebSocket.OPEN && i.id === data.userId
+      );
+    client && client.send(JSON.stringify(data));
+    success = true;
+    console.log(client, "clientclientclientclient");
     return success;
+
+    // this.ws.clients.forEach((client) => {
+    //   if (client.readyState === WebSocket.OPEN && client.id === data.userId) {
+    //     client.send(JSON.stringify(data));
+    //     success = true;
+    //   }
+    // });
+
+    // return success;
   }
 }
 

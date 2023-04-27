@@ -1,7 +1,5 @@
 const { User } = require("../../models");
 const { userFields } = require("../../constant");
-const WS = require("../../socket");
-
 class UserServer {
   // 注册用户
   async createUserServer({ username, password }) {
@@ -23,14 +21,6 @@ class UserServer {
         ...userFields,
       }
     );
-
-    if (user) {
-      WS.singleSendMessage({
-        action: "logout",
-        userId: user._id.toString(),
-        code: 200,
-      });
-    }
 
     return user;
   }
