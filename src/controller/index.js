@@ -41,7 +41,7 @@ const {
   checkArticleLikeStatusCtr,
 } = articleController;
 
-const { uploadFileCtr } = uploadController;
+const { uploadFileCtr, removeFileCtr } = uploadController;
 
 const {
   createCommentsCtr,
@@ -141,6 +141,7 @@ module.exports = {
   logoutCtr,
   getUserInfoCtr,
   uploadFileCtr,
+  removeFileCtr,
   createArticleCtr,
   getArticleListCtr,
   getArticleByIdCtr,

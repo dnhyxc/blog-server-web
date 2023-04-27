@@ -1,4 +1,5 @@
 const path = require("path");
+const fs = require("fs");
 const { fileUploadError } = require("../../constant");
 
 class UploadController {
@@ -17,6 +18,37 @@ class UploadController {
       };
     } else {
       ctx.app.emit("error", fileUploadError, ctx);
+    }
+  }
+
+  /**
+   * 参数说明： filePath 为要删除的文件路径
+   */
+  async removeFileCtr(fileUrl = "") {
+    const index = fileUrl.lastIndexOf("/");
+    const url = fileUrl.substring(index + 1, fileUrl.length);
+
+    const publicPath = path.join(__dirname, "../../upload/image");
+
+    const filePath = path.normalize(`${publicPath}/${url}`);
+    // 判断文件是否存在
+    if (fs.existsSync(filePath)) {
+      const stats = fs.statSync(filePath);
+      // 判断是否是文件
+      if (stats?.isFile()) {
+        // 删除文件
+        fs.unlinkSync(filePath);
+        console.log(filePath, ">>>>>>>>>>>>>>>>aaaaa");
+        return;
+      }
+      // 判断是否是文件夹
+      if (stats.isDirectory()) {
+        let filesArr = fs.readdirSync(filePath);
+        filesArr.forEach((file) => {
+          removeFiles(path.resolve(filePath, file));
+        });
+        fs.rmdirSync(filePath);
+      }
     }
   }
 }
