@@ -195,8 +195,8 @@ class ArticleController {
   // 根据文章id获取详情
   async getArticleByIdCtr(ctx, next) {
     try {
-      const { id } = ctx.request.body;
-      const res = await findArticleById(id);
+      const { id, isEdit } = ctx.request.body;
+      const res = await findArticleById(id, isEdit);
       if (!res) {
         ctx.app.emit("error", ArticleNotFind, ctx);
         return;

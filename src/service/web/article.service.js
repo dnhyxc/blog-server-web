@@ -369,8 +369,11 @@ class articleServer {
   };
 
   // 根据文章id查找文章详情
-  findArticleById = async (id) => {
-    await this.computeArticleReadCount(id);
+  findArticleById = async (id, isEdit) => {
+    // 如果是编辑时调用的详情，则不进行阅读数的更改
+    if (!isEdit) {
+      await this.computeArticleReadCount(id);
+    }
     const article = await Article.findById(id, detailFields);
     if (article) {
       const userInfo = article && (await findUserById(article.authorId));
