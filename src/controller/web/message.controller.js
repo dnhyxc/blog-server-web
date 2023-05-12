@@ -102,8 +102,6 @@ class messageController {
       ctx.app.emit("error", databaseError, ctx);
     }
   }
-
-  //
 }
 
 module.exports = new messageController();

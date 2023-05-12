@@ -7,6 +7,7 @@ const userInfoController = require("./web/userInfo.controller");
 const draftController = require("./web/draft.controller");
 const collectionController = require("./web/collection.controller");
 const messageController = require("./web/message.controller");
+const interactController = require("./web/interact.controller");
 
 // 后台用户控制器
 const adminUserController = require("./admin/user.controller");
@@ -91,6 +92,9 @@ const {
   deleteMessageCtr,
   deleteAllMessageCtr,
 } = messageController;
+
+const { createInteractCtr, getInteractsCtr, getInteractListCtr } =
+  interactController;
 
 // 后台控制器
 const {
@@ -191,6 +195,9 @@ module.exports = {
   getNoReadMsgCountCtr,
   deleteMessageCtr,
   deleteAllMessageCtr,
+  createInteractCtr,
+  getInteractsCtr,
+  getInteractListCtr,
 
   // 后台用户控制器
   adminRegisterCtr,

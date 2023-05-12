@@ -11,7 +11,6 @@ const {
   updateAuthorName,
 } = require("../../service");
 const WS = require("../../socket");
-const FileServer = require("../web/upload.controller");
 
 class UserController {
   // 账号注册

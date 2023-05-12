@@ -7,6 +7,7 @@ const Like = require("./web/like.model");
 const LikeArticle = require("./web/likeArticle.model");
 const Collection = require("./web/collection.model");
 const Message = require("./web/message.model");
+const Interact = require("./web/interact.model");
 
 // 后台model
 const AdminUsers = require("./admin/user.model");
@@ -22,5 +23,6 @@ module.exports = {
   AdminUsers,
   Collection,
   Message,
+  Interact,
   PageConfig,
 };

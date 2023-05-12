@@ -75,6 +75,12 @@ const {
   deleteAllMessage,
 } = require("./web/message.service");
 
+const {
+  createInteract,
+  getInteracts,
+  getInteractsWithTotal,
+} = require("./web/interact.server");
+
 // 后台数据库接口
 const {
   adminFindOneUser,
@@ -174,6 +180,9 @@ module.exports = {
   getNoReadMsgCount,
   deleteMessage,
   deleteAllMessage,
+  createInteract,
+  getInteracts,
+  getInteractsWithTotal,
 
   // 后台
   adminFindOneUser,
