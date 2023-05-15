@@ -1,3 +1,6 @@
+const path = require("path");
+const fs = require("fs");
+
 const errorHandler = (err, ctx) => {
   let status = 500;
   switch (err.code) {
@@ -125,14 +128,14 @@ const parseQuery = (url) => {
 
 // 数组根据某相同字段进行分组
 const formateArrData = (initialArr, name) => {
-  //先获取一下这个数组中有多少个"name"
+  // 先获取一下这个数组中有多少个"name"
   let nameArr = [];
   for (let i in initialArr) {
     if (nameArr.indexOf(initialArr[i][`${name}`]) === -1) {
       nameArr.push(initialArr[i][`${name}`]);
     }
   }
-  //新建一个包含多个list的结果对象
+  // 新建一个包含多个list的结果对象
   let tempObj = {};
   // 根据不同的"name"生成多个数组
   for (let k in nameArr) {
@@ -147,10 +150,44 @@ const formateArrData = (initialArr, name) => {
   return tempObj;
 };
 
+// 检测文件是否已经存在
+const exists = (path) => {
+  return new Promise((resolve, reject) => {
+    fs.access(path, fs.constants.F_OK, (err) => {
+      if (err) {
+        resolve(false);
+        return;
+      }
+      resolve(true);
+    });
+  });
+};
+
+//利用multiparty插件解析前端传来的form-data格式的数据，并上传至服务器
+const multipartyUpload = (req, autoUpload) => {
+  let config = {
+    maxFieldsSize: 200 * 1024 * 1024,
+  };
+  if (autoUpload) config.uploadDir = SERVER_PATH;
+  return new Promise((resolve, reject) => {
+    new multiparty.Form(config).parse(req, (err, fields, files) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      resolve({
+        fields,
+        files,
+      });
+    });
+  });
+};
+
 module.exports = {
   errorHandler,
   getAdvancedSearchFilter,
   getSortType,
   parseQuery,
   formateArrData,
+  exists,
 };
