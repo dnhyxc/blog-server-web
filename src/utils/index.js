@@ -1,5 +1,6 @@
 const path = require("path");
 const fs = require("fs");
+const multiparty = require("multiparty");
 
 const errorHandler = (err, ctx) => {
   let status = 500;
@@ -150,44 +151,10 @@ const formateArrData = (initialArr, name) => {
   return tempObj;
 };
 
-// 检测文件是否已经存在
-const exists = (path) => {
-  return new Promise((resolve, reject) => {
-    fs.access(path, fs.constants.F_OK, (err) => {
-      if (err) {
-        resolve(false);
-        return;
-      }
-      resolve(true);
-    });
-  });
-};
-
-//利用multiparty插件解析前端传来的form-data格式的数据，并上传至服务器
-const multipartyUpload = (req, autoUpload) => {
-  let config = {
-    maxFieldsSize: 200 * 1024 * 1024,
-  };
-  if (autoUpload) config.uploadDir = SERVER_PATH;
-  return new Promise((resolve, reject) => {
-    new multiparty.Form(config).parse(req, (err, fields, files) => {
-      if (err) {
-        reject(err);
-        return;
-      }
-      resolve({
-        fields,
-        files,
-      });
-    });
-  });
-};
-
 module.exports = {
   errorHandler,
   getAdvancedSearchFilter,
   getSortType,
   parseQuery,
   formateArrData,
-  exists,
 };
