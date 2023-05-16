@@ -9,6 +9,7 @@ const {
   findUserById,
   getArticleTotal,
   updateAuthorName,
+  updateInteracts,
 } = require("../../service");
 const WS = require("../../socket");
 
@@ -120,6 +121,7 @@ class UserController {
       const filter = { _id: userId };
       await updateUser(filter, params);
       const userInfo = await findUserById(userId);
+      await updateInteracts({ ...params, userId });
       if (userInfo) {
         ctx.body = {
           code: 200,

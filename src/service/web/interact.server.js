@@ -72,6 +72,23 @@ class interactServer {
       };
     }
   }
+
+  // 修改留言用户信息
+  async updateInteracts(params) {
+    const res = await Interact.updateMany(
+      {
+        userId: params.userId,
+      },
+      {
+        $set: {
+          username: params.username,
+          avatar: params.headUrl,
+        },
+      }
+    );
+
+    return res;
+  }
 }
 
 module.exports = new interactServer();

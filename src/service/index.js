@@ -79,6 +79,7 @@ const {
   createInteract,
   getInteracts,
   getInteractsWithTotal,
+  updateInteracts,
 } = require("./web/interact.server");
 
 // 后台数据库接口
@@ -183,6 +184,7 @@ module.exports = {
   createInteract,
   getInteracts,
   getInteractsWithTotal,
+  updateInteracts,
 
   // 后台
   adminFindOneUser,
