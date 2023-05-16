@@ -1,7 +1,8 @@
 const path = require("path");
 const fs = require("fs");
-const fse = require("fs-extra");
 const { fileUploadError, fileNotFound } = require("../../constant");
+
+const publicPath = path.join(__dirname, "../../upload/image");
 
 class UploadController {
   // 文件上传
@@ -29,7 +30,6 @@ class UploadController {
     const { url } = ctx.request.body;
     const index = url.lastIndexOf("/");
     const sliceUrl = url.substring(index + 1, url.length);
-    const publicPath = path.join(__dirname, "../../upload/image");
     const filePath = path.normalize(`${publicPath}/${sliceUrl}`);
     // 判断文件是否存在
     if (fs.existsSync(filePath)) {
@@ -62,19 +62,15 @@ class UploadController {
   }
 
   // 大文件上传
-  async uploadLargeFileCtr(ctx, next) {
-    try {
-      const { file } = ctx.request.files;
-      const { filename } = ctx.request.body;
-
-      ctx.body = {
-        code: 200,
-        message: "文件上传成功",
-        success: true,
-      };
-    } catch (error) {
-      ctx.app.emit("error", fileNotFound, ctx);
-    }
+  async downLoadFileCtr(ctx, next) {
+    ctx.body = {
+      code: 200,
+      message: "获取文件成功",
+      success: true,
+      data: {
+        filePath: `${ctx.origin}/image/dnhyxc.zip`,
+      },
+    };
   }
 }
 

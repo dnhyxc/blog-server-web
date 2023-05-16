@@ -2,7 +2,7 @@ const Router = require("koa-router");
 const {
   uploadFileCtr,
   removeFileCtr,
-  uploadLargeFileCtr,
+  downLoadFileCtr,
 } = require("../../controller");
 const { auth } = require("../../middleware");
 
@@ -14,7 +14,7 @@ router.post("/upload", auth, uploadFileCtr);
 // 删除图片
 router.post("/removeFile", auth, removeFileCtr);
 
-// 大文件上传
-router.post("/uploadLargeFile", auth, uploadLargeFileCtr);
+// 文件下载
+router.post("/downLoadFile", auth, downLoadFileCtr);
 
 module.exports = router;
