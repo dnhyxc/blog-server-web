@@ -1,5 +1,6 @@
 const path = require("path");
 const fs = require("fs");
+const fse = require("fs-extra");
 const { fileUploadError, fileNotFound } = require("../../constant");
 
 class UploadController {
@@ -56,6 +57,22 @@ class UploadController {
       //   fs.rmdirSync(filePath);
       // }
     } else {
+      ctx.app.emit("error", fileNotFound, ctx);
+    }
+  }
+
+  // 大文件上传
+  async uploadLargeFileCtr(ctx, next) {
+    try {
+      const { file } = ctx.request.files;
+      const { filename } = ctx.request.body;
+
+      ctx.body = {
+        code: 200,
+        message: "文件上传成功",
+        success: true,
+      };
+    } catch (error) {
       ctx.app.emit("error", fileNotFound, ctx);
     }
   }

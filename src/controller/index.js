@@ -8,7 +8,6 @@ const draftController = require("./web/draft.controller");
 const collectionController = require("./web/collection.controller");
 const messageController = require("./web/message.controller");
 const interactController = require("./web/interact.controller");
-const uploaderController = require("./web/uploader.controller");
 
 // 后台用户控制器
 const adminUserController = require("./admin/user.controller");
@@ -43,8 +42,7 @@ const {
   checkArticleLikeStatusCtr,
 } = articleController;
 
-const { uploadFileCtr, removeFileCtr } = uploadController;
-const { uploadSingleCtr } = uploaderController;
+const { uploadFileCtr, removeFileCtr, uploadLargeFileCtr } = uploadController;
 
 const {
   createCommentsCtr,
@@ -148,8 +146,7 @@ module.exports = {
   getUserInfoCtr,
   uploadFileCtr,
   removeFileCtr,
-  // 上传单个文件
-  uploadSingleCtr,
+  uploadLargeFileCtr,
 
   createArticleCtr,
   getArticleListCtr,
