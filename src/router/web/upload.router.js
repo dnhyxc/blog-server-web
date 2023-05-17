@@ -15,6 +15,6 @@ router.post("/upload", auth, uploadFileCtr);
 router.post("/removeFile", auth, removeFileCtr);
 
 // 文件下载
-router.post("/downLoadFile", auth, downLoadFileCtr);
+router.post("/downLoadFile", downLoadFileCtr);
 
 module.exports = router;
