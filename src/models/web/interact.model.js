@@ -6,6 +6,7 @@ const interactSchema = new mongoose.Schema({
   username: String,
   comment: String,
   createTime: Number,
+  isDelete: Boolean,
 });
 
 const Interact = mongoose.model("interacts", interactSchema);

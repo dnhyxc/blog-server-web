@@ -80,6 +80,8 @@ const {
   getInteracts,
   getInteractsWithTotal,
   updateInteracts,
+  removeInteracts,
+  delInteracts,
 } = require("./web/interact.server");
 
 // 后台数据库接口
@@ -185,6 +187,8 @@ module.exports = {
   getInteracts,
   getInteractsWithTotal,
   updateInteracts,
+  removeInteracts,
+  delInteracts,
 
   // 后台
   adminFindOneUser,

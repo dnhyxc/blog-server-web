@@ -93,8 +93,13 @@ const {
   deleteAllMessageCtr,
 } = messageController;
 
-const { createInteractCtr, getInteractsCtr, getInteractListCtr } =
-  interactController;
+const {
+  createInteractCtr,
+  getInteractsCtr,
+  getInteractListCtr,
+  removeInteractsCtr,
+  delInteractsCtr,
+} = interactController;
 
 // 后台控制器
 const {
@@ -200,6 +205,8 @@ module.exports = {
   createInteractCtr,
   getInteractsCtr,
   getInteractListCtr,
+  removeInteractsCtr,
+  delInteractsCtr,
 
   // 后台用户控制器
   adminRegisterCtr,

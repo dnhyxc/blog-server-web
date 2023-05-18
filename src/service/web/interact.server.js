@@ -12,9 +12,9 @@ class interactServer {
   // 获取留言
   async getInteracts(params) {
     const res = await Interact.find(
-      {},
+      { isDelete: { $nin: [true] } },
       {
-        id: "$id",
+        id: "$_id",
         _id: 0,
         userId: 1,
         username: 1,
@@ -34,6 +34,7 @@ class interactServer {
   // 分页获取留言列表
   async getInteractsWithTotal({ pageNo, pageSize }) {
     const list = await Interact.aggregate([
+      { $match: { isDelete: { $nin: [true] } } },
       {
         $facet: {
           total: [{ $count: "count" }],
@@ -88,6 +89,35 @@ class interactServer {
     );
 
     return res;
+  }
+
+  // 移除留言
+  async removeInteracts({ ids }) {
+    const filters = Array.isArray(ids) ? ids : [ids];
+
+    const res = await Interact.updateMany(
+      {
+        _id: { $in: filters },
+      },
+      {
+        $set: {
+          isDelete: true,
+        },
+      }
+    );
+
+    return res.modifiedCount;
+  }
+
+  // 彻底删除
+  async delInteracts({ ids }) {
+    const filters = Array.isArray(ids) ? ids : [ids];
+
+    const res = await Interact.deleteMany({
+      _id: { $in: filters },
+    });
+
+    return res.modifiedCount;
   }
 }
 
