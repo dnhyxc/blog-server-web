@@ -251,8 +251,6 @@ class ArticleController {
       const { commentId, fromCommentId, articleId } = ctx.request.body;
       // 判断当前用户是否对当前评论点过赞
       await adminDeleteComment(commentId, fromCommentId, articleId);
-
-      console.log('1111111');
       ctx.body = {
         code: 200,
         success: true,

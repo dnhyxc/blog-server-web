@@ -29,7 +29,6 @@ app.use(
       // 文件上传大小
       maxFieldsSize: 20 * 1024 * 1024,
       onFileBegin: (name, file) => {
-        console.log(file, "file");
         // 修改 filepath 使用前端生成文件唯一 filename 覆盖 koa-body 自动生成的 filename 属性
         file.filepath = path.normalize(
           `${path.join(__dirname, "../upload/image")}/${file.originalFilename}`
