@@ -285,14 +285,15 @@ class articleServer {
                 authorName: 1,
                 readCount: 1,
                 isDelete: 1,
+                isTop: 1,
               },
             },
             {
               $sort: Object.keys(sortType).length
-                ? sortType // 如果有 sortType，则按照 sortType 排序
+                ? { isTop: -1, ...sortType } // 如果有 sortType，则按照 sortType 排序
                 : hot // 如果有 hot，则按照最热（readCount）排序
-                ? { readCount: -1 }
-                : { createTime: -1, likeCount: -1 },
+                ? { isTop: -1, readCount: -1 }
+                : { isTop: -1, createTime: -1, likeCount: -1 },
             },
             { $skip: (pageNo - 1) * pageSize },
             { $limit: !Object.keys(sortType).length ? pageSize : 1 },

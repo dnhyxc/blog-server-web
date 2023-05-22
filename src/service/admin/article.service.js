@@ -53,9 +53,10 @@ class articleServer {
                 createTime: 1,
                 authorName: 1,
                 isDelete: 1,
+                isTop: 1,
               },
             },
-            { $sort: { createTime: -1, likeCount: -1 } },
+            { $sort: { isTop: -1, createTime: -1, likeCount: -1 } },
             { $skip: (pageNo - 1) * pageSize },
             { $limit: pageSize },
           ],
@@ -154,16 +155,20 @@ class articleServer {
   // 删除评论
   async adminDeleteComment(commentId, fromCommentId, articleId) {
     const replyComment = await Comments.findOne(
-      { articleId, "replyList._id": fromCommentId, 'replyList.isDelete': true },
-      { replyList: { $elemMatch: { "isDelete": true } } }
+      { articleId, "replyList._id": fromCommentId, "replyList.isDelete": true },
+      { replyList: { $elemMatch: { isDelete: true } } }
     );
 
-    const res = await Comments.findOne({ _id: commentId, articleId, isDelete: { $nin: [true] } });
+    const res = await Comments.findOne({
+      _id: commentId,
+      articleId,
+      isDelete: { $nin: [true] },
+    });
 
     const filter = fromCommentId
       ? {
-        "replyList._id": fromCommentId, // 选择数组replyList中某个对象中的_id属性
-      }
+          "replyList._id": fromCommentId, // 选择数组replyList中某个对象中的_id属性
+        }
       : { _id: commentId };
     let count = 0;
     // fromCommentId有值说明是子级评论，直接减一就行
@@ -198,8 +203,8 @@ class articleServer {
   async adminRemoveComment(commentId, fromCommentId, articleId) {
     const filter = fromCommentId
       ? {
-        "replyList._id": fromCommentId, // 选择数组replyList中某个对象中的_id属性
-      }
+          "replyList._id": fromCommentId, // 选择数组replyList中某个对象中的_id属性
+        }
       : { _id: commentId };
 
     let count = 0;
@@ -226,11 +231,11 @@ class articleServer {
       {
         $set: fromCommentId
           ? {
-            "replyList.$.isDelete": true,
-          }
+              "replyList.$.isDelete": true,
+            }
           : {
-            isDelete: true,
-          },
+              isDelete: true,
+            },
       }
     );
 
@@ -241,8 +246,8 @@ class articleServer {
   async adminRestoreComment(commentId, fromCommentId, articleId) {
     const filter = fromCommentId
       ? {
-        "replyList._id": fromCommentId, // 选择数组replyList中某个对象中的_id属性
-      }
+          "replyList._id": fromCommentId, // 选择数组replyList中某个对象中的_id属性
+        }
       : { _id: commentId };
 
     let count = 0;
@@ -265,11 +270,11 @@ class articleServer {
       {
         $unset: fromCommentId
           ? {
-            "replyList.$.isDelete": true,
-          }
+              "replyList.$.isDelete": true,
+            }
           : {
-            isDelete: true,
-          },
+              isDelete: true,
+            },
       }
     );
 
@@ -282,7 +287,7 @@ class articleServer {
       { $match: { articleId: { $in: articleIds } } },
       {
         $project: {
-          id: '$_id',
+          id: "$_id",
           articleId: "$articleId",
           userId: 1,
           username: 1,
@@ -304,18 +309,18 @@ class articleServer {
           comments: {
             $push: {
               id: "$_id",
-              articleId: '$articleId',
-              userId: '$userId',
-              username: '$username',
-              avatarUrl: '$avatarUrl',
-              date: '$date',
-              content: '$content',
-              fromUserId: '$fromUserId',
-              likeCount: '$likeCount',
-              isLike: '$isLike',
-              isDelete: '$isDelete',
-              headUrl: '$headUrl',
-              replyList: '$replyList',
+              articleId: "$articleId",
+              userId: "$userId",
+              username: "$username",
+              avatarUrl: "$avatarUrl",
+              date: "$date",
+              content: "$content",
+              fromUserId: "$fromUserId",
+              likeCount: "$likeCount",
+              isLike: "$isLike",
+              isDelete: "$isDelete",
+              headUrl: "$headUrl",
+              replyList: "$replyList",
             },
           },
         },
@@ -331,9 +336,8 @@ class articleServer {
       { $sort: { date: -1 } },
     ]);
 
-    return commentList
+    return commentList;
   }
-
 
   // 获取文章评论列表
   async adminGetArticlesComments({ pageNo, pageSize }) {
@@ -371,17 +375,19 @@ class articleServer {
     if (list?.length) {
       const { total, data } = list[0];
 
-      const articleIds = data.map(i => i.id.toString())
+      const articleIds = data.map((i) => i.id.toString());
 
-      const comments = await new articleServer().getArticleCommentList(articleIds)
+      const comments = await new articleServer().getArticleCommentList(
+        articleIds
+      );
 
-      data.forEach(i => {
-        comments.forEach(j => {
+      data.forEach((i) => {
+        comments.forEach((j) => {
           if (j.articleId === i.id.toString()) {
-            i.commentList = j
+            i.commentList = j;
           }
-        })
-      })
+        });
+      });
 
       return {
         total: total[0]?.count || 0,

@@ -114,6 +114,7 @@ class classifyServer {
           createTime: "$createTime",
           readCount: "$readCount",
           comments: "$comments",
+          isTop: "$isTop",
         },
       },
       {
@@ -135,6 +136,7 @@ class classifyServer {
               createTime: "$createTime",
               readCount: "$readCount",
               comments: "$comments",
+              isTop: "$isTop",
             },
           },
         },

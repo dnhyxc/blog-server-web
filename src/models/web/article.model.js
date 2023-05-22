@@ -23,6 +23,7 @@ const ArticleSchema = new mongoose.Schema({
   likeCount: Number,
   readCount: Number,
   collectCount: Number,
+  isTop: Number,
 });
 
 const Article = mongoose.model("articles", ArticleSchema);
