@@ -82,6 +82,7 @@ const {
   updateInteracts,
   removeInteracts,
   delInteracts,
+  restoreInteracts,
 } = require("./web/interact.server");
 
 // 后台数据库接口
@@ -189,6 +190,7 @@ module.exports = {
   updateInteracts,
   removeInteracts,
   delInteracts,
+  restoreInteracts,
 
   // 后台
   adminFindOneUser,

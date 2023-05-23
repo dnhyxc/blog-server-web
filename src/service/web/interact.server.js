@@ -32,23 +32,32 @@ class interactServer {
   }
 
   // 分页获取留言列表
-  async getInteractsWithTotal({ pageNo, pageSize }) {
+  async getInteractsWithTotal({ pageNo, pageSize, isAdmin }) {
+    const matchParams = isAdmin ? {} : { isDelete: { $nin: [true] } };
+
+    const project = {
+      id: "$_id",
+      _id: 0,
+      userId: 1,
+      username: 1,
+      createTime: 1,
+      comment: 1,
+      avatar: 1,
+      isDelete: 1,
+    };
+
+    if (!isAdmin) {
+      delete project.isDelete;
+    }
+
     const list = await Interact.aggregate([
-      { $match: { isDelete: { $nin: [true] } } },
+      { $match: matchParams },
       {
         $facet: {
           total: [{ $count: "count" }],
           data: [
             {
-              $project: {
-                id: "$_id",
-                _id: 0,
-                userId: 1,
-                username: 1,
-                createTime: 1,
-                comment: 1,
-                avatar: 1,
-              },
+              $project: project,
             },
             {
               $sort: { createTime: -1 },
@@ -102,6 +111,24 @@ class interactServer {
       {
         $set: {
           isDelete: true,
+        },
+      }
+    );
+
+    return res.modifiedCount;
+  }
+
+  // 显示留言
+  async restoreInteracts({ ids }) {
+    const filters = Array.isArray(ids) ? ids : [ids];
+
+    const res = await Interact.updateMany(
+      {
+        _id: { $in: filters },
+      },
+      {
+        $set: {
+          isDelete: false,
         },
       }
     );
