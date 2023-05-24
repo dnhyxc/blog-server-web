@@ -84,13 +84,14 @@ class ArticleController {
   // 获取文章列表
   async adminGetArticleListCtr(ctx, next) {
     try {
-      const { pageNo, pageSize, filter, userId } = ctx.request.body;
+      const { pageNo, pageSize, filter, userId, authorIds } = ctx.request.body;
       // 操作数据库
       const res = await adminFindArticles({
         pageNo,
         pageSize,
         userId,
         filter,
+        authorIds,
       });
       // 返回结果
       if (res) {

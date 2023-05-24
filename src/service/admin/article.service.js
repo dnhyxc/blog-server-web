@@ -77,10 +77,18 @@ class articleServer {
   }
 
   // 获取文章列表
-  async adminFindArticles({ pageNo = 1, pageSize = 20, filter, tagName }) {
+  async adminFindArticles({
+    pageNo = 1,
+    pageSize = 20,
+    filter,
+    tagName,
+    authorIds,
+  }) {
     let filterKey;
     if (tagName) {
-      filterKey = { tag: tagName };
+      filterKey = {
+        tag: tagName,
+      };
     } else {
       // 不区分大小写
       const reg = (filter && new RegExp(filter, "i")) || "";
@@ -94,6 +102,12 @@ class articleServer {
         ],
       };
     }
+
+    // 如果有authorIds，说明不是超级管理员，需要根据绑定的前台账号拉取对应的文章列表
+    if (authorIds?.length) {
+      filterKey.authorId = { $in: authorIds };
+    }
+
     return await new articleServer().adminGetArticleListWithTotal({
       filterKey,
       pageNo,
