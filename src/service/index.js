@@ -121,6 +121,12 @@ const {
 } = require("./admin/article.service");
 
 const { adminCreateConfig } = require("./admin/config.service");
+const {
+  adminCreateClassify,
+  adminUpdateClassify,
+  adminDelClassifys,
+  adminGetClassifyList,
+} = require("./admin/classify.service");
 
 module.exports = {
   // 前台用户
@@ -208,6 +214,11 @@ module.exports = {
   bindAccount,
   adminCreateConfig,
   findBindUsers,
+  // 文章分类
+  adminCreateClassify,
+  adminUpdateClassify,
+  adminDelClassifys,
+  adminGetClassifyList,
   // 后台文章
   adminCreateArticle,
   adminUpdateArticle,

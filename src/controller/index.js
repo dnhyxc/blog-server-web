@@ -14,6 +14,7 @@ const adminUserController = require("./admin/user.controller");
 const adminArticleController = require("./admin/article.controller");
 const adminPageConfigController = require("./admin/config.controller");
 const adminGetInteractController = require("./admin/interact.controller");
+const adminClassifyController = require("./admin/classify.controller");
 
 // 前台控制器
 const {
@@ -150,6 +151,14 @@ const {
   adminDelInteractsCtr,
 } = adminGetInteractController;
 
+// 文章分类控制器
+const {
+  adminCreateClassifyCtr,
+  adminUpdateClassifyCtr,
+  adminDelClassifysCtr,
+  adminGetClassifyListCtr,
+} = adminClassifyController;
+
 module.exports = {
   // 前台控制器
   registerCtr,
@@ -255,4 +264,9 @@ module.exports = {
   adminRemoveInteractsCtr,
   adminRestoreInteractsCtr,
   adminDelInteractsCtr,
+  // 文章分类
+  adminCreateClassifyCtr,
+  adminUpdateClassifyCtr,
+  adminDelClassifysCtr,
+  adminGetClassifyListCtr,
 };

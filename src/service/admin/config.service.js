@@ -1,4 +1,3 @@
-// https://juejin.cn/post/6844904008495153165
 const { PageConfig } = require("../../models");
 
 class PageConfigServer {

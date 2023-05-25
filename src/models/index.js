@@ -12,6 +12,7 @@ const Interact = require("./web/interact.model");
 // 后台model
 const AdminUsers = require("./admin/user.model");
 const PageConfig = require("./admin/config.model");
+const Classify = require("./admin/classify.model");
 
 module.exports = {
   User,
@@ -25,4 +26,5 @@ module.exports = {
   Message,
   Interact,
   PageConfig,
+  Classify,
 };
