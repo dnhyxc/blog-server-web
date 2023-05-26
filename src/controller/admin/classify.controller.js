@@ -13,9 +13,11 @@ class adminClassifyController {
       const params = ctx.request.body;
       const res = await adminCreateClassify(params);
       ctx.body = {
-        code: 200,
-        message: "分类创建成功",
-        success: true,
+        code: res ? 200 : 10002,
+        message: res
+          ? "分类创建成功"
+          : `分类名称【${params.classifyName}】重复`,
+        success: res ? true : false,
         data: res._id,
       };
     } catch (error) {
@@ -65,7 +67,6 @@ class adminClassifyController {
     try {
       const params = ctx.request.body;
       const res = await adminGetClassifyList(params);
-      console.log(res, "res>>>>获取分类>>res");
       ctx.body = {
         code: 200,
         message: "分类获取成功",

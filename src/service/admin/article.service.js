@@ -1,16 +1,22 @@
 const { Article, Comments } = require("../../models");
 const { findUserById } = require("../web/user.service");
+const { adminUpdateClassify } = require("./classify.service");
 const { detailFields } = require("../../constant");
 
 class articleServer {
   // 创建文章
   async adminCreateArticle({ ...params }) {
     const userInfo = await findUserById(params.authorId);
-    return await Article.create({
+    const article = await Article.create({
       ...params,
       likeCount: 0,
       authorName: userInfo.username,
     });
+    await adminUpdateClassify({
+      classifyNames: params.classify,
+      articleIds: article._id,
+    });
+    return article;
   }
 
   // 根据文章id更新
@@ -133,8 +139,15 @@ class articleServer {
   }
 
   // 批量删除文章
-  async adminBatchDeleteArticle({ articleIds }) {
+  async adminBatchDeleteArticle({ articleIds, classifys }) {
     const res = await Article.deleteMany({ _id: { $in: articleIds } });
+    const delRes = await adminUpdateClassify({
+      classifyNames: classifys,
+      articleIds: articleIds,
+      isDelete: true,
+    });
+
+    console.log(delRes, ">>>>>res>>>adminUpdateClassify");
     return res.deletedCount;
   }
 

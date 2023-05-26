@@ -1,7 +1,3 @@
-const path = require("path");
-const fs = require("fs");
-const multiparty = require("multiparty");
-
 const errorHandler = (err, ctx) => {
   let status = 500;
   switch (err.code) {

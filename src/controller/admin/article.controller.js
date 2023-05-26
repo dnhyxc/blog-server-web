@@ -161,8 +161,8 @@ class ArticleController {
   // 批量删除
   async adminBatchDeleteArticleCtr(ctx, next) {
     try {
-      const { articleIds } = ctx.request.body;
-      const res = await adminBatchDeleteArticle({ articleIds });
+      const params = ctx.request.body;
+      const res = await adminBatchDeleteArticle(params);
       ctx.body = {
         code: 200,
         success: true,
