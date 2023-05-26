@@ -12,12 +12,11 @@ class adminClassifyController {
     try {
       const params = ctx.request.body;
       const res = await adminCreateClassify(params);
-      console.log(res, "res>>>>>>res");
       ctx.body = {
         code: 200,
         message: "分类创建成功",
         success: true,
-        data: res,
+        data: res._id,
       };
     } catch (error) {
       console.error("adminCreateClassifyCtr", error);

@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 
 const classifySchema = new mongoose.Schema({
   addCount: Number,
+  icon: String,
   userIds: [String],
   classifyName: String,
   articleIds: [String],
