@@ -111,8 +111,7 @@ class ClassifyServer {
     const res = await Classify.deleteMany({
       _id: { $in: classifyIds },
     });
-
-    console.log(res, "删除文章分类");
+    return classifyIds.length
   }
 
   // 获取文章分类

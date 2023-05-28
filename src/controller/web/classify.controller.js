@@ -3,6 +3,7 @@ const {
   getTagList,
   getTimelineList,
   checkLikeStatus,
+  getAddedClassifys
 } = require("../../service");
 const { databaseError, userFormateError } = require("../../constant");
 
@@ -68,6 +69,22 @@ class classifyController {
       };
     } catch (error) {
       console.error("getTimelineListCtr", error);
+      ctx.app.emit("error", databaseError, ctx);
+    }
+  }
+  // 获取后台添加的文章列表
+  async getAddedClassifysCtr(ctx, next) {
+    try {
+      const params = ctx.request.body;
+      const res = await getAddedClassifys(params);
+      ctx.body = {
+        code: 200,
+        success: true,
+        message: "获取分类成功",
+        data: res,
+      };
+    } catch (error) {
+      console.error("getAddedClassifysCtr", error);
       ctx.app.emit("error", databaseError, ctx);
     }
   }

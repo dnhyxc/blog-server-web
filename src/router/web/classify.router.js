@@ -3,7 +3,10 @@ const {
   getClassifyListCtr,
   getTagListCtr,
   getTimelineListCtr,
+  getAddedClassifysCtr,
 } = require("../../controller");
+
+const { auth } = require("../../middleware");
 
 const router = new Router({ prefix: "/api" });
 
@@ -15,5 +18,8 @@ router.post("/getTagList", getTagListCtr);
 
 // 获取时间轴列表
 router.post("/getTimelineList", getTimelineListCtr);
+
+// 获取后台添加的文章列表
+router.post("/getAddedClassifys", auth, getAddedClassifysCtr);
 
 module.exports = router;

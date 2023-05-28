@@ -53,7 +53,7 @@ const {
   deleteCommentCtr,
 } = commentsController;
 
-const { getClassifyListCtr, getTagListCtr, getTimelineListCtr } =
+const { getClassifyListCtr, getTagListCtr, getTimelineListCtr, getAddedClassifysCtr } =
   classifyController;
 
 const {
@@ -187,6 +187,7 @@ module.exports = {
   getClassifyListCtr,
   getTagListCtr,
   getTimelineListCtr,
+  getAddedClassifysCtr,
   getMyArticleListCtr,
   getLikeArticleListCtr,
   getArticleByRandomCtr,

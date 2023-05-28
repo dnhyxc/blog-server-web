@@ -39,6 +39,7 @@ const {
   getClassifyList,
   getTagList,
   getTimelineList,
+  getAddedClassifys
 } = require("./web/classify.service");
 const {
   getMyArticleList,
@@ -155,6 +156,7 @@ module.exports = {
   getClassifyList,
   getTagList,
   getTimelineList,
+  getAddedClassifys,
   checkLikeStatus,
   getArticleListWithTotal,
   getMyArticleList,
