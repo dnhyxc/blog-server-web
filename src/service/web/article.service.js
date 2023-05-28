@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const { Article, LikeArticle } = require("../../models");
 const { findUserById, findOneUser } = require("./user.service");
-// const { getLikeArticleList } = require("./userInfo.service");
+const { adminUpdateClassify } = require("../admin/classify.service");
 const { findCommentById } = require("./comments.service");
 const { anotherFields, detailFields } = require("../../constant");
 const { getAdvancedSearchFilter, getSortType } = require("../../utils");
@@ -10,13 +10,20 @@ class articleServer {
   // 创建文章
   async createArticle({ ...params }) {
     const userInfo = await findUserById(params.authorId);
-    return await Article.create({
+    const res = await Article.create({
       ...params,
       likeCount: 0,
       readCount: 0,
       collectCount: 0,
       authorName: userInfo.username,
     });
+    // 创建文章时，更新分类文章数、添加数等
+    await adminUpdateClassify({
+      classifyNames: params.classify,
+      articleIds: res._id,
+      userIds: params.authorId,
+    });
+    return res
   }
 
   // 根据文章id查找文章详情
@@ -292,8 +299,8 @@ class articleServer {
               $sort: Object.keys(sortType).length
                 ? { isTop: -1, ...sortType } // 如果有 sortType，则按照 sortType 排序
                 : hot // 如果有 hot，则按照最热（readCount）排序
-                ? { isTop: -1, readCount: -1 }
-                : { isTop: -1, createTime: -1, likeCount: -1 },
+                  ? { isTop: -1, readCount: -1 }
+                  : { isTop: -1, createTime: -1, likeCount: -1 },
             },
             { $skip: (pageNo - 1) * pageSize },
             { $limit: !Object.keys(sortType).length ? pageSize : 1 },

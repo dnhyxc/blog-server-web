@@ -11,72 +11,98 @@ class ClassifyServer {
   };
 
   // 创建分类
-  async adminCreateClassify({ classifyName }) {
+  async adminCreateClassify({ classifyName, articleIds, userIds }) {
+    if (!classifyName) {
+      throw new Error('没有传入classifyName')
+    }
+
     const findOne = await new ClassifyServer().adminFindCLassify({
       classifyName,
     });
+
+    // 判断分类名称是否重复
     if (findOne) {
       return false;
     } else {
-      return await Classify.create({
+      const res = await Classify.create({
         classifyName,
         addCount: 0,
         userIds: [],
         articleIds: [],
+        addUserIds: [],
         createTime: new Date().valueOf(),
       });
+      if (userIds && articleIds) {
+        await new ClassifyServer().adminUpdateClassify({
+          classifyNames: classifyName,
+          articleIds,
+          userIds
+        })
+      }
+      return res
     }
   }
 
   // 更新分类
   async adminUpdateClassify({
     classifyNames,
-    userIds,
     articleIds,
+    userIds,
     isDelete = false,
   }) {
     const articleIdList =
       articleIds && Array.isArray(articleIds) ? articleIds : [articleIds];
-    // const userIdList = userIds && Array.isArray(userIds) ? userIds : [userIds];
-
-    console.log(articleIds, "articleIds", articleIdList);
-
-    console.log(articleIdList, classifyNames, ">>>>>>uid");
+    const classifyNameList = classifyNames && Array.isArray(classifyNames) ? classifyNames : [classifyNames];
+    const bindUsers = userIds && Array.isArray(userIds) ? userIds : [userIds];
 
     // 判断是否是删除，如果是删除，则需要把相关的用户及文章从分类中删除
     const config = !isDelete
       ? {
-          // 注意：如果要使用排序，$sort必须与$each一起使用才会生效
-          // $addToSet会进行去重添加操作，$push不会进行去重添加操作
-          $addToSet: {
-            articleIds: { $each: articleIdList },
-            // userIds: { $each: userIdList },
-          },
-          $set: {
-            createTime: new Date().valueOf(),
-          },
-        }
+        // 注意：如果要使用排序，$sort必须与$each一起使用才会生效
+        // $addToSet会进行去重添加操作，$push不会进行去重添加操作
+        $addToSet: {
+          articleIds: { $each: articleIdList },
+          userIds: { $each: bindUsers },
+        },
+        $set: {
+          createTime: new Date().valueOf(),
+        },
+      }
       : {
-          // 将对应的文章及用户从 articleIds/userIds 中删除
-          $pull: {
-            articleIds: { $in: articleIds },
-            // userIds: { $in: userIdList },
-          },
-        };
-
-    console.log(config, "config");
+        // 将符合条件的的文章及用户从 articleIds/userIds 中删除
+        $pull: {
+          articleIds: { $in: articleIds },
+          userIds: { $in: bindUsers },
+        },
+      };
 
     const res = await Classify.updateMany(
-      { classifyName: { $in: classifyNames } },
+      { classifyName: { $in: classifyNameList } },
       config
     );
 
     if (!res.matchedCount) {
-      console.log("需要手动创建这个分类");
+      await new ClassifyServer().adminCreateClassify({ classifyName: classifyNames, articleIds, userIds })
     } else {
-      console.log(res, "res>>>跟新文章分类");
       return res;
     }
+  }
+
+  // 添加分类
+  async adminAddClassify({ id, bindUsers, type, userId }) {
+    const config = type === 'add' ? {
+      $addToSet: {
+        userIds: { $each: bindUsers },
+        addUserIds: userId,
+      },
+    } : {
+      $pull: {
+        userIds: { $in: bindUsers },
+        addUserIds: userId,
+      },
+    }
+    const ids = id && Array.isArray(id) ? id : [id]
+    await Classify.updateMany({ _id: { $in: ids } }, config)
   }
 
   // 删除文章分类
@@ -94,7 +120,6 @@ class ClassifyServer {
     const project = {
       id: "$_id",
       _id: 0,
-      addCount: 1,
       icon: 1,
       classifyName: 1,
       articleCount: { $size: "$articleIds" }, // 获取classifyIds数组的数量
@@ -102,6 +127,7 @@ class ClassifyServer {
       createTime: 1,
       articleIds: 1,
       userIds: 1,
+      addUserIds: 1,
     };
 
     const list = await Classify.aggregate([

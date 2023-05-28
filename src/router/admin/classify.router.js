@@ -4,6 +4,7 @@ const {
   adminUpdateClassifyCtr,
   adminDelClassifysCtr,
   adminGetClassifyListCtr,
+  adminAddClassifyCtr,
 } = require("../../controller");
 
 const { adminAuth } = require("../../middleware");
@@ -18,6 +19,9 @@ router.post("/updateClassify", adminAuth, adminUpdateClassifyCtr);
 
 // 删除分类
 router.post("/deleteClassifys", adminAuth, adminDelClassifysCtr);
+
+// 添加分类
+router.post("/addClassify", adminAuth, adminAddClassifyCtr);
 
 // 获取分类
 router.post("/getClassifyList", adminAuth, adminGetClassifyListCtr);

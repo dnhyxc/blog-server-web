@@ -126,6 +126,7 @@ const {
   adminUpdateClassify,
   adminDelClassifys,
   adminGetClassifyList,
+  adminAddClassify
 } = require("./admin/classify.service");
 
 module.exports = {
@@ -219,6 +220,7 @@ module.exports = {
   adminUpdateClassify,
   adminDelClassifys,
   adminGetClassifyList,
+  adminAddClassify,
   // 后台文章
   adminCreateArticle,
   adminUpdateArticle,

@@ -15,6 +15,7 @@ class articleServer {
     await adminUpdateClassify({
       classifyNames: params.classify,
       articleIds: article._id,
+      userIds: params.authorId,
     });
     return article;
   }
@@ -141,13 +142,11 @@ class articleServer {
   // 批量删除文章
   async adminBatchDeleteArticle({ articleIds, classifys }) {
     const res = await Article.deleteMany({ _id: { $in: articleIds } });
-    const delRes = await adminUpdateClassify({
+    await adminUpdateClassify({
       classifyNames: classifys,
       articleIds: articleIds,
       isDelete: true,
     });
-
-    console.log(delRes, ">>>>>res>>>adminUpdateClassify");
     return res.deletedCount;
   }
 
@@ -194,8 +193,8 @@ class articleServer {
 
     const filter = fromCommentId
       ? {
-          "replyList._id": fromCommentId, // 选择数组replyList中某个对象中的_id属性
-        }
+        "replyList._id": fromCommentId, // 选择数组replyList中某个对象中的_id属性
+      }
       : { _id: commentId };
     let count = 0;
     // fromCommentId有值说明是子级评论，直接减一就行
@@ -230,8 +229,8 @@ class articleServer {
   async adminRemoveComment(commentId, fromCommentId, articleId) {
     const filter = fromCommentId
       ? {
-          "replyList._id": fromCommentId, // 选择数组replyList中某个对象中的_id属性
-        }
+        "replyList._id": fromCommentId, // 选择数组replyList中某个对象中的_id属性
+      }
       : { _id: commentId };
 
     let count = 0;
@@ -258,11 +257,11 @@ class articleServer {
       {
         $set: fromCommentId
           ? {
-              "replyList.$.isDelete": true,
-            }
+            "replyList.$.isDelete": true,
+          }
           : {
-              isDelete: true,
-            },
+            isDelete: true,
+          },
       }
     );
 
@@ -273,8 +272,8 @@ class articleServer {
   async adminRestoreComment(commentId, fromCommentId, articleId) {
     const filter = fromCommentId
       ? {
-          "replyList._id": fromCommentId, // 选择数组replyList中某个对象中的_id属性
-        }
+        "replyList._id": fromCommentId, // 选择数组replyList中某个对象中的_id属性
+      }
       : { _id: commentId };
 
     let count = 0;
@@ -297,11 +296,11 @@ class articleServer {
       {
         $unset: fromCommentId
           ? {
-              "replyList.$.isDelete": true,
-            }
+            "replyList.$.isDelete": true,
+          }
           : {
-              isDelete: true,
-            },
+            isDelete: true,
+          },
       }
     );
 

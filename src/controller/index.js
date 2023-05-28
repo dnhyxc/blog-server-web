@@ -157,6 +157,7 @@ const {
   adminUpdateClassifyCtr,
   adminDelClassifysCtr,
   adminGetClassifyListCtr,
+  adminAddClassifyCtr,
 } = adminClassifyController;
 
 module.exports = {
@@ -269,4 +270,5 @@ module.exports = {
   adminUpdateClassifyCtr,
   adminDelClassifysCtr,
   adminGetClassifyListCtr,
+  adminAddClassifyCtr,
 };
