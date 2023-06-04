@@ -10,6 +10,7 @@ const {
   getArticleTotal,
   updateAuthorName,
   updateInteracts,
+  updateFollowUserInfo,
 } = require("../../service");
 const WS = require("../../socket");
 
@@ -122,6 +123,7 @@ class UserController {
       await updateUser(filter, params);
       const userInfo = await findUserById(userId);
       await updateInteracts({ ...params, userId });
+      await updateFollowUserInfo(userId, params);
       if (userInfo) {
         ctx.body = {
           code: 200,

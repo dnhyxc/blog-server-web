@@ -92,8 +92,7 @@ class FollowServer {
   async updateFollowUserInfo(userId, followInfo) {
     const res = await Follow.updateOne(
       {
-        myUserId: userId,
-        userId: followInfo?.userId,
+        userId,
       },
       {
         $set: {
@@ -101,8 +100,6 @@ class FollowServer {
         },
       }
     );
-
-    console.log(res, "更新关注用户信息成功");
 
     return res.modifiedCount;
   }

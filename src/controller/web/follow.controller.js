@@ -61,23 +61,6 @@ class followController {
     }
   }
 
-  // 更新关注用户信息
-  async updateFollowUserInfoCtr(ctx, next) {
-    try {
-      const params = ctx.request.body;
-      const res = await getAddedClassifys(params);
-      ctx.body = {
-        code: 200,
-        success: true,
-        message: "更新关注用户信息成功",
-        data: res,
-      };
-    } catch (error) {
-      console.error("updateFollowUserInfoCtr", error);
-      ctx.app.emit("error", databaseError, ctx);
-    }
-  }
-
   // 查询是否已经关注
   async findFollowedCtr(ctx, next) {
     try {
