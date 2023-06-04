@@ -39,7 +39,7 @@ const {
   getClassifyList,
   getTagList,
   getTimelineList,
-  getAddedClassifys
+  getAddedClassifys,
 } = require("./web/classify.service");
 const {
   getMyArticleList,
@@ -84,7 +84,14 @@ const {
   removeInteracts,
   delInteracts,
   restoreInteracts,
-} = require("./web/interact.server");
+} = require("./web/interact.service");
+
+const {
+  manageFollow,
+  getFollowListWithTotal,
+  updateFollowUserInfo,
+  findFollowed,
+} = require("./web/follow.service");
 
 // 后台数据库接口
 const {
@@ -127,7 +134,7 @@ const {
   adminUpdateClassify,
   adminDelClassifys,
   adminGetClassifyList,
-  adminAddClassify
+  adminAddClassify,
 } = require("./admin/classify.service");
 
 module.exports = {
@@ -200,6 +207,10 @@ module.exports = {
   removeInteracts,
   delInteracts,
   restoreInteracts,
+  manageFollow,
+  getFollowListWithTotal,
+  updateFollowUserInfo,
+  findFollowed,
 
   // 后台
   adminFindOneUser,

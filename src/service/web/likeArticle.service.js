@@ -1,7 +1,6 @@
 const { LikeArticle } = require("../../models");
 
 class likeArticleServer {
-  // 创建评论
   async checkLikeArticle(articleId, userId) {
     // 查找
     const find = await LikeArticle.findOne({

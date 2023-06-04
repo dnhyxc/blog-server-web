@@ -8,6 +8,7 @@ const draftController = require("./web/draft.controller");
 const collectionController = require("./web/collection.controller");
 const messageController = require("./web/message.controller");
 const interactController = require("./web/interact.controller");
+const followController = require("./web/follow.controller");
 
 // 后台用户控制器
 const adminUserController = require("./admin/user.controller");
@@ -53,8 +54,12 @@ const {
   deleteCommentCtr,
 } = commentsController;
 
-const { getClassifyListCtr, getTagListCtr, getTimelineListCtr, getAddedClassifysCtr } =
-  classifyController;
+const {
+  getClassifyListCtr,
+  getTagListCtr,
+  getTimelineListCtr,
+  getAddedClassifysCtr,
+} = classifyController;
 
 const {
   getMyArticleListCtr,
@@ -102,6 +107,8 @@ const {
   removeInteractsCtr,
   delInteractsCtr,
 } = interactController;
+
+const { manageFollowCtr, getFollowListCtr, findFollowedCtr } = followController;
 
 // 后台控制器
 const {
@@ -227,6 +234,9 @@ module.exports = {
   getInteractListCtr,
   removeInteractsCtr,
   delInteractsCtr,
+  manageFollowCtr,
+  getFollowListCtr,
+  findFollowedCtr,
 
   // 后台用户控制器
   adminRegisterCtr,
