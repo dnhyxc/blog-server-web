@@ -141,8 +141,12 @@ class UserController {
   // 获取前台用户列表
   async adminGetUserListCtr(ctx, next) {
     try {
-      const { pageNo, pageSize } = ctx.request.body;
-      const res = await adminGetUserList({ pageNo, pageSize });
+      const { pageNo, pageSize, keyword } = ctx.request.body;
+      const res = await adminGetUserList({
+        pageNo,
+        pageSize,
+        keyword,
+      });
       ctx.body = {
         code: 200,
         success: true,

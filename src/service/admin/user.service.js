@@ -78,7 +78,11 @@ class UserServer {
   }
 
   // 查询前台用户列表
-  async adminGetUserList({ filterKey, pageNo, pageSize }) {
+  async adminGetUserList({ keyword, pageNo, pageSize }) {
+    // 头部搜索关键字不区分大小写
+    const reg = (keyword && new RegExp(keyword, "i")) || "";
+    // 处理头部搜索关键字
+    const filterKey = { username: { $regex: reg } };
     const res = await new UserServer().adminGetUserListWithTotal({
       filterKey,
       pageNo,
