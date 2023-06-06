@@ -27,6 +27,29 @@ class ToolsServer {
           }
         : {};
 
+    const skipRule = [{ $skip: (pageNo - 1) * pageSize }, { $limit: pageSize }];
+
+    const facetDataRule = [
+      {
+        $project: {
+          id: "$_id",
+          _id: 0,
+          toolName: 1,
+          toolHref: 1,
+          toolUrl: 1,
+          powerUsers: 1,
+          createTime: 1,
+        },
+      },
+      {
+        $sort: { createTime: -1 },
+      },
+    ];
+
+    if (type === "all") {
+      facetDataRule.concat(skipRule);
+    }
+
     const list = await Tools.aggregate([
       {
         $match: filters,
@@ -34,24 +57,7 @@ class ToolsServer {
       {
         $facet: {
           total: [{ $count: "count" }],
-          data: [
-            {
-              $project: {
-                id: "$_id",
-                _id: 0,
-                toolName: 1,
-                toolHref: 1,
-                toolUrl: 1,
-                powerUsers: 1,
-                createTime: 1,
-              },
-            },
-            {
-              $sort: { createTime: -1 },
-            },
-            { $skip: (pageNo - 1) * pageSize },
-            { $limit: pageSize },
-          ],
+          data: facetDataRule,
         },
       },
     ]);
