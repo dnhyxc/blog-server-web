@@ -14,6 +14,7 @@ const Follow = require("./web/follow.model");
 const AdminUsers = require("./admin/user.model");
 const PageConfig = require("./admin/config.model");
 const Classify = require("./admin/classify.model");
+const Tools = require("./admin/tools.model");
 
 module.exports = {
   User,
@@ -29,4 +30,5 @@ module.exports = {
   Follow,
   PageConfig,
   Classify,
+  Tools,
 };

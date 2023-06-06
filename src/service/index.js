@@ -137,6 +137,13 @@ const {
   adminAddClassify,
 } = require("./admin/classify.service");
 
+const {
+  adminAddTools,
+  adminGetToolListWithTotal,
+  adminUpdateTools,
+  adminDeleteTools,
+} = require("./admin/tools.service");
+
 module.exports = {
   // 前台用户
   findOneUser,
@@ -249,4 +256,9 @@ module.exports = {
   adminRemoveComment,
   adminRestoreComment,
   adminGetArticlesComments,
+  // 工具
+  adminAddTools,
+  adminGetToolListWithTotal,
+  adminUpdateTools,
+  adminDeleteTools,
 };

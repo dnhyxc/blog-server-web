@@ -16,6 +16,7 @@ const adminArticleController = require("./admin/article.controller");
 const adminPageConfigController = require("./admin/config.controller");
 const adminGetInteractController = require("./admin/interact.controller");
 const adminClassifyController = require("./admin/classify.controller");
+const adminToolsController = require("./admin/tools.controller");
 
 // 前台控制器
 const {
@@ -167,6 +168,14 @@ const {
   adminAddClassifyCtr,
 } = adminClassifyController;
 
+// 实用工具控制器
+const {
+  adminAddToolsCtr,
+  adminGetToolListCtr,
+  adminUpdateToolsCtr,
+  adminDeleteToolsCtr,
+} = adminToolsController;
+
 module.exports = {
   // 前台控制器
   registerCtr,
@@ -282,4 +291,9 @@ module.exports = {
   adminDelClassifysCtr,
   adminGetClassifyListCtr,
   adminAddClassifyCtr,
+  // 工具
+  adminAddToolsCtr,
+  adminGetToolListCtr,
+  adminUpdateToolsCtr,
+  adminDeleteToolsCtr,
 };
