@@ -366,7 +366,11 @@ class articleServer {
   }
 
   // 获取文章评论列表
-  async adminGetArticlesComments({ pageNo, pageSize }) {
+  async adminGetArticlesComments({ pageNo, pageSize, bindUsers = [] }) {
+    const matchParams = bindUsers?.length ? {
+      authorId: { $in: bindUsers }
+    } : {}
+
     const list = await Article.aggregate([
       // {
       //   $lookup: {
@@ -376,6 +380,9 @@ class articleServer {
       //     as: "comments"
       //   }
       // },
+      {
+        $match: matchParams,
+      },
       {
         $facet: {
           total: [{ $count: "count" }],
