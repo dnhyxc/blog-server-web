@@ -159,8 +159,11 @@ class classifyServer {
 
   // 获取对应账号添加的文章列表
   async getAddedClassifys({ userId }) {
-    const res = await Classify.find({ userIds: { $in: [userId] } }, { id: '$_id', _id: 0, classifyName: 1, createTime: 1 })
-    return res
+    const res = await Classify.find(
+      { userIds: { $in: [userId] } },
+      { id: "$_id", _id: 0, classifyName: 1, createTime: 1 }
+    );
+    return res;
   }
 }
 

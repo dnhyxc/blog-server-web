@@ -5,6 +5,7 @@ const {
   adminDelClassifysCtr,
   adminGetClassifyListCtr,
   adminAddClassifyCtr,
+  getTagListCtr,
 } = require("../../controller");
 
 const { adminAuth } = require("../../middleware");
@@ -25,5 +26,8 @@ router.post("/addClassify", adminAuth, adminAddClassifyCtr);
 
 // 获取分类
 router.post("/getClassifyList", adminAuth, adminGetClassifyListCtr);
+
+// 获取分类统计
+router.post("/getTagList", adminAuth, getTagListCtr);
 
 module.exports = router;

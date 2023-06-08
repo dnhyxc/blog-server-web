@@ -17,6 +17,7 @@ const adminPageConfigController = require("./admin/config.controller");
 const adminGetInteractController = require("./admin/interact.controller");
 const adminClassifyController = require("./admin/classify.controller");
 const adminToolsController = require("./admin/tools.controller");
+const adminStatisticsController = require("./admin/statistics.controller");
 
 // 前台控制器
 const {
@@ -176,6 +177,9 @@ const {
   adminDeleteToolsCtr,
 } = adminToolsController;
 
+// 统计
+const { adminGetArticlesStatisticsCtr } = adminStatisticsController;
+
 module.exports = {
   // 前台控制器
   registerCtr,
@@ -296,4 +300,6 @@ module.exports = {
   adminGetToolListCtr,
   adminUpdateToolsCtr,
   adminDeleteToolsCtr,
+  // 后台统计
+  adminGetArticlesStatisticsCtr,
 };
