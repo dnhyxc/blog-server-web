@@ -147,6 +147,7 @@ const {
 const {
   adminGetArticlesStatistics,
   adminGetRegisterStatistics,
+  adminGetAuhthorList,
 } = require("./admin/statistics.service");
 
 module.exports = {
@@ -269,4 +270,5 @@ module.exports = {
   // 后台统计
   adminGetArticlesStatistics,
   adminGetRegisterStatistics,
+  adminGetAuhthorList,
 };

@@ -2,6 +2,7 @@ const Router = require("koa-router");
 const {
   adminGetArticlesStatisticsCtr,
   adminGetRegisterStatisticsCtr,
+  adminGetAuhthorListCtr,
 } = require("../../controller");
 
 const { adminAuth } = require("../../middleware");
@@ -13,5 +14,8 @@ router.post("/getArticlesStatistics", adminAuth, adminGetArticlesStatisticsCtr);
 
 // 获取当前年用户注册情况统计
 router.post("/getRegisterStatistics", adminAuth, adminGetRegisterStatisticsCtr);
+
+// 获取作者人数
+router.post("/getAuhthorList", adminAuth, adminGetAuhthorListCtr);
 
 module.exports = router;

@@ -2,6 +2,7 @@ const { databaseError } = require("../../constant");
 const {
   adminGetArticlesStatistics,
   adminGetRegisterStatistics,
+  adminGetAuhthorList,
 } = require("../../service");
 
 class adminStatisticsController {
@@ -35,6 +36,23 @@ class adminStatisticsController {
       };
     } catch (error) {
       console.error("adminGetRegisterStatisticsCtr", error);
+      ctx.app.emit("error", databaseError, ctx);
+    }
+  }
+
+  // 作者人数
+  async adminGetAuhthorListCtr(ctx, next) {
+    try {
+      const params = ctx.request.body;
+      const res = await adminGetAuhthorList(params);
+      ctx.body = {
+        code: 200,
+        message: "获取成功",
+        success: true,
+        data: res,
+      };
+    } catch (error) {
+      console.error("adminGetAuhthorListCtr", error);
       ctx.app.emit("error", databaseError, ctx);
     }
   }

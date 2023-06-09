@@ -47,6 +47,12 @@ class statisticsServer {
             month: "$month",
           },
           count: { $sum: 1 },
+          articleInfo: {
+            $push: {
+              title: "$title",
+              readCount: "$readCount",
+            },
+          },
         },
       },
       {
@@ -55,7 +61,7 @@ class statisticsServer {
           year: "$_id.year",
           month: "$_id.month",
           count: 1,
-          totalAmount: 1,
+          articleInfo: 1,
         },
       },
       { $sort: { year: 1, month: 1 } },
@@ -106,6 +112,40 @@ class statisticsServer {
         },
       },
       { $sort: { month: 1 } },
+    ]);
+
+    return list;
+  }
+
+  // 获取作者人数
+  async adminGetAuhthorList() {
+    const list = await Article.aggregate([
+      {
+        $match: {
+          // isDelete: { $nin: [true] },
+        },
+      },
+      {
+        $project: {
+          authorName: "$authorName",
+        },
+      },
+      {
+        $group: {
+          _id: {
+            authorName: "$authorName",
+          },
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          authorName: "$_id.authorName",
+          count: 1,
+        },
+      },
+      { $sort: { count: -1 } },
     ]);
 
     return list;
