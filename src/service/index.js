@@ -144,7 +144,10 @@ const {
   adminDeleteTools,
 } = require("./admin/tools.service");
 
-const { adminGetArticlesStatistics } = require("./admin/statistics.service");
+const {
+  adminGetArticlesStatistics,
+  adminGetRegisterStatistics,
+} = require("./admin/statistics.service");
 
 module.exports = {
   // 前台用户
@@ -265,4 +268,5 @@ module.exports = {
   adminDeleteTools,
   // 后台统计
   adminGetArticlesStatistics,
+  adminGetRegisterStatistics,
 };

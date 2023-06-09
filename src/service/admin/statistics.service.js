@@ -1,7 +1,7 @@
 const { Article } = require("../../models");
 
 class statisticsServer {
-  // 获取时间轴文章列表
+  // 获取文章统计
   async adminGetArticlesStatistics() {
     const list = await Article.aggregate([
       {
@@ -58,7 +58,54 @@ class statisticsServer {
           totalAmount: 1,
         },
       },
-      { $sort: { createTime: -1 } },
+      { $sort: { year: 1, month: 1 } },
+    ]);
+
+    return list;
+  }
+
+  // 获取用户注册情况统计
+  async adminGetRegisterStatistics() {
+    const currentYear = new Date().getFullYear();
+
+    const list = await Article.aggregate([
+      {
+        $match: {
+          // isDelete: { $nin: [true] },
+          // 查询当前年的数据
+          createTime: {
+            $gte: new Date(`${currentYear}-01-01`).getTime(),
+            $lt: new Date(`${currentYear + 1}-01-01`).getTime(),
+          },
+        },
+      },
+      {
+        $project: {
+          month: {
+            $dateToString: {
+              // "%Y-%m-%d" => 2022-07-21
+              format: "%Y-%m", // 解析年月
+              date: { $add: [new Date(0), "$createTime"] },
+            },
+          },
+        },
+      },
+      {
+        $group: {
+          _id: {
+            month: "$month",
+          },
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          month: "$_id.month",
+          count: 1,
+        },
+      },
+      { $sort: { month: 1 } },
     ]);
 
     return list;

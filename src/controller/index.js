@@ -178,7 +178,8 @@ const {
 } = adminToolsController;
 
 // 统计
-const { adminGetArticlesStatisticsCtr } = adminStatisticsController;
+const { adminGetArticlesStatisticsCtr, adminGetRegisterStatisticsCtr } =
+  adminStatisticsController;
 
 module.exports = {
   // 前台控制器
@@ -302,4 +303,5 @@ module.exports = {
   adminDeleteToolsCtr,
   // 后台统计
   adminGetArticlesStatisticsCtr,
+  adminGetRegisterStatisticsCtr,
 };
