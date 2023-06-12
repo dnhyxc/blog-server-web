@@ -17,6 +17,7 @@ const {
   adminSetAdminUserAuth,
   bindAccount,
   findBindUsers,
+  findAuthorInfo,
 } = require("../../service");
 
 class UserController {
@@ -318,6 +319,23 @@ class UserController {
       };
     } catch (error) {
       console.error("findBindUsersCtr", error);
+      ctx.app.emit("error", databaseError, ctx);
+    }
+  }
+
+  // 获取博主信息
+  async adminFindAuthorInfoCtr(ctx, next) {
+    try {
+      const params = ctx.request.body;
+      const res = await findAuthorInfo(params);
+      ctx.body = {
+        code: 200,
+        success: true,
+        message: "获取博主信息成功",
+        data: res,
+      };
+    } catch (error) {
+      console.error("adminFindAuthorInfoCtr", error);
       ctx.app.emit("error", databaseError, ctx);
     }
   }

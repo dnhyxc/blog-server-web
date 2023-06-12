@@ -109,6 +109,7 @@ const {
   adminUpdateAdminUsers,
   bindAccount,
   findBindUsers,
+  findAuthorInfo
 } = require("./admin/user.service");
 
 const {
@@ -241,6 +242,7 @@ module.exports = {
   bindAccount,
   adminCreateConfig,
   findBindUsers,
+  findAuthorInfo,
   // 文章分类
   adminCreateClassify,
   adminUpdateClassify,

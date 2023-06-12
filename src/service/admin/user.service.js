@@ -1,4 +1,4 @@
-const { AdminUsers, User } = require("../../models");
+const { AdminUsers, User, Article } = require("../../models");
 const { userFields } = require("../../constant");
 
 class UserServer {
@@ -241,6 +241,28 @@ class UserServer {
     );
 
     return res;
+  }
+
+  // 获取博主信息
+  async findAuthorInfo() {
+    const authorInfo = await User.find(
+      {
+        auth: 1,
+      },
+      {
+        ...userFields,
+        id: '$_id',
+      }
+    );
+
+    const articles = await Article.find({ authorId: { $in: [authorInfo[0]?.id] } }, { id: "$_id", _id: 0, title: 1, coverImage: 1 }).sort({ createTime: -1 })
+
+    const articleInfo = {
+      newArticle: articles[0],
+      articleTotal: articles.length
+    }
+
+    return { authorInfo: authorInfo?.[0], articleInfo };
   }
 }
 

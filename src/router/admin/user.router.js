@@ -15,6 +15,7 @@ const {
   adminUpdateUsersCtr,
   bindAccountCtr,
   findBindUsersCtr,
+  adminFindAuthorInfoCtr,
 } = require("../../controller");
 const {
   userValidator,
@@ -95,5 +96,8 @@ router.post("/bindAccount", adminAuth, bindAccountCtr);
 
 // 获取绑定账户信息
 router.post("/findBindUsers", adminAuth, findBindUsersCtr);
+
+// 获取博主信息
+router.post("/getAuthorInfo", adminAuth, adminFindAuthorInfoCtr);
 
 module.exports = router;

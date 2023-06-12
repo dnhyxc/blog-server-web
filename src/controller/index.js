@@ -129,6 +129,7 @@ const {
   adminUpdateUsersCtr,
   bindAccountCtr,
   findBindUsersCtr,
+  adminFindAuthorInfoCtr,
 } = adminUserController;
 
 // 后台文章控制器
@@ -271,6 +272,7 @@ module.exports = {
   adminUpdateUsersCtr,
   bindAccountCtr,
   findBindUsersCtr,
+  adminFindAuthorInfoCtr,
   // 后台文章控制器
   adminCreateArticleCtr,
   adminUpdateArticleCtr,
