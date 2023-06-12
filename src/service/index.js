@@ -109,7 +109,7 @@ const {
   adminUpdateAdminUsers,
   bindAccount,
   findBindUsers,
-  findAuthorInfo
+  findAuthorInfo,
 } = require("./admin/user.service");
 
 const {
@@ -149,6 +149,7 @@ const {
   adminGetArticlesStatistics,
   adminGetRegisterStatistics,
   adminGetAuhthorList,
+  adminGetPopularArticles,
 } = require("./admin/statistics.service");
 
 module.exports = {
@@ -273,4 +274,5 @@ module.exports = {
   adminGetArticlesStatistics,
   adminGetRegisterStatistics,
   adminGetAuhthorList,
+  adminGetPopularArticles,
 };

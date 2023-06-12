@@ -100,6 +100,31 @@ class UserController {
     }
   }
 
+  // 重置密码
+  async adminResetPwdCtr(ctx, next) {
+    try {
+      const { password, username } = ctx.request.body;
+      if (!password || !username) {
+        ctx.app.emit("error", fieldFormateError, ctx);
+        return;
+      }
+      const filter = { username };
+      await adminUpdateUser(filter, { password });
+      const { ...props } = (await adminFindOneUser({ username })) || {};
+      delete props?._doc.password;
+      delete props?._doc._id;
+      ctx.body = {
+        code: 200,
+        success: true,
+        message: "密码重置成功",
+        data: props?._doc,
+      };
+    } catch (error) {
+      console.error("adminResetPwdCtr", error);
+      ctx.app.emit("error", databaseError, ctx);
+    }
+  }
+
   // 更新用户信息
   async adminUpdateInfoCtr(ctx, next) {
     try {
@@ -108,7 +133,7 @@ class UserController {
         ctx.app.emit("error", fieldFormateError, ctx);
         return;
       }
-      await adminUpdateUser(userId, params);
+      await adminUpdateUser({ _id: userId }, params);
       const userInfo = await adminFindUserById(userId);
       if (userInfo) {
         ctx.body = {

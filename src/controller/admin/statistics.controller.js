@@ -3,6 +3,7 @@ const {
   adminGetArticlesStatistics,
   adminGetRegisterStatistics,
   adminGetAuhthorList,
+  adminGetPopularArticles,
 } = require("../../service");
 
 class adminStatisticsController {
@@ -53,6 +54,23 @@ class adminStatisticsController {
       };
     } catch (error) {
       console.error("adminGetAuhthorListCtr", error);
+      ctx.app.emit("error", databaseError, ctx);
+    }
+  }
+
+  // 获取最受欢迎的文章
+  async adminGetPopularArticlesCtr(ctx, next) {
+    try {
+      const params = ctx.request.body;
+      const res = await adminGetPopularArticles(params);
+      ctx.body = {
+        code: 200,
+        message: "获取成功",
+        success: true,
+        data: res,
+      };
+    } catch (error) {
+      console.error("adminGetPopularArticlesCtr", error);
       ctx.app.emit("error", databaseError, ctx);
     }
   }

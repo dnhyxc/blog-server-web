@@ -16,6 +16,7 @@ const {
   bindAccountCtr,
   findBindUsersCtr,
   adminFindAuthorInfoCtr,
+  adminResetPwdCtr,
 } = require("../../controller");
 const {
   userValidator,
@@ -26,6 +27,7 @@ const {
   verifyAdminUser,
   auth,
   adminAuth,
+  verifyAdminUserExistsByUsername,
 } = require("../../middleware");
 
 const router = new Router({ prefix: "/admin" });
@@ -41,6 +43,14 @@ router.post(
 
 // 登录接口
 router.post("/login", userValidator, verifyAdminLogin, adminLoginCtr);
+
+// 重置密码
+router.put(
+  "/resetPassword",
+  verifyAdminUserExistsByUsername,
+  bcryptPassword,
+  adminResetPwdCtr
+);
 
 // 获取用户信息
 router.post("/getUserInfo", adminGetUserInfoCtr);

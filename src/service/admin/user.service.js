@@ -104,9 +104,8 @@ class UserServer {
   }
 
   // 修改用户信息
-  async adminUpdateUser(userId, newUserInfo) {
-    const id = { _id: userId };
-    const res = await AdminUsers.updateOne(id, {
+  async adminUpdateUser(filter, newUserInfo) {
+    const res = await AdminUsers.updateOne(filter, {
       $set: newUserInfo,
     });
     return res.modifiedCount > 0 ? true : false;
@@ -251,16 +250,19 @@ class UserServer {
       },
       {
         ...userFields,
-        id: '$_id',
+        id: "$_id",
       }
     );
 
-    const articles = await Article.find({ authorId: { $in: [authorInfo[0]?.id] } }, { id: "$_id", _id: 0, title: 1, coverImage: 1 }).sort({ createTime: -1 })
+    const articles = await Article.find(
+      { authorId: { $in: [authorInfo[0]?.id] } },
+      { id: "$_id", _id: 0, title: 1, coverImage: 1 }
+    ).sort({ createTime: -1 });
 
     const articleInfo = {
       newArticle: articles[0],
-      articleTotal: articles.length
-    }
+      articleTotal: articles.length,
+    };
 
     return { authorInfo: authorInfo?.[0], articleInfo };
   }

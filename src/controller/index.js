@@ -130,6 +130,7 @@ const {
   bindAccountCtr,
   findBindUsersCtr,
   adminFindAuthorInfoCtr,
+  adminResetPwdCtr,
 } = adminUserController;
 
 // 后台文章控制器
@@ -183,6 +184,7 @@ const {
   adminGetArticlesStatisticsCtr,
   adminGetRegisterStatisticsCtr,
   adminGetAuhthorListCtr,
+  adminGetPopularArticlesCtr,
 } = adminStatisticsController;
 
 module.exports = {
@@ -273,6 +275,7 @@ module.exports = {
   bindAccountCtr,
   findBindUsersCtr,
   adminFindAuthorInfoCtr,
+  adminResetPwdCtr,
   // 后台文章控制器
   adminCreateArticleCtr,
   adminUpdateArticleCtr,
@@ -310,4 +313,5 @@ module.exports = {
   adminGetArticlesStatisticsCtr,
   adminGetRegisterStatisticsCtr,
   adminGetAuhthorListCtr,
+  adminGetPopularArticlesCtr,
 };

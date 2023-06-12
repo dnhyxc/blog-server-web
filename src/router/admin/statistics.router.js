@@ -3,6 +3,7 @@ const {
   adminGetArticlesStatisticsCtr,
   adminGetRegisterStatisticsCtr,
   adminGetAuhthorListCtr,
+  adminGetPopularArticlesCtr,
 } = require("../../controller");
 
 const { adminAuth } = require("../../middleware");
@@ -17,5 +18,8 @@ router.post("/getRegisterStatistics", adminAuth, adminGetRegisterStatisticsCtr);
 
 // 获取作者人数
 router.post("/getAuhthorList", adminAuth, adminGetAuhthorListCtr);
+
+// 获取最受欢迎的文章
+router.post("/getPopularArticles", adminAuth, adminGetPopularArticlesCtr);
 
 module.exports = router;

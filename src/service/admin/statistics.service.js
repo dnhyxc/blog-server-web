@@ -1,4 +1,5 @@
 const { Article } = require("../../models");
+const { articleListRes } = require("../../constant");
 
 class statisticsServer {
   // 获取文章统计
@@ -149,6 +150,15 @@ class statisticsServer {
     ]);
 
     return list;
+  }
+
+  // 查询阅读数最大的两篇文章
+  async adminGetPopularArticles({ limit = 2 }) {
+    const res = await Article.find({}, articleListRes)
+      .sort({ readCount: -1 })
+      .limit(limit);
+
+    return res;
   }
 }
 

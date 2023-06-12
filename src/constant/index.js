@@ -185,6 +185,25 @@ const collectionRes = {
   collectUserIds: 1,
 };
 
+// 文章列表返回字段
+const articleListRes = {
+  _id: 0, // 默认情况下_id是包含的，将_id设置为0|false，则选择不包含_id，其他字段也可以这样选择是否显示。
+  id: "$_id", // 将_id更名为classify
+  title: 1,
+  classify: 1,
+  tag: 1,
+  coverImage: 1,
+  abstract: 1,
+  authorId: 1,
+  isLike: 1,
+  likeCount: 1,
+  createTime: 1,
+  authorName: 1,
+  readCount: 1,
+  isDelete: 1,
+  isTop: 1,
+};
+
 module.exports = {
   databaseError,
   userFormateError,
@@ -207,4 +226,5 @@ module.exports = {
   collectionAlreadyExited,
   collectionRes,
   fileNotFound,
+  articleListRes,
 };

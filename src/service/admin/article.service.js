@@ -1,7 +1,7 @@
 const { Article, Comments } = require("../../models");
 const { findUserById } = require("../web/user.service");
 const { adminUpdateClassify } = require("./classify.service");
-const { detailFields } = require("../../constant");
+const { detailFields, articleListRes } = require("../../constant");
 
 class articleServer {
   // 创建文章
@@ -46,22 +46,7 @@ class articleServer {
           total: [{ $count: "count" }],
           data: [
             {
-              $project: {
-                _id: 0, // 默认情况下_id是包含的，将_id设置为0|false，则选择不包含_id，其他字段也可以这样选择是否显示。
-                id: "$_id", // 将_id更名为classify
-                title: 1,
-                classify: 1,
-                tag: 1,
-                coverImage: 1,
-                abstract: 1,
-                authorId: 1,
-                isLike: 1,
-                likeCount: 1,
-                createTime: 1,
-                authorName: 1,
-                isDelete: 1,
-                isTop: 1,
-              },
+              $project: articleListRes,
             },
             { $sort: { isTop: -1, createTime: -1, likeCount: -1 } },
             { $skip: (pageNo - 1) * pageSize },
@@ -193,8 +178,8 @@ class articleServer {
 
     const filter = fromCommentId
       ? {
-        "replyList._id": fromCommentId, // 选择数组replyList中某个对象中的_id属性
-      }
+          "replyList._id": fromCommentId, // 选择数组replyList中某个对象中的_id属性
+        }
       : { _id: commentId };
     let count = 0;
     // fromCommentId有值说明是子级评论，直接减一就行
@@ -229,8 +214,8 @@ class articleServer {
   async adminRemoveComment(commentId, fromCommentId, articleId) {
     const filter = fromCommentId
       ? {
-        "replyList._id": fromCommentId, // 选择数组replyList中某个对象中的_id属性
-      }
+          "replyList._id": fromCommentId, // 选择数组replyList中某个对象中的_id属性
+        }
       : { _id: commentId };
 
     let count = 0;
@@ -257,11 +242,11 @@ class articleServer {
       {
         $set: fromCommentId
           ? {
-            "replyList.$.isDelete": true,
-          }
+              "replyList.$.isDelete": true,
+            }
           : {
-            isDelete: true,
-          },
+              isDelete: true,
+            },
       }
     );
 
@@ -272,8 +257,8 @@ class articleServer {
   async adminRestoreComment(commentId, fromCommentId, articleId) {
     const filter = fromCommentId
       ? {
-        "replyList._id": fromCommentId, // 选择数组replyList中某个对象中的_id属性
-      }
+          "replyList._id": fromCommentId, // 选择数组replyList中某个对象中的_id属性
+        }
       : { _id: commentId };
 
     let count = 0;
@@ -296,11 +281,11 @@ class articleServer {
       {
         $unset: fromCommentId
           ? {
-            "replyList.$.isDelete": true,
-          }
+              "replyList.$.isDelete": true,
+            }
           : {
-            isDelete: true,
-          },
+              isDelete: true,
+            },
       }
     );
 
@@ -367,9 +352,11 @@ class articleServer {
 
   // 获取文章评论列表
   async adminGetArticlesComments({ pageNo, pageSize, bindUsers = [] }) {
-    const matchParams = bindUsers?.length ? {
-      authorId: { $in: bindUsers }
-    } : {}
+    const matchParams = bindUsers?.length
+      ? {
+          authorId: { $in: bindUsers },
+        }
+      : {};
 
     const list = await Article.aggregate([
       // {
