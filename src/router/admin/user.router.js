@@ -57,7 +57,7 @@ router.post("/getUserInfo", adminGetUserInfoCtr);
 
 // 修改用户信息接口
 router.put(
-  "/updateInfo",
+  "/updateUserInfo",
   adminAuth,
   verifyUserExists,
   // verifyUpdateInfo,
