@@ -6,6 +6,14 @@ const databaseError = {
   data: "",
 };
 
+// 检验用户失败
+const verifyUserError = {
+  code: "10000",
+  success: false,
+  message: "检验用户失败",
+  data: "",
+};
+
 const userFormateError = {
   code: "10001",
   success: false,
@@ -206,6 +214,7 @@ const articleListRes = {
 
 module.exports = {
   databaseError,
+  verifyUserError,
   userFormateError,
   userAlreadyExited,
   userRegisterError,

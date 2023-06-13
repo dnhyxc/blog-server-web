@@ -28,6 +28,7 @@ const {
   auth,
   adminAuth,
   verifyAdminUserExistsByUsername,
+  verifyAdminUserExists,
 } = require("../../middleware");
 
 const router = new Router({ prefix: "/admin" });
@@ -56,11 +57,10 @@ router.put(
 router.post("/getUserInfo", adminGetUserInfoCtr);
 
 // 修改用户信息接口
-router.put(
+router.post(
   "/updateUserInfo",
   adminAuth,
-  verifyUserExists,
-  // verifyUpdateInfo,
+  verifyAdminUserExists,
   adminUpdateInfoCtr
 );
 
@@ -68,7 +68,7 @@ router.put(
 router.put(
   "/updatePassword",
   adminAuth,
-  verifyUserExists,
+  verifyAdminUserExists,
   // verifyUpdateInfo,
   bcryptPassword,
   adminUpdateInfoCtr

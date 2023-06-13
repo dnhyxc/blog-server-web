@@ -144,7 +144,7 @@ class UserController {
         };
       }
     } catch (error) {
-      console.error("updateInfoCtr", error);
+      console.error("adminUpdateInfoCtr", error);
       ctx.app.emit("error", databaseError, ctx);
     }
   }

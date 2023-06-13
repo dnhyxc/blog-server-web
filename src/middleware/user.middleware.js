@@ -14,6 +14,7 @@ const {
   pwdNotChange,
   fieldFormateError,
   userNotExist,
+  verifyUserError,
 } = require("../constant");
 
 // 校验用户名或密码是否为空
@@ -40,12 +41,11 @@ const verifyUser = async (ctx, next) => {
       if (await findOneUser(filter)) {
         return ctx.app.emit("error", userAlreadyExited, ctx);
       }
+      await next();
     } catch (error) {
-      ctx.app.emit("error", databaseError, ctx);
+      ctx.app.emit("error", verifyUserError, ctx);
     }
   }
-
-  await next();
 };
 
 // 校验用户名是否存在
@@ -63,12 +63,11 @@ const verifyAdminUser = async (ctx, next) => {
       if (await adminFindOneUser(filter)) {
         return ctx.app.emit("error", userAlreadyExited, ctx);
       }
+      await next();
     } catch (error) {
-      ctx.app.emit("error", databaseError, ctx);
+      ctx.app.emit("error", verifyUserError, ctx);
     }
   }
-
-  await next();
 };
 
 // 校验用户是否存在
@@ -85,11 +84,30 @@ const verifyUserExists = async (ctx, next) => {
     if (!user) {
       return ctx.app.emit("error", userNotExist, ctx);
     }
+    await next();
   } catch (error) {
-    ctx.app.emit("error", databaseError, ctx);
+    ctx.app.emit("error", verifyUserError, ctx);
+  }
+};
+
+// 校验后台用户是否存在
+const verifyAdminUserExists = async (ctx, next) => {
+  const { userId } = ctx.request.body;
+
+  if (!userId) {
+    ctx.app.emit("error", fieldFormateError, ctx);
+    return;
   }
 
-  await next();
+  try {
+    const user = await adminFindUserById(userId);
+    if (!user) {
+      return ctx.app.emit("error", userNotExist, ctx);
+    }
+    await next();
+  } catch (error) {
+    ctx.app.emit("error", verifyUserError, ctx);
+  }
 };
 
 // 根据用户名检验用户是否存在
@@ -106,11 +124,10 @@ const verifyUserExistsByUsername = async (ctx, next) => {
     if (!user) {
       return ctx.app.emit("error", userNotExist, ctx);
     }
+    await next();
   } catch (error) {
-    ctx.app.emit("error", databaseError, ctx);
+    ctx.app.emit("error", verifyUserError, ctx);
   }
-
-  await next();
 };
 
 // 根据用户名检验后台用户是否存在
@@ -126,11 +143,10 @@ const verifyAdminUserExistsByUsername = async (ctx, next) => {
     if (!user) {
       return ctx.app.emit("error", userNotExist, ctx);
     }
+    await next();
   } catch (error) {
-    ctx.app.emit("error", databaseError, ctx);
+    ctx.app.emit("error", verifyUserError, ctx);
   }
-
-  await next();
 };
 
 // 密码加密
@@ -160,11 +176,10 @@ const verifyLogin = async (ctx, next) => {
     if (!checkPwd) {
       return ctx.app.emit("error", userPwdError, ctx);
     }
+    await next();
   } catch (error) {
-    ctx.app.emit("error", databaseError, ctx);
+    ctx.app.emit("error", verifyUserError, ctx);
   }
-
-  await next();
 };
 
 // 校验用户用户名或者密码是否正确
@@ -180,11 +195,10 @@ const verifyAdminLogin = async (ctx, next) => {
     if (!checkPwd) {
       return ctx.app.emit("error", userPwdError, ctx);
     }
+    await next();
   } catch (error) {
-    ctx.app.emit("error", databaseError, ctx);
+    ctx.app.emit("error", verifyUserError, ctx);
   }
-
-  await next();
 };
 
 const verifyUpdateInfo = async (ctx, next) => {
@@ -197,11 +211,10 @@ const verifyUpdateInfo = async (ctx, next) => {
     if (checkPwd) {
       return ctx.app.emit("error", pwdNotChange, ctx);
     }
+    await next();
   } catch (error) {
-    ctx.app.emit("error", databaseError, ctx);
+    ctx.app.emit("error", verifyUserError, ctx);
   }
-
-  await next();
 };
 
 const verifyAdminUpdateInfo = async (ctx, next) => {
@@ -214,11 +227,10 @@ const verifyAdminUpdateInfo = async (ctx, next) => {
     if (checkPwd) {
       return ctx.app.emit("error", pwdNotChange, ctx);
     }
+    await next();
   } catch (error) {
-    ctx.app.emit("error", databaseError, ctx);
+    ctx.app.emit("error", verifyUserError, ctx);
   }
-
-  await next();
 };
 
 module.exports = {
@@ -229,10 +241,11 @@ module.exports = {
   verifyUpdateInfo,
   verifyUserExists,
   verifyUserExistsByUsername,
-  verifyAdminUserExistsByUsername,
 
   // 后台中间件
   verifyAdminLogin,
   verifyAdminUpdateInfo,
   verifyAdminUser,
+  verifyAdminUserExistsByUsername,
+  verifyAdminUserExists,
 };
