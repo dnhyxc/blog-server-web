@@ -13,7 +13,7 @@ class ClassifyServer {
   // 创建分类
   async adminCreateClassify({ classifyName, articleIds, userIds }) {
     if (!classifyName) {
-      throw new Error('没有传入classifyName')
+      throw new Error("没有传入classifyName");
     }
 
     const findOne = await new ClassifyServer().adminFindCLassify({
@@ -36,10 +36,10 @@ class ClassifyServer {
         await new ClassifyServer().adminUpdateClassify({
           classifyNames: classifyName,
           articleIds,
-          userIds
-        })
+          userIds,
+        });
       }
-      return res
+      return res;
     }
   }
 
@@ -52,37 +52,45 @@ class ClassifyServer {
   }) {
     const articleIdList =
       articleIds && Array.isArray(articleIds) ? articleIds : [articleIds];
-    const classifyNameList = classifyNames && Array.isArray(classifyNames) ? classifyNames : [classifyNames];
+    const classifyNameList =
+      classifyNames && Array.isArray(classifyNames)
+        ? classifyNames
+        : [classifyNames];
     const bindUsers = userIds && Array.isArray(userIds) ? userIds : [userIds];
 
     // 判断是否是删除，如果是删除，则需要把相关的用户及文章从分类中删除
     const config = !isDelete
       ? {
-        // 注意：如果要使用排序，$sort必须与$each一起使用才会生效
-        // $addToSet会进行去重添加操作，$push不会进行去重添加操作
-        $addToSet: {
-          articleIds: { $each: articleIdList },
-          userIds: { $each: bindUsers },
-        },
-        $set: {
-          createTime: new Date().valueOf(),
-        },
-      }
+          // 注意：如果要使用排序，$sort必须与$each一起使用才会生效
+          // $addToSet会进行去重添加操作，$push不会进行去重添加操作
+          $addToSet: {
+            articleIds: { $each: articleIdList },
+            userIds: { $each: bindUsers },
+          },
+          $set: {
+            createTime: new Date().valueOf(),
+          },
+        }
       : {
-        // 将符合条件的的文章及用户从 articleIds/userIds 中删除
-        $pull: {
-          articleIds: { $in: articleIds },
-          userIds: { $in: bindUsers },
-        },
-      };
+          // 将符合条件的的文章及用户从 articleIds/userIds 中删除
+          $pull: {
+            articleIds: { $in: articleIds },
+            userIds: { $in: bindUsers },
+          },
+        };
 
     const res = await Classify.updateMany(
       { classifyName: { $in: classifyNameList } },
       config
     );
 
-    if (!res.matchedCount) {
-      await new ClassifyServer().adminCreateClassify({ classifyName: classifyNames, articleIds, userIds })
+    // 判断是否是删除文章，如果是删除则不创建分类
+    if (!res.matchedCount && !isDelete) {
+      await new ClassifyServer().adminCreateClassify({
+        classifyName: classifyNames,
+        articleIds,
+        userIds,
+      });
     } else {
       return res;
     }
@@ -90,19 +98,22 @@ class ClassifyServer {
 
   // 添加分类
   async adminAddClassify({ id, bindUsers, type, userId }) {
-    const config = type === 'add' ? {
-      $addToSet: {
-        userIds: { $each: bindUsers },
-        addUserIds: userId,
-      },
-    } : {
-      $pull: {
-        userIds: { $in: bindUsers },
-        addUserIds: userId,
-      },
-    }
-    const ids = id && Array.isArray(id) ? id : [id]
-    await Classify.updateMany({ _id: { $in: ids } }, config)
+    const config =
+      type === "add"
+        ? {
+            $addToSet: {
+              userIds: { $each: bindUsers },
+              addUserIds: userId,
+            },
+          }
+        : {
+            $pull: {
+              userIds: { $in: bindUsers },
+              addUserIds: userId,
+            },
+          };
+    const ids = id && Array.isArray(id) ? id : [id];
+    await Classify.updateMany({ _id: { $in: ids } }, config);
   }
 
   // 删除文章分类
@@ -111,7 +122,7 @@ class ClassifyServer {
     const res = await Classify.deleteMany({
       _id: { $in: classifyIds },
     });
-    return classifyIds.length
+    return classifyIds.length;
   }
 
   // 获取文章分类
