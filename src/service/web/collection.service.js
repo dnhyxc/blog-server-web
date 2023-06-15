@@ -234,29 +234,29 @@ class collectionServer {
     });
   };
 
-  // 移除指定收藏集中的文章
+  // 删除收藏集文章
   removeCollectArticle = async ({ articleId, userId, id, isMove = false }) => {
     // 查询条件为，查找当前用户下的，并且articleIds数组中包含articleId的所有数据
     let filters = { _id: id, articleIds: { $elemMatch: { $eq: articleId } } };
 
+    const articleIds =
+      articleId && Array.isArray(articleId) ? articleId : [articleId];
+
     if (!isMove) {
-      // 如果是点击的是移除的话，需要将所有收藏集中收藏的该文章都统统移除掉，因此，需要把唯一的id查找条件删除
-      filters = { articleIds: { $elemMatch: { $eq: articleId } } };
+      // 如果是点击的是移除（非转移）的话，需要将所有收藏集中收藏的该文章都统统移除掉，因此，需要把唯一的id查找条件删除
+      filters = { articleIds: { $in: articleIds } };
+      // filters = { articleIds: { $elemMatch: { $eq: articleId } } };
       // 更改该文章的收藏次数
       await updateCollectCount({ articleId, type: false });
     }
 
-    const res = await Collection.updateMany(
-      filters,
-      // 向查找到的Collection中的articleIdst数组中删除一篇文章
-      // 注意：如果要使用排序，$sort必须与$each一起使用才会生效
-      {
-        $pull: { articleIds: articleId },
-        $inc: {
-          count: -1,
-        },
-      }
-    );
+    const res = await Collection.updateMany(filters, {
+      // 删除与articleIds匹配的文章列表
+      $pull: { articleIds: { $in: articleIds } },
+      $inc: {
+        count: -1,
+      },
+    });
 
     return res;
   };

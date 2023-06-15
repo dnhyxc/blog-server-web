@@ -12,6 +12,7 @@ const {
   adminRemoveComment,
   adminRestoreComment,
   adminGetArticlesComments,
+  removeCollectArticle,
 } = require("../../service");
 const { databaseError, fieldFormateError } = require("../../constant");
 
@@ -163,6 +164,10 @@ class ArticleController {
     try {
       const params = ctx.request.body;
       const res = await adminBatchDeleteArticle(params);
+      // 删除文章之后更新收藏集收藏文章数量
+      await removeCollectArticle({
+        articleId: params.articleIds,
+      });
       ctx.body = {
         code: 200,
         success: true,
