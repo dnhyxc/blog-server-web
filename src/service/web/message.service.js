@@ -98,13 +98,33 @@ class messageServer {
 
   // 获取未读消息数量
   getNoReadMsgCount = async ({ userId }) => {
-    const res = await Message.find({
-      toUserId: userId,
-      isReaded: { $ne: true },
-      isRemove: { $ne: true },
-    }).count();
+    const res = await Message.find(
+      {
+        toUserId: userId,
+        isReaded: { $ne: true },
+        isRemove: { $ne: true },
+      },
+      {
+        id: "$_id",
+        _id: 0,
+        action: 1,
+        articleId: 1,
+        authorId: 1,
+        authorName: 1,
+        fromUserId: 1,
+        fromUsername: 1,
+        isReaded: 1,
+        isRemove: 1,
+        pushDate: 1,
+        title: 1,
+        toUserId: 1,
+      }
+    );
 
-    return res;
+    return {
+      count: res.length,
+      list: res,
+    };
   };
 
   // 删除消息
