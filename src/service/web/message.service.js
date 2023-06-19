@@ -119,7 +119,7 @@ class messageServer {
         title: 1,
         toUserId: 1,
       }
-    );
+    ).sort({ pushDate: -1 });
 
     return {
       count: res.length,
