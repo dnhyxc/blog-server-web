@@ -1,4 +1,4 @@
-const { Article } = require("../../models");
+const { Article, User } = require("../../models");
 const { articleListRes } = require("../../constant");
 
 class statisticsServer {
@@ -75,12 +75,12 @@ class statisticsServer {
   async adminGetRegisterStatistics() {
     const currentYear = new Date().getFullYear();
 
-    const list = await Article.aggregate([
+    const list = await User.aggregate([
       {
         $match: {
           // isDelete: { $nin: [true] },
           // 查询当前年的数据
-          createTime: {
+          registerTime: {
             $gte: new Date(`${currentYear}-01-01`).getTime(),
             $lt: new Date(`${currentYear + 1}-01-01`).getTime(),
           },
@@ -92,7 +92,7 @@ class statisticsServer {
             $dateToString: {
               // "%Y-%m-%d" => 2022-07-21
               format: "%Y-%m", // 解析年月
-              date: { $add: [new Date(0), "$createTime"] },
+              date: { $add: [new Date(0), "$registerTime"] },
             },
           },
         },
