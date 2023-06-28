@@ -1,6 +1,10 @@
 const path = require("path");
 const fs = require("fs");
-const { fileUploadError, fileNotFound } = require("../../constant");
+const {
+  fileUploadError,
+  fileNotFound,
+  fieldFormateError,
+} = require("../../constant");
 
 const publicPath = path.join(__dirname, "../../upload/image");
 
@@ -68,12 +72,18 @@ class UploadController {
 
   // 大文件上传
   async downLoadFileCtr(ctx, next) {
+    const { system } = ctx.request.body;
+    if (!system) {
+      ctx.app.emit("error", fieldFormateError, ctx);
+      return;
+    }
+    const file = system !== "mac" ? "dnhyxc.zip" : "dnhyxc-mac.zip";
     ctx.body = {
       code: 200,
       message: "获取文件成功",
       success: true,
       data: {
-        filePath: `${ctx.origin}/image/dnhyxc.zip`,
+        filePath: `${ctx.origin}/image/${file}`,
       },
     };
   }
