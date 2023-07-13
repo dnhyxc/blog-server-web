@@ -89,7 +89,7 @@ class WS {
     const client =
       clientList?.length &&
       Array.from(clientList).find(
-        (i) => i.readyState === WebSocket.OPEN && i.id === data.userId
+        (i) => i.readyState === WebSocket.OPEN && i.id == data.userId
       );
     client && client.send(JSON.stringify(data));
     success = true;
