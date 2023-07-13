@@ -88,9 +88,10 @@ class WS {
 
     const client =
       clientList?.length &&
-      Array.from(clientList).find(
-        (i) => i.readyState === WebSocket.OPEN && i.id == data.userId
-      );
+      Array.from(clientList).find((i) => {
+        console.log(i.id, "i.id>>>>>id", data.userId);
+        return i.readyState === WebSocket.OPEN && i.id == data.userId;
+      });
     client && client.send(JSON.stringify(data));
     success = true;
     return success;
