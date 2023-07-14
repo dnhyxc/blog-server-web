@@ -79,6 +79,7 @@ class WS {
     // success 控制是否发送成功
     let success = false;
     if (!(this.ws instanceof WebSocket.Server)) {
+      console.log(this.ws instanceof WebSocket.Server, "this.ws");
       return success;
     }
 
@@ -86,14 +87,17 @@ class WS {
 
     const clientList = Array.from(clients);
 
-    const client =
-      clientList?.length &&
-      Array.from(clientList).find((i) => {
-        console.log(i.id, "i.id>>>>>id", data.userId);
-        return i.readyState === WebSocket.OPEN && i.id == data.userId;
+    if (clientList?.length) {
+      Array.from(clientList).forEach((i) => {
+        console.log(i.id, "i.id>>>>>id>>>>out", data.userId);
+        if (i.readyState === WebSocket.OPEN && i.id == data.userId) {
+          console.log(i.id, "i.id>>>>>id", data.userId, data);
+          i.send(JSON.stringify(data));
+          success = true;
+        }
       });
-    client && client.send(JSON.stringify(data));
-    success = true;
+    }
+
     return success;
 
     // this.ws.clients.forEach((client) => {
