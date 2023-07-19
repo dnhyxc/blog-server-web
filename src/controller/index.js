@@ -9,6 +9,7 @@ const collectionController = require("./web/collection.controller");
 const messageController = require("./web/message.controller");
 const interactController = require("./web/interact.controller");
 const followController = require("./web/follow.controller");
+const atlasController = require("./web/atlas.controller");
 
 // 后台用户控制器
 const adminUserController = require("./admin/user.controller");
@@ -111,6 +112,9 @@ const {
 } = interactController;
 
 const { manageFollowCtr, getFollowListCtr, findFollowedCtr } = followController;
+
+const { addAtlasImagesCtr, getAtlasListCtr, deleteAtlasImagesCtr } =
+  atlasController;
 
 // 后台控制器
 const {
@@ -257,6 +261,9 @@ module.exports = {
   manageFollowCtr,
   getFollowListCtr,
   findFollowedCtr,
+  addAtlasImagesCtr,
+  getAtlasListCtr,
+  deleteAtlasImagesCtr,
 
   // 后台用户控制器
   adminRegisterCtr,

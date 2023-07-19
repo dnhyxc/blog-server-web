@@ -7,11 +7,15 @@ const {
 } = require("../../constant");
 
 const publicPath = path.join(__dirname, "../../upload/image");
+const atlasPublicPath = path.join(__dirname, "../../upload/atlas");
 
 class UploadController {
   // 文件上传
   async uploadFileCtr(ctx, next) {
     const { file } = ctx.request.files;
+    const dirName = file.originalFilename.includes("__ATLAS__")
+      ? "atlas"
+      : "image";
     if (file) {
       const basename = path.basename(file.filepath);
       ctx.body = {
@@ -19,7 +23,7 @@ class UploadController {
         message: "文件上传成功",
         success: true,
         data: {
-          filePath: `${ctx.origin}/image/${basename}`,
+          filePath: `${ctx.origin}/${dirName}/${basename}`,
         },
       };
     } else {
@@ -36,9 +40,10 @@ class UploadController {
     const urls = url && Array.isArray(url) ? url : [url];
 
     urls.forEach((url) => {
+      const dirName = url.includes("__ATLAS__") ? atlasPublicPath : publicPath;
       const index = url.lastIndexOf("/");
       const sliceUrl = url.substring(index + 1, url.length);
-      const filePath = path.normalize(`${publicPath}/${sliceUrl}`);
+      const filePath = path.normalize(`${dirName}/${sliceUrl}`);
       try {
         // 判断文件是否存在
         if (fs.existsSync(filePath)) {
@@ -70,7 +75,31 @@ class UploadController {
     });
   }
 
-  // 大文件上传
+  // 删除图片
+  removeAtlasImage(url) {
+    const urls = url && Array.isArray(url) ? url : [url];
+    urls.forEach((url) => {
+      const dirName = url.includes("__ATLAS__") ? atlasPublicPath : publicPath;
+      const index = url.lastIndexOf("/");
+      const sliceUrl = url.substring(index + 1, url.length);
+      const filePath = path.normalize(`${dirName}/${sliceUrl}`);
+      try {
+        // 判断文件是否存在
+        if (fs.existsSync(filePath)) {
+          const stats = fs.statSync(filePath);
+          // 判断是否是文件
+          if (stats?.isFile()) {
+            // 删除文件
+            fs.unlinkSync(filePath);
+          }
+        }
+      } catch (error) {
+        throw new Error("删除失败");
+      }
+    });
+  }
+
+  // 文件下载
   async downLoadFileCtr(ctx, next) {
     const { system } = ctx.request.body;
     if (!system) {

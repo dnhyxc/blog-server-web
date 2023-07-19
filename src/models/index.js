@@ -9,6 +9,7 @@ const Collection = require("./web/collection.model");
 const Message = require("./web/message.model");
 const Interact = require("./web/interact.model");
 const Follow = require("./web/follow.model");
+const Atlas = require("./web/atlas.model");
 
 // 后台model
 const AdminUsers = require("./admin/user.model");
@@ -28,6 +29,7 @@ module.exports = {
   Message,
   Interact,
   Follow,
+  Atlas,
   PageConfig,
   Classify,
   Tools,

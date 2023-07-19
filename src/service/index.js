@@ -93,6 +93,12 @@ const {
   findFollowed,
 } = require("./web/follow.service");
 
+const {
+  addAtlasImages,
+  getAtlasWithTotal,
+  deleteAtlasImages,
+} = require("./web/atlas.service");
+
 // 后台数据库接口
 const {
   adminFindOneUser,
@@ -226,6 +232,9 @@ module.exports = {
   getFollowListWithTotal,
   updateFollowUserInfo,
   findFollowed,
+  addAtlasImages,
+  getAtlasWithTotal,
+  deleteAtlasImages,
 
   // 后台
   adminFindOneUser,

@@ -23,15 +23,19 @@ app.use(
     patchKoa: true,
     formidable: {
       // 图片保存的静态资源文件路径
-      uploadDir: path.join(__dirname, "../upload/image"),
+      uploadDir: path.join(__dirname, "../upload"),
       // 是否保留扩展名
       keepExtensions: true,
       // 文件上传大小
       maxFieldsSize: 20 * 1024 * 1024,
       onFileBegin: (name, file) => {
+        const isAtlas = file.originalFilename.includes("__ATLAS__");
         // 修改 filepath 使用前端生成文件唯一 filename 覆盖 koa-body 自动生成的 filename 属性
         file.filepath = path.normalize(
-          `${path.join(__dirname, "../upload/image")}/${file.originalFilename}`
+          `${path.join(
+            __dirname,
+            !isAtlas ? "../upload/image" : "../upload/atlas"
+          )}/${file.originalFilename}`
         );
       },
     },
