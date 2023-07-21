@@ -2,7 +2,7 @@ const { Atlas } = require("../../models");
 
 class AtlasServer {
   // 添加图片
-  async addAtlasImages({ userId, url }) {
+  async addAtlasImages({ userId, url, fileName, size, type }) {
     const findOne = await Atlas.findOne(
       {
         url,
@@ -20,6 +20,9 @@ class AtlasServer {
       userId,
       url,
       createTime: new Date().valueOf(),
+      fileName,
+      size,
+      type,
     });
 
     return {
@@ -27,6 +30,9 @@ class AtlasServer {
       createTime: res.createTime,
       url: res.url,
       id: res._id,
+      fileName: res.fileName,
+      size: res.size,
+      type: res.type,
     };
   }
 
@@ -46,6 +52,9 @@ class AtlasServer {
                 url: 1,
                 createTime: 1,
                 isDelete: 1,
+                fileName: 1,
+                size: 1,
+                type: 1,
               },
             },
             {

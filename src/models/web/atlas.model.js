@@ -5,6 +5,9 @@ const atlasSchema = new mongoose.Schema({
   url: String,
   createTime: Number,
   isDelete: Boolean,
+  fileName: String,
+  size: Number,
+  type: String,
 });
 
 const Atlas = mongoose.model("atlas", atlasSchema);
