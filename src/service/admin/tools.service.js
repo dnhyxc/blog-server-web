@@ -19,12 +19,12 @@ class ToolsServer {
     const filters =
       type !== "all"
         ? {
-          $or: [
-            // 查询数组对象（powerUsers:[{username:'xxx',id:'1'},{username:'xxx',id:'2'}]）中id为userId的某一项
-            { powerUsers: { $elemMatch: { id: userId } } },
-            { powerUsers: { $size: 0 } }, // 查询powerUsers为空的
-          ],
-        }
+            $or: [
+              // 查询数组对象（powerUsers:[{username:'xxx',id:'1'},{username:'xxx',id:'2'}]）中id为userId的某一项
+              { powerUsers: { $elemMatch: { id: userId } } },
+              { powerUsers: { $size: 0 } }, // 查询powerUsers为空的
+            ],
+          }
         : {};
 
     const skipRule = [{ $skip: (pageNo - 1) * pageSize }, { $limit: pageSize }];
@@ -39,10 +39,11 @@ class ToolsServer {
           toolUrl: 1,
           powerUsers: 1,
           createTime: 1,
+          sort: 1,
         },
       },
       {
-        $sort: { createTime: -1 },
+        $sort: { sort: 1, createTime: -1 },
       },
     ];
 
@@ -77,22 +78,35 @@ class ToolsServer {
   }
 
   // 更新工具
-  async adminUpdateTools({ id, toolName, toolHref, toolUrl, powerUsers }) {
-    const res = await Tools.updateOne(
-      {
-        _id: id,
-      },
-      {
-        $set: {
-          toolName,
-          toolHref,
-          toolUrl,
-          powerUsers,
+  async adminUpdateTools({
+    id,
+    toolName,
+    toolHref,
+    toolUrl,
+    powerUsers,
+    sortInfo = null,
+  }) {
+    if (sortInfo) {
+      sortInfo.forEach(async (item) => {
+        await Tools.updateMany({ id: item.id }, { $set: { sort: item.sort } });
+      });
+      return sortInfo.length;
+    } else {
+      const res = await Tools.updateMany(
+        {
+          _id: id,
         },
-      }
-    );
-
-    return res.modifiedCount;
+        {
+          $set: {
+            toolName,
+            toolHref,
+            toolUrl,
+            powerUsers,
+          },
+        }
+      );
+      return res.modifiedCount;
+    }
   }
 
   // 删除工具

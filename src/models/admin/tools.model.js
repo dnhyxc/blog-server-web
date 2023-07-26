@@ -11,6 +11,7 @@ const toolsSchema = new mongoose.Schema({
     },
   ],
   createTime: Number,
+  sort: Number,
 });
 
 const Tools = mongoose.model("tools", toolsSchema);
