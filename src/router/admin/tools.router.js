@@ -17,7 +17,7 @@ router.post("/addTools", adminAuth, adminAddToolsCtr);
 router.post("/getToolList", adminAuth, adminGetToolListCtr);
 
 // 更新工具
-router.post("/updateTools", adminAuth, adminUpdateToolsCtr);
+router.post("/updateTools", adminUpdateToolsCtr);
 
 // 删除工具
 router.post("/deleteTools", adminAuth, adminDeleteToolsCtr);

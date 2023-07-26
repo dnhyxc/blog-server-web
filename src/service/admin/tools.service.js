@@ -2,13 +2,14 @@ const { Tools } = require("../../models");
 
 class ToolsServer {
   // 添加工具
-  async adminAddTools({ toolName, toolHref, toolUrl, powerUsers }) {
+  async adminAddTools({ toolName, toolHref, toolUrl, powerUsers, sort }) {
     // 删除之前绑定的账号配置
     const res = await Tools.create({
       toolName,
       toolHref,
       toolUrl,
       powerUsers,
+      sort,
       createTime: new Date().valueOf(),
     });
     return res;
@@ -19,12 +20,12 @@ class ToolsServer {
     const filters =
       type !== "all"
         ? {
-            $or: [
-              // 查询数组对象（powerUsers:[{username:'xxx',id:'1'},{username:'xxx',id:'2'}]）中id为userId的某一项
-              { powerUsers: { $elemMatch: { id: userId } } },
-              { powerUsers: { $size: 0 } }, // 查询powerUsers为空的
-            ],
-          }
+          $or: [
+            // 查询数组对象（powerUsers:[{username:'xxx',id:'1'},{username:'xxx',id:'2'}]）中id为userId的某一项
+            { powerUsers: { $elemMatch: { id: userId } } },
+            { powerUsers: { $size: 0 } }, // 查询powerUsers为空的
+          ],
+        }
         : {};
 
     const skipRule = [{ $skip: (pageNo - 1) * pageSize }, { $limit: pageSize }];
@@ -88,7 +89,7 @@ class ToolsServer {
   }) {
     if (sortInfo) {
       sortInfo.forEach(async (item) => {
-        await Tools.updateMany({ id: item.id }, { $set: { sort: item.sort } });
+        await Tools.updateMany({ _id: item.id }, { $set: { sort: item.sort } });
       });
       return sortInfo.length;
     } else {
