@@ -4,6 +4,9 @@ const {
   adminGetToolListCtr,
   adminUpdateToolsCtr,
   adminDeleteToolsCtr,
+  adminCreateToolSortCtr,
+  adminUpdateToolSortCtr,
+  adminGetToolSortCtr,
 } = require("../../controller");
 
 const { adminAuth } = require("../../middleware");
@@ -21,5 +24,14 @@ router.post("/updateTools", adminUpdateToolsCtr);
 
 // 删除工具
 router.post("/deleteTools", adminAuth, adminDeleteToolsCtr);
+
+// 创建工具排序
+router.post("/createToolSort", adminCreateToolSortCtr);
+
+// 更新工具排序
+router.post("/updateToolSort", adminAuth, adminUpdateToolSortCtr);
+
+// 获取工具排序
+router.post("/getToolSort", adminAuth, adminGetToolSortCtr);
 
 module.exports = router;

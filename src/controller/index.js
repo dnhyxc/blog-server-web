@@ -181,6 +181,9 @@ const {
   adminGetToolListCtr,
   adminUpdateToolsCtr,
   adminDeleteToolsCtr,
+  adminCreateToolSortCtr,
+  adminUpdateToolSortCtr,
+  adminGetToolSortCtr,
 } = adminToolsController;
 
 // 统计
@@ -316,6 +319,9 @@ module.exports = {
   adminGetToolListCtr,
   adminUpdateToolsCtr,
   adminDeleteToolsCtr,
+  adminCreateToolSortCtr,
+  adminUpdateToolSortCtr,
+  adminGetToolSortCtr,
   // 后台统计
   adminGetArticlesStatisticsCtr,
   adminGetRegisterStatisticsCtr,

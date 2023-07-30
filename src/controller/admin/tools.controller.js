@@ -4,6 +4,9 @@ const {
   adminGetToolListWithTotal,
   adminUpdateTools,
   adminDeleteTools,
+  adminCreateToolSort,
+  adminGetToolSort,
+  adminUpdateToolSort,
 } = require("../../service");
 
 class ToolsController {
@@ -28,7 +31,16 @@ class ToolsController {
   async adminGetToolListCtr(ctx, next) {
     try {
       const params = ctx.request.body;
-      const res = await adminGetToolListWithTotal(params);
+      const sortRes = await adminGetToolSort({ userId: params.userId })
+      if (sortRes) {
+        await adminUpdateTools({
+          sortInfo: sortRes.sortInfo
+        })
+      }
+      const res = await adminGetToolListWithTotal({
+        ...params,
+        sortByTime: sortRes ? false : true
+      });
       ctx.body = {
         code: 200,
         message: "获取工具列表成功",
@@ -71,6 +83,57 @@ class ToolsController {
       };
     } catch (error) {
       console.error("adminDeleteToolsCtr", error);
+      ctx.app.emit("error", databaseError, ctx);
+    }
+  }
+
+  // 创建工具排序
+  async adminCreateToolSortCtr(ctx, next) {
+    try {
+      const params = ctx.request.body;
+      const res = await adminCreateToolSort(params);
+      ctx.body = {
+        code: 200,
+        message: "设置成功",
+        success: true,
+        data: res,
+      };
+    } catch (error) {
+      console.error("adminCreateToolSortCtr", error);
+      ctx.app.emit("error", databaseError, ctx);
+    }
+  }
+
+  // 更新工具排序
+  async adminUpdateToolSortCtr(ctx, next) {
+    try {
+      const params = ctx.request.body;
+      const res = await adminUpdateToolSort(params);
+      ctx.body = {
+        code: 200,
+        message: "更新成功",
+        success: true,
+        data: res,
+      };
+    } catch (error) {
+      console.error("adminUpdateToolSortCtr", error);
+      ctx.app.emit("error", databaseError, ctx);
+    }
+  }
+
+  // 创建工具排序
+  async adminGetToolSortCtr(ctx, next) {
+    try {
+      const params = ctx.request.body;
+      const res = await adminGetToolSort(params);
+      ctx.body = {
+        code: 200,
+        message: "获取成功",
+        success: true,
+        data: res,
+      };
+    } catch (error) {
+      console.error("adminGetToolSortCtr", error);
       ctx.app.emit("error", databaseError, ctx);
     }
   }

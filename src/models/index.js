@@ -16,6 +16,7 @@ const AdminUsers = require("./admin/user.model");
 const PageConfig = require("./admin/config.model");
 const Classify = require("./admin/classify.model");
 const Tools = require("./admin/tools.model");
+const ToolSort = require("./admin/toolSort.model");
 
 module.exports = {
   User,
@@ -33,4 +34,5 @@ module.exports = {
   PageConfig,
   Classify,
   Tools,
+  ToolSort,
 };

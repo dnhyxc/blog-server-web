@@ -149,6 +149,9 @@ const {
   adminGetToolListWithTotal,
   adminUpdateTools,
   adminDeleteTools,
+  adminCreateToolSort,
+  adminGetToolSort,
+  adminUpdateToolSort,
 } = require("./admin/tools.service");
 
 const {
@@ -279,6 +282,9 @@ module.exports = {
   adminGetToolListWithTotal,
   adminUpdateTools,
   adminDeleteTools,
+  adminCreateToolSort,
+  adminGetToolSort,
+  adminUpdateToolSort,
   // 后台统计
   adminGetArticlesStatistics,
   adminGetRegisterStatistics,

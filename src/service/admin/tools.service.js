@@ -1,4 +1,4 @@
-const { Tools } = require("../../models");
+const { Tools, ToolSort } = require("../../models");
 
 class ToolsServer {
   // 添加工具
@@ -16,7 +16,7 @@ class ToolsServer {
   }
 
   // 获取工具列表
-  async adminGetToolListWithTotal({ pageNo, pageSize, userId, type = "all" }) {
+  async adminGetToolListWithTotal({ pageNo, pageSize, userId, type = "all", sortByTime }) {
     const filters =
       type !== "all"
         ? {
@@ -44,7 +44,7 @@ class ToolsServer {
         },
       },
       {
-        $sort: { sort: 1, createTime: -1 },
+        $sort: sortByTime ? { createTime: -1 } : { sort: 1, createTime: -1 },
       },
     ];
 
@@ -88,10 +88,11 @@ class ToolsServer {
     sortInfo = null,
   }) {
     if (sortInfo) {
-      sortInfo.forEach(async (item) => {
-        await Tools.updateMany({ _id: item.id }, { $set: { sort: item.sort } });
+      const updateList = await sortInfo.map(async (item) => {
+        return await Tools.updateMany({ _id: item.id }, { $set: { sort: item.sort } });
       });
-      return sortInfo.length;
+      const res = await Promise.all(updateList)
+      return res;
     } else {
       const res = await Tools.updateMany(
         {
@@ -118,6 +119,50 @@ class ToolsServer {
     });
 
     return res.deletedCount;
+  }
+
+  // 添加工具排序
+  async adminCreateToolSort({ userId, sortInfo }) {
+    const findOne = await ToolSort.findOne({ userId })
+    if (!findOne) {
+      // 删除之前绑定的账号配置
+      const res = await ToolSort.create({
+        userId,
+        sortInfo,
+        createTime: new Date().valueOf(),
+      });
+      return res;
+    } else {
+      const res = await ToolSort.updateOne({ userId }, {
+        $set: {
+          sortInfo,
+          createTime: new Date().valueOf()
+        }
+      })
+      if (res.modifiedCount) {
+        return {
+          userId,
+          sortInfo
+        }
+      }
+    }
+  }
+
+  // 更新工具排序
+  async adminUpdateToolSort({ userId, sortInfo }) {
+    const res = await ToolSort.updateOne({ userId }, {
+      $set: {
+        sortInfo,
+        createTime: new Date().valueOf()
+      }
+    })
+    return res.modifiedCount;
+  }
+
+  // 获取工具排序列表
+  async adminGetToolSort({ userId }) {
+    const res = await ToolSort.findOne({ userId })
+    return res;
   }
 }
 
