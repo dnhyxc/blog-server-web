@@ -31,15 +31,15 @@ class ToolsController {
   async adminGetToolListCtr(ctx, next) {
     try {
       const params = ctx.request.body;
-      const sortRes = await adminGetToolSort({ userId: params.userId })
+      const sortRes = await adminGetToolSort({ userId: params.userId });
       if (sortRes) {
         await adminUpdateTools({
-          sortInfo: sortRes.sortInfo
-        })
+          sortInfo: sortRes.sortInfo,
+        });
       }
       const res = await adminGetToolListWithTotal({
         ...params,
-        sortByTime: sortRes ? false : true
+        sortByTime: sortRes ? false : true,
       });
       ctx.body = {
         code: 200,
@@ -91,12 +91,12 @@ class ToolsController {
   async adminCreateToolSortCtr(ctx, next) {
     try {
       const params = ctx.request.body;
-      const res = await adminCreateToolSort(params);
+      await adminCreateToolSort(params);
       ctx.body = {
         code: 200,
         message: "设置成功",
         success: true,
-        data: res,
+        data: params?.sortInfo?.length,
       };
     } catch (error) {
       console.error("adminCreateToolSortCtr", error);
