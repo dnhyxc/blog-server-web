@@ -13,6 +13,9 @@ class AtlasServer {
         createTime: 1,
         url: 1,
         userId: 1,
+        type: 1,
+        fileName: 1,
+        size: 1,
       }
     );
     if (findOne) return findOne;
