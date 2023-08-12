@@ -113,8 +113,12 @@ const {
 
 const { manageFollowCtr, getFollowListCtr, findFollowedCtr } = followController;
 
-const { addAtlasImagesCtr, getAtlasListCtr, deleteAtlasImagesCtr } =
-  atlasController;
+const {
+  addAtlasImagesCtr,
+  getAtlasListCtr,
+  deleteAtlasImagesCtr,
+  updateFileInfoCtr,
+} = atlasController;
 
 // 后台控制器
 const {
@@ -267,6 +271,7 @@ module.exports = {
   addAtlasImagesCtr,
   getAtlasListCtr,
   deleteAtlasImagesCtr,
+  updateFileInfoCtr,
 
   // 后台用户控制器
   adminRegisterCtr,

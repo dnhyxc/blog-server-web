@@ -2,6 +2,8 @@ const {
   addAtlasImages,
   getAtlasWithTotal,
   deleteAtlasImages,
+  findImageUrls,
+  updateFileInfo,
 } = require("../../service");
 const { removeAtlasImage } = require("./upload.controller");
 const { databaseError } = require("../../constant");
@@ -21,6 +23,23 @@ class atlasController {
       };
     } catch (error) {
       console.error("addAtlasImagesCtr", error);
+      ctx.app.emit("error", databaseError, ctx);
+    }
+  }
+
+  // 更新图片信息
+  async updateFileInfoCtr(ctx, next) {
+    try {
+      const params = ctx.request.body;
+      const res = await updateFileInfo(params);
+      ctx.body = {
+        code: 200,
+        success: true,
+        message: "更新成功",
+        data: res,
+      };
+    } catch (error) {
+      console.error("updateFileInfoCtr", error);
       ctx.app.emit("error", databaseError, ctx);
     }
   }
@@ -47,8 +66,11 @@ class atlasController {
   async deleteAtlasImagesCtr(ctx, next) {
     try {
       const params = ctx.request.body;
+      // 查找对应的图片url
+      const data = await findImageUrls(params);
+      const urls = data.map((i) => i.url);
       const res = await deleteAtlasImages(params);
-      await removeAtlasImage(params.url);
+      await removeAtlasImage(urls);
       ctx.body = {
         code: 200,
         success: true,

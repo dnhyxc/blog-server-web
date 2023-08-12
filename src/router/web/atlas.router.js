@@ -3,6 +3,7 @@ const {
   addAtlasImagesCtr,
   getAtlasListCtr,
   deleteAtlasImagesCtr,
+  updateFileInfoCtr,
 } = require("../../controller");
 
 const { auth } = require("../../middleware");
@@ -17,5 +18,8 @@ router.post("/getAtlasList", auth, getAtlasListCtr);
 
 // 删除图片集图片
 router.post("/deleteAtlasImages", auth, deleteAtlasImagesCtr);
+
+// 更新图片集图片信息
+router.post("/updateFileInfo", auth, updateFileInfoCtr);
 
 module.exports = router;

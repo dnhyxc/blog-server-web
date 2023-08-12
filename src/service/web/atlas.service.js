@@ -39,6 +39,21 @@ class AtlasServer {
     };
   }
 
+  // 更新图片信息
+  async updateFileInfo({ id, fileName }) {
+    const res = await Atlas.updateOne(
+      {
+        _id: id,
+      },
+      {
+        $set: {
+          fileName,
+        },
+      }
+    );
+    return res.modifiedCount;
+  }
+
   // 获取我的关注列表
   async getAtlasWithTotal({ pageNo, pageSize, userId }) {
     const list = await Atlas.aggregate([
@@ -82,6 +97,18 @@ class AtlasServer {
         list: [],
       };
     }
+  }
+
+  // 查找图片urls
+  async findImageUrls({ id }) {
+    const ids = Array.isArray(id) ? id : [id];
+    const res = await Atlas.find(
+      {
+        _id: { $in: ids },
+      },
+      { url: 1, _id: 0 }
+    );
+    return res;
   }
 
   // 删除图片

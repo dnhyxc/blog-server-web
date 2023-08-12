@@ -97,6 +97,8 @@ const {
   addAtlasImages,
   getAtlasWithTotal,
   deleteAtlasImages,
+  findImageUrls,
+  updateFileInfo,
 } = require("./web/atlas.service");
 
 // 后台数据库接口
@@ -238,6 +240,8 @@ module.exports = {
   addAtlasImages,
   getAtlasWithTotal,
   deleteAtlasImages,
+  findImageUrls,
+  updateFileInfo,
 
   // 后台
   adminFindOneUser,
