@@ -255,7 +255,7 @@ class UserServer {
     );
 
     const articles = await Article.find(
-      { authorId: { $in: [authorInfo[0]?.id] } },
+      { authorId: { $in: [authorInfo[0]?.id] }, isDelete: { $nin: [true] } },
       { id: "$_id", _id: 0, title: 1, coverImage: 1 }
     ).sort({ createTime: -1 });
 
