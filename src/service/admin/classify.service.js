@@ -117,7 +117,7 @@ class ClassifyServer {
   }
 
   // 删除文章分类
-  async adminDelClassifys(ids) {
+  async adminDelClassifys({ ids }) {
     const classifyIds = ids && Array.isArray(ids) ? ids : [ids];
     const res = await Classify.deleteMany({
       _id: { $in: classifyIds },
