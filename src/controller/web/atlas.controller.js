@@ -15,7 +15,6 @@ class atlasController {
     try {
       const params = ctx.request.body;
       const findOne = await findAtlasImage(params);
-      console.log(findOne, "findOne");
       if (findOne) {
         ctx.body = {
           code: 201,
@@ -64,7 +63,7 @@ class atlasController {
       ctx.body = {
         code: 200,
         success: true,
-        message: "获取收藏集列表成功",
+        message: "获取图片集列表成功",
         data: res,
       };
     } catch (error) {
