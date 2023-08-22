@@ -137,7 +137,12 @@ const {
   adminGetArticlesComments,
 } = require("./admin/article.service");
 
-const { adminCreateConfig, adminCreateThemes } = require("./admin/config.service");
+const {
+  adminCreateConfig,
+  adminFindTheme,
+  adminCreateThemes,
+  adminGetThemesWithTotal,
+} = require("./admin/config.service");
 const {
   adminCreateClassify,
   adminUpdateClassify,
@@ -258,7 +263,9 @@ module.exports = {
   adminUpdateAdminUsers,
   bindAccount,
   adminCreateConfig,
+  adminFindTheme,
   adminCreateThemes,
+  adminGetThemesWithTotal,
   findBindUsers,
   findAuthorInfo,
   // 文章分类

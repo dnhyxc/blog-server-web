@@ -160,7 +160,8 @@ const {
 } = adminArticleController;
 
 // 主题设置控制器
-const { adminCreateConfigCtr, adminCreateThemesCtr } = adminPageConfigController;
+const { adminCreateConfigCtr, adminCreateThemesCtr, adminGetThemesCtr } =
+  adminPageConfigController;
 
 // 留言控制器
 const {
@@ -309,6 +310,7 @@ module.exports = {
   // 主题设置控制器
   adminCreateConfigCtr,
   adminCreateThemesCtr,
+  adminGetThemesCtr,
   // 留言
   adminGetInteractListCtr,
   adminRemoveInteractsCtr,
