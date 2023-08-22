@@ -1,4 +1,4 @@
-const { PageConfig } = require("../../models");
+const { PageConfig, Themes } = require("../../models");
 
 class PageConfigServer {
   // 创建布局配置
@@ -55,6 +55,25 @@ class PageConfigServer {
 
       await PageConfig.create(newConfigList);
     }
+  }
+
+  // 创建主题配置列表
+  async adminCreateThemes(params) {
+    const res = await Themes.create({
+      ...params,
+      createTime: new Date().valueOf()
+    }, {
+      id: "$_id",
+      _id: 0,
+      name: 1,
+      size: 1,
+      type: 1,
+      url: 1,
+      auth: 1,
+    })
+
+    console.log(res, 'res');
+    return res;
   }
 }
 

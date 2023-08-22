@@ -17,6 +17,7 @@ const PageConfig = require("./admin/config.model");
 const Classify = require("./admin/classify.model");
 const Tools = require("./admin/tools.model");
 const ToolSort = require("./admin/toolSort.model");
+const Themes = require("./admin/theme.model");
 
 module.exports = {
   User,
@@ -35,4 +36,5 @@ module.exports = {
   Classify,
   Tools,
   ToolSort,
+  Themes,
 };

@@ -137,7 +137,7 @@ const {
   adminGetArticlesComments,
 } = require("./admin/article.service");
 
-const { adminCreateConfig } = require("./admin/config.service");
+const { adminCreateConfig, adminCreateThemes } = require("./admin/config.service");
 const {
   adminCreateClassify,
   adminUpdateClassify,
@@ -258,6 +258,7 @@ module.exports = {
   adminUpdateAdminUsers,
   bindAccount,
   adminCreateConfig,
+  adminCreateThemes,
   findBindUsers,
   findAuthorInfo,
   // 文章分类
