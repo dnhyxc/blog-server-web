@@ -94,6 +94,7 @@ const {
 } = require("./web/follow.service");
 
 const {
+  findAtlasImage,
   addAtlasImages,
   getAtlasWithTotal,
   deleteAtlasImages,
@@ -242,6 +243,7 @@ module.exports = {
   getFollowListWithTotal,
   updateFollowUserInfo,
   findFollowed,
+  findAtlasImage,
   addAtlasImages,
   getAtlasWithTotal,
   deleteAtlasImages,

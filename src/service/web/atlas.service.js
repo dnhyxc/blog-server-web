@@ -3,22 +3,22 @@ const { Atlas } = require("../../models");
 class AtlasServer {
   // 添加图片
   async addAtlasImages({ userId, url, fileName, size, type }) {
-    const findOne = await Atlas.findOne(
-      {
-        url,
-      },
-      {
-        id: "$_id",
-        _id: 0,
-        createTime: 1,
-        url: 1,
-        userId: 1,
-        type: 1,
-        fileName: 1,
-        size: 1,
-      }
-    );
-    if (findOne) return findOne;
+    // const findOne = await Atlas.findOne(
+    //   {
+    //     url,
+    //   },
+    //   {
+    //     id: "$_id",
+    //     _id: 0,
+    //     createTime: 1,
+    //     url: 1,
+    //     userId: 1,
+    //     type: 1,
+    //     fileName: 1,
+    //     size: 1,
+    //   }
+    // );
+    // if (findOne) return findOne;
     const res = await Atlas.create({
       userId,
       url,
@@ -37,6 +37,26 @@ class AtlasServer {
       size: res.size,
       type: res.type,
     };
+  }
+
+  async findAtlasImage({ url }) {
+    const res = await Atlas.findOne(
+      {
+        url,
+      },
+      {
+        id: "$_id",
+        _id: 0,
+        createTime: 1,
+        url: 1,
+        userId: 1,
+        type: 1,
+        fileName: 1,
+        size: 1,
+      }
+    );
+
+    return res;
   }
 
   // 更新图片信息

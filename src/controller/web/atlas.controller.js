@@ -1,4 +1,5 @@
 const {
+  findAtlasImage,
   addAtlasImages,
   getAtlasWithTotal,
   deleteAtlasImages,
@@ -13,14 +14,24 @@ class atlasController {
   async addAtlasImagesCtr(ctx, next) {
     try {
       const params = ctx.request.body;
-      const res = await addAtlasImages(params);
-      // 返回结果
-      ctx.body = {
-        code: 200,
-        success: true,
-        message: "添加成功",
-        data: res,
-      };
+      const findOne = await findAtlasImage(params);
+      console.log(findOne, "findOne");
+      if (findOne) {
+        ctx.body = {
+          code: 201,
+          success: true,
+          message: "该图片已存在",
+          data: findOne,
+        };
+      } else {
+        const res = await addAtlasImages(params);
+        ctx.body = {
+          code: 200,
+          success: true,
+          message: "添加成功",
+          data: res,
+        };
+      }
     } catch (error) {
       console.error("addAtlasImagesCtr", error);
       ctx.app.emit("error", databaseError, ctx);
