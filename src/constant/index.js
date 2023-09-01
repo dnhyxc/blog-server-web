@@ -177,6 +177,7 @@ const userFields = {
   isDelete: 1,
   bindUserId: 1,
   bindUserIds: 1,
+  menus: 1,
 };
 
 // 收藏集response

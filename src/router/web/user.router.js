@@ -7,6 +7,7 @@ const {
   logoutCtr,
   getUserInfoCtr,
   verifyTokenCtr,
+  findMenusCtr,
 } = require("../../controller");
 const {
   userValidator,
@@ -60,5 +61,8 @@ router.put(
 
 // 校验token是否过期
 router.post("/verify", auth, verifyTokenCtr);
+
+// 获取菜单权限列表
+router.post("/getUserMenuRoles", auth, findMenusCtr);
 
 module.exports = router;

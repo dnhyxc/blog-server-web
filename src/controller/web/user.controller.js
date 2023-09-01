@@ -11,6 +11,7 @@ const {
   updateAuthorName,
   updateInteracts,
   updateFollowUserInfo,
+  adminFindMenus,
 } = require("../../service");
 const WS = require("../../socket");
 
@@ -198,6 +199,23 @@ class UserController {
           data: params.userId,
         };
       }
+    } catch (error) {
+      console.error("logout", error);
+      ctx.app.emit("error", databaseError, ctx);
+    }
+  }
+
+  // 获取菜单权限列表
+  async findMenusCtr(ctx, next) {
+    try {
+      const params = ctx.request.body;
+      const res = await adminFindMenus(params)
+      ctx.body = {
+        code: 200,
+        success: true,
+        message: "获取菜单权限成功",
+        data: res,
+      };
     } catch (error) {
       console.error("logout", error);
       ctx.app.emit("error", databaseError, ctx);

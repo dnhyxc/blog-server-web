@@ -18,6 +18,7 @@ const userSchema = new mongoose.Schema({
   registerTime: Number,
   isDelete: Boolean,
   bindUserId: String,
+  menus: [{ key: String, name: String }]
 });
 
 const User = mongoose.model("users", userSchema);

@@ -14,6 +14,7 @@ const {
   adminUpdateAdminUsers,
   adminBatchDeleteUser,
   adminSetAuth,
+  adminFindMenus,
   adminSetAdminUserAuth,
   bindAccount,
   findBindUsers,
@@ -273,16 +274,33 @@ class UserController {
   // 设置权限
   async adminSetAuthCtr(ctx, next) {
     try {
-      const { auth, userId } = ctx.request.body;
-      await adminSetAuth({ auth, userId });
+      const params = ctx.request.body;
+      await adminSetAuth(params);
       ctx.body = {
         code: 200,
         success: true,
         message: "权限设置成功",
-        data: userId,
+        data: params.userId,
       };
     } catch (error) {
       console.error("adminSetAuthCtr", error);
+      ctx.app.emit("error", databaseError, ctx);
+    }
+  }
+
+  // 获取菜单权限
+  async adminFindMenusCtr(ctx, next) {
+    try {
+      const params = ctx.request.body;
+      const res = await adminFindMenus(params);
+      ctx.body = {
+        code: 200,
+        success: true,
+        message: "获取菜单权限成功",
+        data: res,
+      };
+    } catch (error) {
+      console.error("adminFindMenusCtr", error);
       ctx.app.emit("error", databaseError, ctx);
     }
   }

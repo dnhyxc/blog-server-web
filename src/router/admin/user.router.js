@@ -17,6 +17,7 @@ const {
   findBindUsersCtr,
   adminFindAuthorInfoCtr,
   adminResetPwdCtr,
+  adminFindMenusCtr,
 } = require("../../controller");
 const {
   userValidator,
@@ -109,5 +110,8 @@ router.post("/findBindUsers", adminAuth, findBindUsersCtr);
 
 // 获取博主信息
 router.post("/getAuthorInfo", adminAuth, adminFindAuthorInfoCtr);
+
+// 获取用户菜单权限
+router.post("/getUserMenuRoles", adminAuth, adminFindMenusCtr);
 
 module.exports = router;

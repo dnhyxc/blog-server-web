@@ -18,6 +18,7 @@ const Classify = require("./admin/classify.model");
 const Tools = require("./admin/tools.model");
 const ToolSort = require("./admin/toolSort.model");
 const Themes = require("./admin/theme.model");
+const Menus = require("./admin/menu.model");
 
 module.exports = {
   User,
@@ -37,4 +38,5 @@ module.exports = {
   Tools,
   ToolSort,
   Themes,
+  Menus,
 };

@@ -119,6 +119,7 @@ const {
   bindAccount,
   findBindUsers,
   findAuthorInfo,
+  adminFindMenus,
 } = require("./admin/user.service");
 
 const {
@@ -259,6 +260,7 @@ module.exports = {
   adminGetAdminUserList,
   adminBatchDeleteUser,
   adminSetAuth,
+  adminFindMenus,
   adminSetAdminUserAuth,
   adminUpdateUsers,
   adminDeleteAdminUsers,

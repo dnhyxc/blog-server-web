@@ -1,4 +1,4 @@
-const { AdminUsers, User, Article } = require("../../models");
+const { AdminUsers, User, Article, Menus } = require("../../models");
 const { userFields } = require("../../constant");
 
 class UserServer {
@@ -149,10 +149,21 @@ class UserServer {
     return userIds;
   }
 
+  async adminFindMenus({ userId }) {
+    const res = await Menus.findOne({ userId }, { id: '$_id', _id: 0, menus: 1 })
+    return res
+  }
+
   // 设置为博主
-  async adminSetAuth({ auth, userId }) {
+  async adminSetAuth({ auth, userId, menus }) {
     await User.updateOne({ auth }, { $unset: { auth } });
     const data = await User.updateOne({ _id: userId }, { $set: { auth } });
+    const menu = await new UserServer().adminFindMenus({ userId })
+    if (menu) {
+      await Menus.updateOne({ userId }, { $set: { menus } })
+    } else {
+      await Menus.create({ userId, menus })
+    }
     return data.modifiedCount;
   }
 
