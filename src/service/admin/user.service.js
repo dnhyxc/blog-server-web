@@ -51,7 +51,12 @@ class UserServer {
                 ...userFields,
               },
             },
-            { $sort: { registerTime: -1 } },
+            {
+              $sort:
+                searchType === 1
+                  ? { updateTime: -1, registerTime: -1 }
+                  : { registerTime: -1 },
+            },
             { $skip: (pageNo - 1) * pageSize },
             { $limit: pageSize },
           ],
@@ -150,19 +155,25 @@ class UserServer {
   }
 
   async adminFindMenus({ userId }) {
-    const res = await Menus.findOne({ userId }, { id: '$_id', _id: 0, menus: 1 })
-    return res
+    const res = await Menus.findOne(
+      { userId },
+      { id: "$_id", _id: 0, menus: 1 }
+    );
+    return res;
   }
 
   // 设置为博主
   async adminSetAuth({ auth, userId, menus }) {
     await User.updateOne({ auth }, { $unset: { auth } });
-    const data = await User.updateOne({ _id: userId }, { $set: { auth } });
-    const menu = await new UserServer().adminFindMenus({ userId })
+    const data = await User.updateOne(
+      { _id: userId },
+      { $set: { auth, updateTime: new Date().valueOf() } }
+    );
+    const menu = await new UserServer().adminFindMenus({ userId });
     if (menu) {
-      await Menus.updateOne({ userId }, { $set: { menus } })
+      await Menus.updateOne({ userId }, { $set: { menus } });
     } else {
-      await Menus.create({ userId, menus })
+      await Menus.create({ userId, menus });
     }
     return data.modifiedCount;
   }

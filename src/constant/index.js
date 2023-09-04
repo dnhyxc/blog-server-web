@@ -178,6 +178,7 @@ const userFields = {
   bindUserId: 1,
   bindUserIds: 1,
   menus: 1,
+  updateTime: 1,
 };
 
 // 收藏集response
