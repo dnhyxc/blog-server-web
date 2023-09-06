@@ -2,9 +2,10 @@ const { Convert } = require("../../models");
 
 class convertServer {
   // 创建转换列表
-  async createConvert({ userId, keyword, count }) {
+  async createConvert({ userId, keyword }) {
+    const count = await Convert.find({ userId }).count();
     // 如果转换列表超过5条后，删除最先转换的那条
-    if (count > 5) {
+    if (count > 10) {
       await Convert.findOneAndDelete({ userId }, { sort: { createTime: 1 } });
       const res = await Convert.create({
         userId,
