@@ -10,6 +10,7 @@ const messageController = require("./web/message.controller");
 const interactController = require("./web/interact.controller");
 const followController = require("./web/follow.controller");
 const atlasController = require("./web/atlas.controller");
+const convertController = require("./web/convert.controller");
 
 // 后台用户控制器
 const adminUserController = require("./admin/user.controller");
@@ -120,6 +121,12 @@ const {
   deleteAtlasImagesCtr,
   updateFileInfoCtr,
 } = atlasController;
+
+const {
+  createConvertCtr,
+  getConvertListCtr,
+  deleteConvertCtr,
+} = convertController;
 
 // 后台控制器
 const {
@@ -276,6 +283,9 @@ module.exports = {
   getAtlasListCtr,
   deleteAtlasImagesCtr,
   updateFileInfoCtr,
+  createConvertCtr,
+  getConvertListCtr,
+  deleteConvertCtr,
 
   // 后台用户控制器
   adminRegisterCtr,

@@ -104,8 +104,8 @@ const {
 
 const {
   createConvert,
-  updateConvert,
   deleteConvert,
+  getConvertList,
 } = require("./web/convert.service");
 
 // 后台数据库接口
@@ -257,8 +257,8 @@ module.exports = {
   findImageUrls,
   updateFileInfo,
   createConvert,
-  updateConvert,
   deleteConvert,
+  getConvertList,
 
   // 后台
   adminFindOneUser,

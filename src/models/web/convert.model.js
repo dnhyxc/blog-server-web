@@ -2,9 +2,7 @@ const mongoose = require("mongoose");
 
 const convertSchema = new mongoose.Schema({
   userId: String,
-  keywords: [{
-    keyword: String
-  }],
+  keyword: String,
   createTime: Number,
 });
 
