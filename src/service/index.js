@@ -102,6 +102,12 @@ const {
   updateFileInfo,
 } = require("./web/atlas.service");
 
+const {
+  createConvert,
+  updateConvert,
+  deleteConvert,
+} = require("./web/convert.service");
+
 // 后台数据库接口
 const {
   adminFindOneUser,
@@ -250,6 +256,9 @@ module.exports = {
   deleteAtlasImages,
   findImageUrls,
   updateFileInfo,
+  createConvert,
+  updateConvert,
+  deleteConvert,
 
   // 后台
   adminFindOneUser,

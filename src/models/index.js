@@ -10,6 +10,7 @@ const Message = require("./web/message.model");
 const Interact = require("./web/interact.model");
 const Follow = require("./web/follow.model");
 const Atlas = require("./web/atlas.model");
+const Convert = require("./web/convert.model");
 
 // 后台model
 const AdminUsers = require("./admin/user.model");
@@ -33,6 +34,7 @@ module.exports = {
   Interact,
   Follow,
   Atlas,
+  Convert,
   PageConfig,
   Classify,
   Tools,
