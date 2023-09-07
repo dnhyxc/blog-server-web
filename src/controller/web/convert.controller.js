@@ -15,7 +15,7 @@ class convertController {
         code: 200,
         success: true,
         message: "添加成功",
-        data: res,
+        data: res._id,
       };
     } catch (error) {
       console.error("createConvertCtr", error);

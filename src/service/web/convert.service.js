@@ -39,9 +39,9 @@ class convertServer {
     const ids = Array.isArray(id) ? id : [id];
     const res = await Convert.deleteMany({
       userId,
-      "keywords._id": { $in: ids },
+      _id: { $in: ids },
     });
-    console.log(res, "res>>>>deleteConvert");
+    return res.deletedCount;
   }
 }
 
