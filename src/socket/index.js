@@ -22,8 +22,6 @@ class WS {
         return ws.close();
       }
       try {
-        //do something
-        // 这里可以做一些加强判断查询数据库等行为
         ws.id = query.id; // 添加ws实例的唯一标识
         const obj = {
           message: `连接成功${query.id}${this.online}`,
@@ -79,7 +77,6 @@ class WS {
     // success 控制是否发送成功
     let success = false;
     if (!(this.ws instanceof WebSocket.Server)) {
-      console.log(this.ws instanceof WebSocket.Server, "this.ws");
       return success;
     }
 
@@ -89,9 +86,7 @@ class WS {
 
     if (clientList?.length) {
       Array.from(clientList).forEach((i) => {
-        console.log(i.id, "i.id>>>>>id>>>>out", data.userId);
         if (i.readyState === WebSocket.OPEN && i.id == data.userId) {
-          console.log(i.id, "i.id>>>>>id", data.userId, data);
           i.send(JSON.stringify(data));
           success = true;
         }
