@@ -7,13 +7,15 @@ const {
   getAuthorTimelineCtr,
 } = require("../../controller");
 
+const { auth } = require("../../middleware");
+
 const router = new Router({ prefix: "/api" });
 
 // 获取我的文章列表
-router.post("/getMyArticleList", getMyArticleListCtr);
+router.post("/getMyArticleList", auth, getMyArticleListCtr);
 
 // 获取我点赞的文章列表
-router.post("/getLikeArticleList", getLikeArticleListCtr);
+router.post("/getLikeArticleList", auth, getLikeArticleListCtr);
 
 // 获取博主文章列表
 router.post("/getAuthorArticleList", getAuthorArticleListCtr);
