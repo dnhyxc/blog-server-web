@@ -108,6 +108,14 @@ const {
   getConvertList,
 } = require("./web/convert.service");
 
+const {
+  addCode,
+  updateCode,
+  deleteCode,
+  getCodeListWithTotal,
+  getCodeById,
+} = require("./web/code.service");
+
 // 后台数据库接口
 const {
   adminFindOneUser,
@@ -259,6 +267,11 @@ module.exports = {
   createConvert,
   deleteConvert,
   getConvertList,
+  addCode,
+  updateCode,
+  deleteCode,
+  getCodeListWithTotal,
+  getCodeById,
 
   // 后台
   adminFindOneUser,

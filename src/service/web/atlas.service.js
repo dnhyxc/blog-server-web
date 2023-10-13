@@ -74,7 +74,7 @@ class AtlasServer {
     return res.modifiedCount;
   }
 
-  // 获取我的关注列表
+  // 获取图片集列表
   async getAtlasWithTotal({ pageNo, pageSize, userId }) {
     const list = await Atlas.aggregate([
       // { $match: { myUserId: userId } },
