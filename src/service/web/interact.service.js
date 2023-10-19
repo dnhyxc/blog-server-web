@@ -104,6 +104,23 @@ class interactServer {
   async removeInteracts({ ids }) {
     const filters = Array.isArray(ids) ? ids : [ids];
 
+    const params = filters.length
+      ? {
+          _id: { $in: filters },
+        }
+      : {};
+
+    const res = await Interact.updateMany(params, {
+      $set: {
+        isDelete: true,
+      },
+    });
+
+    return res.modifiedCount;
+  }
+
+  // 移除所有留言
+  async removeAllInteracts() {
     const res = await Interact.updateMany(
       {
         _id: { $in: filters },
