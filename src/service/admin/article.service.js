@@ -91,6 +91,7 @@ class articleServer {
           { classify: { $regex: reg } },
           { authorId: { $regex: reg } },
           { authorName: { $regex: reg } },
+          { abstract: { $regex: reg } },
         ],
       };
     }

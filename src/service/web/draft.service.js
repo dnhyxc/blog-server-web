@@ -83,6 +83,7 @@ class draftServer {
           { classify: { $regex: reg } },
           { authorId: { $regex: reg } },
           { authorName: { $regex: reg } },
+          { abstract: { $regex: reg } },
         ],
         isDelete: { $nin: [true] },
       };
