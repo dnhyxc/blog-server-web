@@ -1,4 +1,5 @@
-const { Follow } = require("../../models");
+const { Follow, User } = require("../../models");
+const { userFields } = require("../../constant");
 
 class FollowServer {
   // 查询是否已经关注
@@ -79,6 +80,60 @@ class FollowServer {
       return {
         total: total[0]?.count || 0,
         list: data || [],
+      };
+    } else {
+      return {
+        total: 0,
+        list: [],
+      };
+    }
+  }
+
+  // 获取关注我的人员列表
+  async getFollowMeListWithTotal({ pageNo, pageSize, userId }) {
+    const list = await Follow.aggregate([
+      { $match: { userId } },
+      {
+        $facet: {
+          total: [{ $count: "count" }],
+          data: [
+            {
+              $project: {
+                id: "$_id",
+                _id: 0,
+                myUserId: 1,
+              },
+            },
+            {
+              $sort: { createTime: -1 },
+            },
+            { $skip: (pageNo - 1) * pageSize },
+            { $limit: pageSize },
+          ],
+        },
+      },
+    ]);
+
+    if (list?.length) {
+      const { total, data } = list[0];
+      const userIds = data.map((i) => i.myUserId);
+      const userList = await User.find(
+        {
+          _id: { $in: userIds },
+        },
+        {
+          userId: "$_id",
+          _id: 0,
+          username: 1,
+          headUrl: 1,
+          introduce: 1,
+          job: 1,
+          motto: 1,
+        }
+      );
+      return {
+        total: total[0]?.count || 0,
+        list: userList || [],
       };
     } else {
       return {

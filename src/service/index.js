@@ -91,6 +91,7 @@ const {
   getFollowListWithTotal,
   updateFollowUserInfo,
   findFollowed,
+  getFollowMeListWithTotal,
 } = require("./web/follow.service");
 
 const {
@@ -256,6 +257,7 @@ module.exports = {
   restoreInteracts,
   manageFollow,
   getFollowListWithTotal,
+  getFollowMeListWithTotal,
   updateFollowUserInfo,
   findFollowed,
   findAtlasImage,

@@ -114,7 +114,12 @@ const {
   delInteractsCtr,
 } = interactController;
 
-const { manageFollowCtr, getFollowListCtr, findFollowedCtr } = followController;
+const {
+  manageFollowCtr,
+  getFollowListCtr,
+  getFollowMeListCtr,
+  findFollowedCtr,
+} = followController;
 
 const {
   addAtlasImagesCtr,
@@ -284,6 +289,7 @@ module.exports = {
   delInteractsCtr,
   manageFollowCtr,
   getFollowListCtr,
+  getFollowMeListCtr,
   findFollowedCtr,
   addAtlasImagesCtr,
   getAtlasListCtr,
