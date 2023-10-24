@@ -1,13 +1,31 @@
 const { Follow, User } = require("../../models");
-const { userFields } = require("../../constant");
 
 class FollowServer {
   // 查询是否已经关注
   async findFollowed({ userId, authorId }) {
-    const find = await Follow.findOne({
-      myUserId: userId, // 发起关注的用户id
-      userId: authorId, // 被关注的用户Id
-    });
+    const find = await Follow.findOne(
+      {
+        myUserId: userId, // 发起关注的用户id
+        userId: authorId, // 被关注的用户Id
+      },
+      {
+        id: "$_id",
+        _id: 0,
+        myUserId: 1,
+        userId: 1,
+        username: 1,
+        job: 1,
+        motto: 1,
+        headUrl: 1,
+        introduce: 1,
+        github: 1,
+        juejin: 1,
+        zhihu: 1,
+        blog: 1,
+        createTime: 1,
+        isFollowed: 1,
+      }
+    );
     return find;
   }
 
@@ -102,6 +120,7 @@ class FollowServer {
                 id: "$_id",
                 _id: 0,
                 myUserId: 1,
+                userId: 1,
               },
             },
             {
@@ -116,10 +135,11 @@ class FollowServer {
 
     if (list?.length) {
       const { total, data } = list[0];
-      const userIds = data.map((i) => i.myUserId);
+      const myUserIds = data.map((i) => i.myUserId);
+      const userIds = data.map((i) => i.userId);
       const userList = await User.find(
         {
-          _id: { $in: userIds },
+          _id: { $in: myUserIds },
         },
         {
           userId: "$_id",
@@ -131,9 +151,38 @@ class FollowServer {
           motto: 1,
         }
       );
+
+      // 查找我已关注的关注我的用户
+      const findFollowUsers = await myUserIds.map(async (i, index) => {
+        const find = await new FollowServer().findFollowed({
+          userId: userIds[index],
+          authorId: i,
+        });
+        return find;
+      });
+
+      const users = await Promise.all(findFollowUsers);
+
+      const findUserIdList = [];
+
+      users.forEach((u) => {
+        if (u) {
+          findUserIdList.push(u.userId);
+        }
+      });
+
+      const cloneList = JSON.parse(JSON.stringify(userList));
+
+      // 将我已关注的用户的isFollowed设置为true
+      cloneList.forEach((i) => {
+        if (findUserIdList.includes(i.userId)) {
+          i.isFollowed = true;
+        }
+      });
+
       return {
         total: total[0]?.count || 0,
-        list: userList || [],
+        list: cloneList || [],
       };
     } else {
       return {

@@ -8,6 +8,7 @@ class commentServer {
     const comment = await Comments.create({
       ...params,
       headUrl: userInfo?.headUrl || "",
+      job: userInfo?.job || "",
     });
     return comment;
   }
@@ -124,7 +125,13 @@ class commentServer {
         $push: {
           replyList: {
             // ...params, // 不适用$each包一下sort不会生效
-            $each: [{ ...params, headUrl: userInfo?.headUrl || "" }], // $each 向replyList插入多条
+            $each: [
+              {
+                ...params,
+                headUrl: userInfo?.headUrl || "",
+                job: userInfo?.job,
+              },
+            ], // $each 向replyList插入多条
             // $sort: { date: 1 }, // 正序排列
           },
         },
@@ -135,6 +142,7 @@ class commentServer {
           "replyList.$.fromUsername": params.fromUsername,
           "replyList.$.formContent": params.formContent,
           "replyList.$.headUrl": userInfo?.headUrl || "",
+          "replyList.$.job": userInfo?.job || "",
         },
       }
     );
@@ -213,6 +221,37 @@ class commentServer {
     );
 
     return comment;
+  }
+
+  // 更新用户信息时，更新评论中的用户信息
+  async updateCommentUserInfo({ username, headUrl, job, userId }) {
+    await Comments.updateMany(
+      {
+        $or: [
+          { userId },
+          { "replyList.userId": userId },
+          { "replyList.fromUserId": userId },
+        ],
+      },
+      {
+        $set: {
+          job,
+          username,
+          headUrl,
+          "replyList.$[elem].username": username,
+          "replyList.$[elem].job": job,
+          "replyList.$[elem].headUrl": headUrl,
+          "replyList.$[elem1].fromUsername": username,
+        },
+      },
+      // 通过 arrayFilters 选项指定数组过滤器，用于匹配内层 replyList 数组中符合条件的数据。这样就可以将外层和内层的 job 字段都更新为 'new job'。
+      {
+        arrayFilters: [
+          { "elem.userId": userId },
+          { "elem1.fromUserId": userId },
+        ],
+      }
+    );
   }
 }
 

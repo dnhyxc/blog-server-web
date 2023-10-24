@@ -32,6 +32,7 @@ const {
   updateComments,
   giveLike,
   deleteComment,
+  updateCommentUserInfo,
 } = require("./web/comments.service");
 const { createLike } = require("./web/like.service");
 const { checkLikeArticle } = require("./web/likeArticle.service");
@@ -205,6 +206,7 @@ module.exports = {
   giveLike,
   createLike,
   deleteComment,
+  updateCommentUserInfo,
   deleteArticles,
   likeArticle,
   checkLikeArticle,

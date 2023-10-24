@@ -12,6 +12,7 @@ const {
   updateInteracts,
   updateFollowUserInfo,
   adminFindMenus,
+  updateCommentUserInfo,
 } = require("../../service");
 const WS = require("../../socket");
 
@@ -125,6 +126,8 @@ class UserController {
       const userInfo = await findUserById(userId);
       await updateInteracts({ ...params, userId });
       await updateFollowUserInfo(userId, params);
+      // 更新评论中的用户信息
+      await updateCommentUserInfo({ ...params, userId });
       if (userInfo) {
         ctx.body = {
           code: 200,
@@ -209,7 +212,7 @@ class UserController {
   async findMenusCtr(ctx, next) {
     try {
       const params = ctx.request.body;
-      const res = await adminFindMenus(params)
+      const res = await adminFindMenus(params);
       ctx.body = {
         code: 200,
         success: true,

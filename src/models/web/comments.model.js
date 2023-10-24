@@ -4,6 +4,7 @@ const CommentsSchema = new mongoose.Schema({
   articleId: String,
   userId: String,
   username: String,
+  job: String,
   avatarUrl: String,
   date: Number,
   content: String,
@@ -16,6 +17,7 @@ const CommentsSchema = new mongoose.Schema({
     {
       userId: String,
       username: String,
+      job: String,
       avatarUrl: String,
       date: Number,
       fromUserId: String,
