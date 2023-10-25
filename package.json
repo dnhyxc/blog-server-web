@@ -21,6 +21,7 @@
     "koa-static": "^5.0.0",
     "mongoose": "^6.4.4",
     "multiparty": "^4.2.3",
+    "socket.io": "^4.7.2",
     "ts-node": "^10.8.2",
     "tslib": "^2.4.0",
     "ws": "^8.12.0"

@@ -118,6 +118,8 @@ const {
   getCodeById,
 } = require("./web/code.service");
 
+const { deleteChat, getChatListWithTotal } = require("./web/chat.service");
+
 // 后台数据库接口
 const {
   adminFindOneUser,
@@ -276,6 +278,8 @@ module.exports = {
   deleteCode,
   getCodeListWithTotal,
   getCodeById,
+  deleteChat,
+  getChatListWithTotal,
 
   // 后台
   adminFindOneUser,

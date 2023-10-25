@@ -48,6 +48,16 @@ class WS {
               code: 200,
             });
           }
+          if (messages.action === "chat") {
+            this.sendMessage({
+              ...messages,
+              data: {
+                ...messages.data,
+                isReaded: false,
+              },
+              code: 200,
+            });
+          }
         } catch (error) {
           console.error("websocket on message error", error);
           return ws.close();
