@@ -2,29 +2,26 @@ const { Chat } = require("../../models");
 
 class chatServer {
   // 添加聊天
-  addChat = async ({ from, to, content }) => {
-    const chatId = [from, to].sort().join("_");
+  addChat = async ({ from, to, content, chatId, createTime }) => {
     const res = await Chat.create({
       from,
       to,
       content,
       chatId,
-      createTime: new Date().valueOf(),
+      createTime,
     });
 
     console.log(res, "res");
   };
+
   // 删除聊天
-  deleteChat = async (id) => {
-    const res = await Chat.deleteOne({ _id: id });
+  deleteChat = async (chatId) => {
+    const res = await Chat.deleteOne({ chatId });
     return res;
   };
 
   // 分页获取聊天消息列表
-  getChatListWithTotal = async ({ from, to, pageNo, pageSize }) => {
-    const chatId = [from, to].sort().join("_");
-    console.log(chatId, "chatId");
-
+  getChatListWithTotal = async ({ chatId, pageNo, pageSize }) => {
     const list = await Chat.aggregate([
       { $match: { chatId } },
       {
@@ -51,9 +48,10 @@ class chatServer {
     ]);
     if (list?.length) {
       const { total, data } = list[0];
+      const sortData = data.sort((a, b) => a.createTime - b.createTime)
       return {
         total: total[0]?.count || 0,
-        list: data || [],
+        list: sortData || [],
       };
     } else {
       return {
