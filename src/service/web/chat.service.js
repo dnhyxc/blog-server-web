@@ -1,6 +1,19 @@
 const { Chat } = require("../../models");
 
 class chatServer {
+  // 添加聊天
+  addChat = async ({ from, to, content }) => {
+    const chatId = [from, to].sort().join("_");
+    const res = await Chat.create({
+      from,
+      to,
+      content,
+      chatId,
+      createTime: new Date().valueOf(),
+    });
+
+    console.log(res, "res");
+  };
   // 删除聊天
   deleteChat = async (id) => {
     const res = await Chat.deleteOne({ _id: id });

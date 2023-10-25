@@ -1,6 +1,7 @@
 const WebSocket = require("ws");
 const { parseQuery } = require("../utils");
 const messageServer = require("../service/web/message.service");
+const chatServer = require("../service/web/chat.service");
 
 class WS {
   static online = 0; // 在线连接
@@ -33,7 +34,7 @@ class WS {
         return ws.close();
       }
 
-      ws.on("message", (msg) => {
+      ws.on("message", async (msg) => {
         try {
           const messages = msg && JSON.parse(msg);
           if (messages.action === "push") {
@@ -49,6 +50,7 @@ class WS {
             });
           }
           if (messages.action === "chat") {
+            await chatServer.addChat(messages.data);
             this.sendMessage({
               ...messages,
               data: {
