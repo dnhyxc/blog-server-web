@@ -12,7 +12,7 @@ const Follow = require("./web/follow.model");
 const Atlas = require("./web/atlas.model");
 const Convert = require("./web/convert.model");
 const Codes = require("./web/code.model");
-const Chat = require("./web/chat.model");
+const { Chat, CacheChats } = require("./web/chat.model");
 
 // 后台model
 const AdminUsers = require("./admin/user.model");
@@ -39,6 +39,7 @@ module.exports = {
   Convert,
   Codes,
   Chat,
+  CacheChats,
   PageConfig,
   Classify,
   Tools,

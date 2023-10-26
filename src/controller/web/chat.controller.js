@@ -1,6 +1,7 @@
 const {
   getChatListWithTotal,
-  deleteChat
+  deleteChat,
+  getChatlist,
 } = require("../../service");
 const { databaseError } = require("../../constant");
 
@@ -9,7 +10,8 @@ class codesController {
   async getChatListCtr(ctx, next) {
     try {
       const params = ctx.request.body;
-      const res = await getChatListWithTotal(params);
+      // const res = await getChatListWithTotal(params);
+      const res = await getChatlist(params);
       ctx.body = {
         code: 200,
         success: true,

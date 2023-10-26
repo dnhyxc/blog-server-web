@@ -10,5 +10,9 @@ const chatSchema = mongoose.Schema({
 });
 
 const Chat = mongoose.model("chats", chatSchema);
+const CacheChats = mongoose.model("cacheChats", chatSchema);
 
-module.exports = Chat;
+module.exports = {
+  Chat,
+  CacheChats
+};
