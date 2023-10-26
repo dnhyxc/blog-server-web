@@ -10,8 +10,7 @@ class chatServer {
       chatId,
       createTime,
     });
-
-    console.log(res, "res");
+    return res;
   };
 
   // 删除聊天
@@ -48,7 +47,7 @@ class chatServer {
     ]);
     if (list?.length) {
       const { total, data } = list[0];
-      const sortData = data.sort((a, b) => a.createTime - b.createTime)
+      const sortData = data.sort((a, b) => a.createTime - b.createTime);
       return {
         total: total[0]?.count || 0,
         list: sortData || [],

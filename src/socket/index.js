@@ -50,11 +50,12 @@ class WS {
             });
           }
           if (messages.action === "chat") {
-            await chatServer.addChat(messages.data);
+            const res = await chatServer.addChat(messages.data);
             this.sendMessage({
               ...messages,
               data: {
                 ...messages.data,
+                id: res._id,
                 isReaded: false,
               },
               code: 200,
