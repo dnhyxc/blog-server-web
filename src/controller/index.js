@@ -13,6 +13,7 @@ const atlasController = require("./web/atlas.controller");
 const convertController = require("./web/convert.controller");
 const codesController = require("./web/code.controller");
 const chatsController = require("./web/chat.controller");
+const contactsController = require("./web/contacts.controller");
 
 // 后台用户控制器
 const adminUserController = require("./admin/user.controller");
@@ -140,10 +141,14 @@ const {
   getCodeByIdCtr,
 } = codesController;
 
+const { getChatListCtr, deleteChatCtr, mergeChatsCtr } = chatsController;
+
 const {
-  getChatListCtr,
-  deleteChatCtr,
-} = chatsController;
+  addContactsCtr,
+  deleteContactsCtr,
+  toTopContactsCtr,
+  getContactListCtr,
+} = contactsController;
 
 // 后台控制器
 const {
@@ -311,6 +316,11 @@ module.exports = {
   getCodeByIdCtr,
   getChatListCtr,
   deleteChatCtr,
+  mergeChatsCtr,
+  addContactsCtr,
+  deleteContactsCtr,
+  toTopContactsCtr,
+  getContactListCtr,
 
   // 后台用户控制器
   adminRegisterCtr,

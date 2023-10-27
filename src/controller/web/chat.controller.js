@@ -1,7 +1,7 @@
 const {
   getChatListWithTotal,
   deleteChat,
-  getChatlist,
+  mergeChats,
 } = require("../../service");
 const { databaseError } = require("../../constant");
 
@@ -10,8 +10,7 @@ class codesController {
   async getChatListCtr(ctx, next) {
     try {
       const params = ctx.request.body;
-      // const res = await getChatListWithTotal(params);
-      const res = await getChatlist(params);
+      const res = await getChatListWithTotal(params);
       ctx.body = {
         code: 200,
         success: true,
@@ -20,6 +19,21 @@ class codesController {
       };
     } catch (error) {
       console.error("getChatListCtr", error);
+      ctx.app.emit("error", databaseError, ctx);
+    }
+  }
+
+  // 合并消息
+  async mergeChatsCtr(ctx, next) {
+    try {
+      const params = ctx.request.body;
+      await mergeChats(params);
+      ctx.body = {
+        code: 200,
+        success: true,
+      };
+    } catch (error) {
+      console.error("mergeChatsCtr", error);
       ctx.app.emit("error", databaseError, ctx);
     }
   }
