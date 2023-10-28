@@ -1,4 +1,5 @@
 const { Contacts, User } = require("../../models");
+const { getNewChat } = require('./chat.service')
 
 class contactsServer {
   // 添加聊天联系人
@@ -84,19 +85,31 @@ class contactsServer {
       const { total, data } = list[0];
       const contactIds = data.map((i) => i.contactId);
       const res = await this.getUserList({ contactIds });
-      const cloneData = JSON.parse(JSON.stringify(data));
-      cloneData.forEach((i) => {
+      const chatIds = []
+      data.forEach((i) => {
         res.forEach((j) => {
           if (i.contactId === j._id.toString()) {
+            const chatId = [userId, j._id.toString()].sort().join('_')
+            chatIds.push(chatId)
             i.headUrl = j.headUrl;
             i.job = j.job;
+            i.chatId = chatId;
             i.username = j.username;
           }
         });
       });
+      const chats = await (chatIds?.length && getNewChat(chatIds))
+      data.forEach(i => {
+        chats.forEach(j => {
+          if (j.chatId === i.chatId) {
+            i.message = j.content
+            i.sendTime = j.createTime
+          }
+        })
+      })
       return {
         total: total[0]?.count || 0,
-        list: cloneData || [],
+        list: data || [],
       };
     } else {
       return {

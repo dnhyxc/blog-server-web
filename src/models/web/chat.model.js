@@ -11,8 +11,10 @@ const chatSchema = mongoose.Schema({
 
 const Chat = mongoose.model("chats", chatSchema);
 const CacheChats = mongoose.model("cacheChats", chatSchema);
+const NewChats = mongoose.model("newChats", chatSchema);
 
 module.exports = {
   Chat,
-  CacheChats
+  CacheChats,
+  NewChats
 };

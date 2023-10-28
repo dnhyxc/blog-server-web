@@ -1,4 +1,4 @@
-const { Chat, CacheChats } = require("../../models");
+const { Chat, CacheChats, NewChats } = require("../../models");
 
 class chatServer {
   // 添加聊天
@@ -10,8 +10,51 @@ class chatServer {
       chatId,
       createTime,
     });
+    this.addNewChat({ from, to, content, chatId, createTime })
     return res;
   };
+
+  // 添加最新聊天
+  addNewChat = async ({ from, to, content, chatId, createTime }) => {
+    const findOne = await NewChats.findOne({ chatId })
+    if (findOne) {
+      await NewChats.updateOne({ chatId }, {
+        from,
+        to,
+        content,
+        chatId,
+        createTime,
+      });
+    } else {
+      await NewChats.create({
+        from,
+        to,
+        content,
+        chatId,
+        createTime,
+      });
+    }
+    return {
+      from,
+      to,
+      content,
+      chatId,
+      createTime,
+    }
+  };
+
+  // 获取最新聊天
+  getNewChat = async (chatIds) => {
+    return NewChats.find({ chatId: { $in: chatIds } }, {
+      _id: 0,
+      id: "$_id",
+      from: 1,
+      to: 1,
+      chatId: 1,
+      createTime: 1,
+      content: 1,
+    })
+  }
 
   // 合并消息列表
   mergeChats = async ({ chatId }) => {
