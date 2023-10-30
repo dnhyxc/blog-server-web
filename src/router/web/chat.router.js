@@ -1,7 +1,7 @@
 const Router = require("koa-router");
 const {
   getChatListCtr,
-  deleteChatCtr,
+  deleteChatsCtr,
   mergeChatsCtr,
 } = require("../../controller");
 
@@ -16,6 +16,6 @@ router.post("/getChatList", auth, getChatListCtr);
 router.post("/mergeChats", auth, mergeChatsCtr);
 
 // 删除聊天消息
-router.post("/deleteChat", auth, deleteChatCtr);
+router.post("/deleteChats", auth, deleteChatsCtr);
 
 module.exports = router;

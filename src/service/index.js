@@ -119,7 +119,7 @@ const {
 } = require("./web/code.service");
 
 const {
-  deleteChat,
+  deleteChats,
   getChatListWithTotal,
   mergeChats,
 } = require("./web/chat.service");
@@ -289,7 +289,7 @@ module.exports = {
   deleteCode,
   getCodeListWithTotal,
   getCodeById,
-  deleteChat,
+  deleteChats,
   getChatListWithTotal,
   mergeChats,
   addContacts,

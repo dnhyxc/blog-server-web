@@ -1,6 +1,6 @@
 const {
   getChatListWithTotal,
-  deleteChat,
+  deleteChats,
   mergeChats,
 } = require("../../service");
 const { databaseError } = require("../../constant");
@@ -39,10 +39,10 @@ class codesController {
   }
 
   // 删除聊天
-  async deleteChatCtr(ctx, next) {
+  async deleteChatsCtr(ctx, next) {
     try {
       const params = ctx.request.body;
-      const res = await deleteChat(params);
+      const res = await deleteChats(params);
       ctx.body = {
         code: 200,
         success: true,
@@ -50,7 +50,7 @@ class codesController {
         data: res,
       };
     } catch (error) {
-      console.error("deleteChatCtr", error);
+      console.error("deleteChatsCtr", error);
       ctx.app.emit("error", databaseError, ctx);
     }
   }

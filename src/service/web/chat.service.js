@@ -10,21 +10,24 @@ class chatServer {
       chatId,
       createTime,
     });
-    this.addNewChat({ from, to, content, chatId, createTime })
+    this.addNewChat({ from, to, content, chatId, createTime });
     return res;
   };
 
   // 添加最新聊天
   addNewChat = async ({ from, to, content, chatId, createTime }) => {
-    const findOne = await NewChats.findOne({ chatId })
+    const findOne = await NewChats.findOne({ chatId });
     if (findOne) {
-      await NewChats.updateOne({ chatId }, {
-        from,
-        to,
-        content,
-        chatId,
-        createTime,
-      });
+      await NewChats.updateOne(
+        { chatId },
+        {
+          from,
+          to,
+          content,
+          chatId,
+          createTime,
+        }
+      );
     } else {
       await NewChats.create({
         from,
@@ -40,21 +43,24 @@ class chatServer {
       content,
       chatId,
       createTime,
-    }
+    };
   };
 
   // 获取最新聊天
   getNewChat = async (chatIds) => {
-    return NewChats.find({ chatId: { $in: chatIds } }, {
-      _id: 0,
-      id: "$_id",
-      from: 1,
-      to: 1,
-      chatId: 1,
-      createTime: 1,
-      content: 1,
-    })
-  }
+    return NewChats.find(
+      { chatId: { $in: chatIds } },
+      {
+        _id: 0,
+        id: "$_id",
+        from: 1,
+        to: 1,
+        chatId: 1,
+        createTime: 1,
+        content: 1,
+      }
+    );
+  };
 
   // 合并消息列表
   mergeChats = async ({ chatId }) => {
@@ -89,9 +95,9 @@ class chatServer {
   };
 
   // 删除聊天
-  deleteChat = async (chatId) => {
-    const res = await Chat.deleteOne({ chatId });
-    return res;
+  deleteChats = async ({ delIds }) => {
+    const res = await Chat.deleteMany({ _id: { $in: delIds } });
+    return res.deletedCount;
   };
 
   // 分页获取聊天消息列表

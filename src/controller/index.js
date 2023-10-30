@@ -141,7 +141,7 @@ const {
   getCodeByIdCtr,
 } = codesController;
 
-const { getChatListCtr, deleteChatCtr, mergeChatsCtr } = chatsController;
+const { getChatListCtr, deleteChatsCtr, mergeChatsCtr } = chatsController;
 
 const {
   addContactsCtr,
@@ -315,7 +315,7 @@ module.exports = {
   getCodeListCtr,
   getCodeByIdCtr,
   getChatListCtr,
-  deleteChatCtr,
+  deleteChatsCtr,
   mergeChatsCtr,
   addContactsCtr,
   deleteContactsCtr,
