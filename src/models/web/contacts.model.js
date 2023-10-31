@@ -5,6 +5,7 @@ const contactsSchema = mongoose.Schema({
   userId: String,
   contactId: String,
   createTime: Number,
+  noReadCount: Number,
 });
 
 const Contacts = mongoose.model("contacts", contactsSchema);

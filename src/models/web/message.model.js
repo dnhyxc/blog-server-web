@@ -23,6 +23,11 @@ const messageSchema = new mongoose.Schema({
   isReaded: Boolean,
   isRemove: Boolean,
   articleId: String,
+  // 私信
+  from: String,
+  to: String,
+  content: String,
+  chatId: String,
 });
 
 const Message = mongoose.model("messages", messageSchema);

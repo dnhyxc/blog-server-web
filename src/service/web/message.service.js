@@ -28,14 +28,7 @@ class messageServer {
                 _id: 0, // 默认情况下_id是包含的，将_id设置为0|false，则选择不包含_id，其他字段也可以这样选择是否显示。
                 id: "$_id", // 将_id更名为classify
                 title: 1,
-                // classify: 1,
-                // tag: 1,
-                // coverImage: 1,
-                // abstract: 1,
                 authorId: 1,
-                // isLike: 1,
-                // likeCount: 1,
-                // createTime: 1,
                 authorName: 1,
                 pushDate: 1,
                 fromUsername: 1,
@@ -45,6 +38,10 @@ class messageServer {
                 articleId: 1,
                 isRemove: 1,
                 toUserId: 1,
+                from: 1,
+                to: 1,
+                content: 1,
+                chatId: 1,
               },
             },
             {

@@ -25,6 +25,19 @@ class UserServer {
     return user;
   }
 
+  // 根据userId获取用户信息
+  async findUser(userId) {
+    const user = await User.findOne(
+      { _id: userId, isDelete: { $nin: [true] } },
+      {
+        userId: `${"$_id".toString()}`,
+        _id: 1,
+        ...userFields,
+      }
+    );
+    return user;
+  }
+
   // 根据id查找用户
   async findUserById(id) {
     const user = await User.findById(id, {

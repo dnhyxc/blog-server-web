@@ -2,6 +2,8 @@ const WebSocket = require("ws");
 const { parseQuery } = require("../utils");
 const messageServer = require("../service/web/message.service");
 const chatServer = require("../service/web/chat.service");
+const contactServer = require("../service/web/contacts.service");
+// const userServer = require("../service/web/user.service");
 
 class WS {
   static online = 0; // 在线连接
@@ -37,29 +39,45 @@ class WS {
       ws.on("message", async (msg) => {
         try {
           const messages = msg && JSON.parse(msg);
-          if (messages.action === "push") {
+          if (messages.action === "push" || messages.action === "chat") {
             // 创建消息，保存到数据库
             messageServer.createMessage(messages);
-            this.sendMessage({
-              ...messages,
-              data: {
-                ...messages.data,
-                isReaded: false,
-              },
-              code: 200,
-            });
+            // 如果是聊天则不单独推送ws消息，由消息自己推送
+            if (messages.action !== "chat") {
+              this.sendMessage({
+                ...messages,
+                data: {
+                  ...messages.data,
+                  isReaded: false,
+                },
+                code: 200,
+              });
+            }
           }
-          if (messages.action === "chat") {
+          if (
+            messages.action === "chat" &&
+            messages.data.from !== messages.data.to
+          ) {
             const res = await chatServer.addChat(messages.data);
-            this.sendMessage({
+            const sendData = {
               ...messages,
               data: {
                 ...messages.data,
+                userId: messages.userId,
                 id: res._id,
-                isReaded: false,
               },
               code: 200,
-            });
+            };
+
+            this.sendMessage(sendData);
+
+            if (messages.data.to !== messages.userId) {
+              await contactServer.addContacts({
+                contactId: messages.data.from,
+                userId: messages.data.to,
+                createTime: messages.data.createTime,
+              });
+            }
           }
         } catch (error) {
           console.error("websocket on message error", error);

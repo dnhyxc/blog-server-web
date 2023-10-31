@@ -2,7 +2,7 @@ const { Chat, CacheChats, NewChats } = require("../../models");
 
 class chatServer {
   // 添加聊天
-  addChat = async ({ from, to, content, chatId, createTime }) => {
+  addChat = async ({ from, to, content, chatId, createTime, userId }) => {
     const res = await CacheChats.create({
       from,
       to,
@@ -48,7 +48,7 @@ class chatServer {
 
   // 获取最新聊天
   getNewChat = async (chatIds) => {
-    return NewChats.find(
+    const res = await NewChats.find(
       { chatId: { $in: chatIds } },
       {
         _id: 0,
@@ -60,11 +60,12 @@ class chatServer {
         content: 1,
       }
     );
+    return res;
   };
 
-  // 合并消息列表
-  mergeChats = async ({ chatId }) => {
-    const chats = await CacheChats.find(
+  // 获取新增的缓存消息
+  getCacheChats = async (chatId) => {
+    const res = await CacheChats.find(
       { chatId },
       {
         _id: 0,
@@ -76,6 +77,18 @@ class chatServer {
         content: 1,
       }
     );
+    return res;
+  };
+
+  // 获取未读消息
+  getUnReadChat = async (chatId) => {
+    const res = await this.getCacheChats(chatId);
+    return res;
+  };
+
+  // 合并消息列表
+  mergeChats = async ({ chatId }) => {
+    const chats = await this.getCacheChats(chatId);
     if (chats?.length) {
       await Chat.insertMany(chats);
       await CacheChats.deleteMany({ chatId });

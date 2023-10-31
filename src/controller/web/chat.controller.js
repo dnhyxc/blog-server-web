@@ -2,6 +2,7 @@ const {
   getChatListWithTotal,
   deleteChats,
   mergeChats,
+  getUnReadChat,
 } = require("../../service");
 const { databaseError } = require("../../constant");
 
@@ -34,6 +35,24 @@ class codesController {
       };
     } catch (error) {
       console.error("mergeChatsCtr", error);
+      ctx.app.emit("error", databaseError, ctx);
+    }
+  }
+
+  // 合并消息
+  async getUnReadChatCtr(ctx, next) {
+    try {
+      const params = ctx.request.body;
+      const res = await getUnReadChat(params.chatId);
+      ctx.body = {
+        code: 200,
+        success: true,
+        data: {
+          noReadCount: res.length,
+        },
+      };
+    } catch (error) {
+      console.error("getUnReadChatCtr", error);
       ctx.app.emit("error", databaseError, ctx);
     }
   }

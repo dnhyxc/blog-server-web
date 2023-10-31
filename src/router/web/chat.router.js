@@ -3,6 +3,7 @@ const {
   getChatListCtr,
   deleteChatsCtr,
   mergeChatsCtr,
+  getUnReadChatCtr,
 } = require("../../controller");
 
 const { auth } = require("../../middleware");
@@ -17,5 +18,8 @@ router.post("/mergeChats", auth, mergeChatsCtr);
 
 // 删除聊天消息
 router.post("/deleteChats", auth, deleteChatsCtr);
+
+// 获取未读聊天消息数量
+router.post("/getUnReadChat", auth, getUnReadChatCtr);
 
 module.exports = router;
