@@ -4,6 +4,9 @@ const {
   deleteChatsCtr,
   mergeChatsCtr,
   getUnReadChatCtr,
+  updateNewChatCtr,
+  deleteNewChatCtr,
+  deleteCatchChatCtr,
 } = require("../../controller");
 
 const { auth } = require("../../middleware");
@@ -21,5 +24,14 @@ router.post("/deleteChats", auth, deleteChatsCtr);
 
 // 获取未读聊天消息数量
 router.post("/getUnReadChat", auth, getUnReadChatCtr);
+
+// 更新最新消息
+router.post("/updateNewChat", auth, updateNewChatCtr);
+
+// 删除最新消息
+router.post("/deleteNewChat", auth, deleteNewChatCtr);
+
+// 删除缓存消息
+router.post("/deleteCatchChat", auth, deleteCatchChatCtr);
 
 module.exports = router;

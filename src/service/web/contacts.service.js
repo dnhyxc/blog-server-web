@@ -47,9 +47,11 @@ class contactsServer {
     const res = await Contacts.updateOne(
       { userId, contactId },
       {
-        createTime,
-        isUnDisturb,
-        isTop,
+        $set: {
+          createTime,
+          isUnDisturb,
+          isTop,
+        },
       }
     );
     return res;

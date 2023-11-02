@@ -141,8 +141,15 @@ const {
   getCodeByIdCtr,
 } = codesController;
 
-const { getChatListCtr, deleteChatsCtr, mergeChatsCtr, getUnReadChatCtr } =
-  chatsController;
+const {
+  getChatListCtr,
+  deleteChatsCtr,
+  mergeChatsCtr,
+  getUnReadChatCtr,
+  updateNewChatCtr,
+  deleteNewChatCtr,
+  deleteCatchChatCtr,
+} = chatsController;
 
 const {
   addContactsCtr,
@@ -319,6 +326,9 @@ module.exports = {
   deleteChatsCtr,
   mergeChatsCtr,
   getUnReadChatCtr,
+  updateNewChatCtr,
+  deleteNewChatCtr,
+  deleteCatchChatCtr,
   addContactsCtr,
   deleteContactsCtr,
   onUpdateContactCtr,

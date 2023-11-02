@@ -49,7 +49,7 @@ class contactsController {
       ctx.body = {
         code: 200,
         success: true,
-        message: "置顶成功",
+        message: "更新成功",
         data: {
           count: res.modifiedCount,
           contactId: params.contactId,

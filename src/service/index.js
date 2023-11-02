@@ -122,6 +122,9 @@ const {
   deleteChats,
   getChatListWithTotal,
   mergeChats,
+  updateNewChat,
+  deleteNewChat,
+  deleteCatchChat,
   getUnReadChat,
 } = require("./web/chat.service");
 
@@ -293,6 +296,9 @@ module.exports = {
   deleteChats,
   getChatListWithTotal,
   mergeChats,
+  updateNewChat,
+  deleteNewChat,
+  deleteCatchChat,
   getUnReadChat,
   addContacts,
   deleteContacts,

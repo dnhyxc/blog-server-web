@@ -2,6 +2,9 @@ const {
   getChatListWithTotal,
   deleteChats,
   mergeChats,
+  updateNewChat,
+  deleteNewChat,
+  deleteCatchChat,
   getUnReadChat,
 } = require("../../service");
 const { databaseError } = require("../../constant");
@@ -39,7 +42,58 @@ class codesController {
     }
   }
 
-  // 合并消息
+  // 更新最新消息消息
+  async updateNewChatCtr(ctx, next) {
+    try {
+      const params = ctx.request.body;
+      await updateNewChat(params);
+      ctx.body = {
+        code: 200,
+        data: params.chatId,
+        message: "更新成功",
+        success: true,
+      };
+    } catch (error) {
+      console.error("updateNewChatCtr", error);
+      ctx.app.emit("error", databaseError, ctx);
+    }
+  }
+
+  // 更新最新消息消息
+  async deleteNewChatCtr(ctx, next) {
+    try {
+      const params = ctx.request.body;
+      await deleteNewChat(params);
+      ctx.body = {
+        code: 200,
+        data: params.chatId,
+        message: "删除成功",
+        success: true,
+      };
+    } catch (error) {
+      console.error("deleteNewChatCtr", error);
+      ctx.app.emit("error", databaseError, ctx);
+    }
+  }
+
+  // 删除缓存消息
+  async deleteCatchChatCtr(ctx, next) {
+    try {
+      const params = ctx.request.body;
+      await deleteCatchChat(params);
+      ctx.body = {
+        code: 200,
+        data: params.chatId,
+        message: "删除成功",
+        success: true,
+      };
+    } catch (error) {
+      console.error("deleteCatchChatCtr", error);
+      ctx.app.emit("error", databaseError, ctx);
+    }
+  }
+
+  // 获取未读消息
   async getUnReadChatCtr(ctx, next) {
     try {
       const params = ctx.request.body;

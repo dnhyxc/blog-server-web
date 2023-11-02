@@ -21,11 +21,13 @@ class chatServer {
       await NewChats.updateOne(
         { chatId },
         {
-          from,
-          to,
-          content,
-          chatId,
-          createTime,
+          $set: {
+            from,
+            to,
+            content,
+            chatId,
+            createTime,
+          },
         }
       );
     } else {
@@ -44,6 +46,44 @@ class chatServer {
       chatId,
       createTime,
     };
+  };
+
+  // 更新最新消息
+  updateNewChat = async ({ from, to, content, chatId, createTime }) => {
+    const res = await NewChats.updateOne(
+      { chatId },
+      {
+        $set: {
+          from,
+          to,
+          content,
+          chatId,
+          createTime,
+        },
+      }
+    );
+    return res;
+  };
+
+  // 删除缓存及最新消息
+  deleteChatMesaage = async (params) => {
+    const res = await Promise.all([
+      this.deleteNewChat(params),
+      this.deleteCatchChat(params),
+    ]);
+    return res;
+  };
+
+  // 删除最新消息
+  deleteNewChat = async ({ chatId }) => {
+    const res = await NewChats.deleteOne({ chatId });
+    return res;
+  };
+
+  // 删除缓存聊天记录
+  deleteCatchChat = async ({ id }) => {
+    const res = await CacheChats.deleteOne({ _id: id });
+    return res;
   };
 
   // 获取最新聊天
