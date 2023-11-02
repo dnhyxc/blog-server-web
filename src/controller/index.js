@@ -147,7 +147,7 @@ const { getChatListCtr, deleteChatsCtr, mergeChatsCtr, getUnReadChatCtr } =
 const {
   addContactsCtr,
   deleteContactsCtr,
-  toTopContactsCtr,
+  onUpdateContactCtr,
   getContactListCtr,
 } = contactsController;
 
@@ -321,7 +321,7 @@ module.exports = {
   getUnReadChatCtr,
   addContactsCtr,
   deleteContactsCtr,
-  toTopContactsCtr,
+  onUpdateContactCtr,
   getContactListCtr,
 
   // 后台用户控制器

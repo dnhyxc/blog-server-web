@@ -128,7 +128,7 @@ const {
 const {
   addContacts,
   deleteContacts,
-  toTopContacts,
+  onUpdateContact,
   getContactList,
 } = require("./web/contacts.service");
 
@@ -296,7 +296,7 @@ module.exports = {
   getUnReadChat,
   addContacts,
   deleteContacts,
-  toTopContacts,
+  onUpdateContact,
   getContactList,
 
   // 后台

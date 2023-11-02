@@ -15,6 +15,8 @@ class contactsServer {
         contactId,
         createTime,
         noReadCount: 0,
+        isUnDisturb: false,
+        isTop: false,
       });
       return res;
     }
@@ -27,19 +29,29 @@ class contactsServer {
   };
 
   // 删除联系人
-  deleteContacts = async ({ userId }) => {
-    const res = await Contacts.deleteOne({
-      userId,
+  deleteContacts = async ({ contactIds }) => {
+    const res = await Contacts.deleteMany({
+      contactId: { $in: contactIds },
     });
     return res;
   };
 
-  // 置顶联系人
-  toTopContacts = async ({ userId, createTime }) => {
-    const res = await Contacts.updateOne({
-      userId,
-      createTime,
-    });
+  // 更新联系人
+  onUpdateContact = async ({
+    contactId,
+    createTime,
+    isUnDisturb,
+    isTop,
+    userId,
+  }) => {
+    const res = await Contacts.updateOne(
+      { userId, contactId },
+      {
+        createTime,
+        isUnDisturb,
+        isTop,
+      }
+    );
     return res;
   };
 
@@ -76,9 +88,11 @@ class contactsServer {
                 contactId: 1,
                 createTime: 1,
                 noReadCount: 1,
+                isTop: 1,
+                isUnDisturb: 1,
               },
             },
-            { $sort: { createTime: -1 } },
+            { $sort: { isTop: -1, createTime: -1 } },
             { $skip: (pageNo - 1) * pageSize },
             { $limit: pageSize },
           ],
@@ -109,7 +123,7 @@ class contactsServer {
       data.forEach((i) => {
         unReadChats.forEach((u) => {
           // u.from 判断未读消息是否是别人发给我的，并且判断联系人Id（contactId） 是否是否是发送消息的人
-          if (i.contactId === u.from) {
+          if (i.contactId === u.from && !i.isUnDisturb) {
             i.noReadCount += 1;
           }
         });

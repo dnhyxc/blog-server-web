@@ -6,6 +6,8 @@ const contactsSchema = mongoose.Schema({
   contactId: String,
   createTime: Number,
   noReadCount: Number,
+  isUnDisturb: Boolean,
+  isTop: Boolean,
 });
 
 const Contacts = mongoose.model("contacts", contactsSchema);

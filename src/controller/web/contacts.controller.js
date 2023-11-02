@@ -1,7 +1,7 @@
 const {
   addContacts,
   deleteContacts,
-  toTopContacts,
+  onUpdateContact,
   getContactList,
 } = require("../../service");
 const { databaseError } = require("../../constant");
@@ -42,18 +42,21 @@ class contactsController {
   }
 
   // 联系人置顶
-  async toTopContactsCtr(ctx, next) {
+  async onUpdateContactCtr(ctx, next) {
     try {
       const params = ctx.request.body;
-      const res = await toTopContacts(params);
+      const res = await onUpdateContact(params);
       ctx.body = {
         code: 200,
         success: true,
         message: "置顶成功",
-        data: res,
+        data: {
+          count: res.modifiedCount,
+          contactId: params.contactId,
+        },
       };
     } catch (error) {
-      console.error("toTopContactsCtr", error);
+      console.error("onUpdateContactCtr", error);
       ctx.app.emit("error", databaseError, ctx);
     }
   }
