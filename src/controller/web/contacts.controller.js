@@ -3,6 +3,7 @@ const {
   deleteContacts,
   onUpdateContact,
   getContactList,
+  searchContacts,
 } = require("../../service");
 const { databaseError } = require("../../constant");
 
@@ -74,6 +75,23 @@ class contactsController {
       };
     } catch (error) {
       console.error("getContactListCtr", error);
+      ctx.app.emit("error", databaseError, ctx);
+    }
+  }
+
+  // 搜索联系人
+  async searchContactsCtr(ctx, next) {
+    try {
+      const params = ctx.request.body;
+      const res = await searchContacts(params);
+      ctx.body = {
+        code: 200,
+        success: true,
+        message: "获取成功",
+        data: res,
+      };
+    } catch (error) {
+      console.error("searchContactsCtr", error);
       ctx.app.emit("error", databaseError, ctx);
     }
   }

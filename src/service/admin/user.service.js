@@ -97,6 +97,16 @@ class UserServer {
     return res;
   }
 
+  // 查询前台所有符合名称的用户
+  async adminSearchUserList({ keyword }) {
+    const reg = (keyword && new RegExp(keyword, "i")) || "";
+    const filterKey = { username: { $regex: reg } };
+    const res = await User.find(filterKey, {
+      ...userFields,
+    });
+    return res;
+  }
+
   // 查询后台用户列表
   async adminGetAdminUserList({ filterKey, pageNo, pageSize }) {
     const res = await new UserServer().adminGetUserListWithTotal({

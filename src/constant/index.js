@@ -214,6 +214,16 @@ const articleListRes = {
   isTop: 1,
 };
 
+// 联系人返回字段
+const contactsRes = {
+  userId: 1,
+  contactId: 1,
+  createTime: 1,
+  noReadCount: 1,
+  isTop: 1,
+  isUnDisturb: 1,
+};
+
 module.exports = {
   databaseError,
   verifyUserError,
@@ -238,4 +248,5 @@ module.exports = {
   collectionRes,
   fileNotFound,
   articleListRes,
+  contactsRes,
 };

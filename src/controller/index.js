@@ -156,6 +156,7 @@ const {
   deleteContactsCtr,
   onUpdateContactCtr,
   getContactListCtr,
+  searchContactsCtr,
 } = contactsController;
 
 // 后台控制器
@@ -333,6 +334,7 @@ module.exports = {
   deleteContactsCtr,
   onUpdateContactCtr,
   getContactListCtr,
+  searchContactsCtr,
 
   // 后台用户控制器
   adminRegisterCtr,

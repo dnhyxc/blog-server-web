@@ -133,6 +133,7 @@ const {
   deleteContacts,
   onUpdateContact,
   getContactList,
+  searchContacts,
 } = require("./web/contacts.service");
 
 // 后台数据库接口
@@ -304,6 +305,7 @@ module.exports = {
   deleteContacts,
   onUpdateContact,
   getContactList,
+  searchContacts,
 
   // 后台
   adminFindOneUser,

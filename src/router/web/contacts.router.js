@@ -4,6 +4,7 @@ const {
   deleteContactsCtr,
   onUpdateContactCtr,
   getContactListCtr,
+  searchContactsCtr,
 } = require("../../controller");
 
 const { auth } = require("../../middleware");
@@ -21,5 +22,8 @@ router.post("/deleteContacts", auth, deleteContactsCtr);
 
 // 获取联系人
 router.post("/getContactList", auth, getContactListCtr);
+
+// 搜索联系人
+router.post("/searchContacts", auth, searchContactsCtr);
 
 module.exports = router;

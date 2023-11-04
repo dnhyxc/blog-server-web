@@ -1,5 +1,7 @@
 const { Contacts, User } = require("../../models");
 const { getNewChat, getUnReadChat } = require("./chat.service");
+const { adminGetUserList } = require("../admin/user.service");
+const { contactsRes } = require("../../constant");
 
 class contactsServer {
   // 添加聊天联系人
@@ -86,12 +88,7 @@ class contactsServer {
               $project: {
                 _id: 0,
                 id: "$_id",
-                userId: 1,
-                contactId: 1,
-                createTime: 1,
-                noReadCount: 1,
-                isTop: 1,
-                isUnDisturb: 1,
+                ...contactsRes,
               },
             },
             { $sort: { isTop: -1, createTime: -1 } },
@@ -139,6 +136,64 @@ class contactsServer {
       return {
         total: total[0]?.count || 0,
         list: data || [],
+      };
+    } else {
+      return {
+        total: 0,
+        list: [],
+      };
+    }
+  };
+
+  // 联系人查询
+  searchContacts = async ({ userId, keyword, pageNo, pageSize }) => {
+    const { list: userList } = await adminGetUserList({
+      keyword,
+      pageNo: 1,
+      pageSize: 999999,
+      userId,
+    });
+
+    const userIds =
+      userList
+        .filter((j) => j.id.toString() !== userId)
+        .map((i) => i.id.toString()) || [];
+
+    const list = await Contacts.aggregate([
+      { $match: { contactId: { $in: userIds }, userId } },
+      {
+        $facet: {
+          total: [{ $count: "count" }],
+          data: [
+            {
+              $project: {
+                _id: 0,
+                id: "$_id",
+                ...contactsRes,
+              },
+            },
+            { $sort: { isTop: -1, createTime: -1 } },
+            { $skip: (pageNo - 1) * pageSize },
+            { $limit: pageSize },
+          ],
+        },
+      },
+    ]);
+
+    if (list?.length) {
+      const { data, total } = list[0];
+      const newList = data.map((i) => {
+        userList.forEach((j) => {
+          if (j?.id?.toString() === i.contactId) {
+            i.username = j.username;
+            i.headUrl = j.headUrl;
+          }
+        });
+        return i;
+      });
+      return {
+        total: total?.[0]?.count || 0,
+        list: newList || [],
       };
     } else {
       return {
