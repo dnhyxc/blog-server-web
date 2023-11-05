@@ -58,7 +58,10 @@ class WS {
             messages.action === "chat" &&
             messages.data.from !== messages.data.to
           ) {
-            const res = await chatServer.addChat(messages.data);
+            const res = await chatServer.addChat({
+              ...messages.data,
+              userId: messages.userId
+            });
             const sendData = {
               ...messages,
               data: {

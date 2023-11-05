@@ -2,63 +2,71 @@ const { Chat, CacheChats, NewChats } = require("../../models");
 
 class chatServer {
   // 添加聊天
-  addChat = async ({ from, to, content, chatId, createTime, userId }) => {
-    const res = await CacheChats.create({
-      from,
-      to,
-      content,
-      chatId,
-      createTime,
-    });
-    this.addNewChat({ from, to, content, chatId, createTime });
-    return res;
-  };
-
-  // 添加最新聊天
-  addNewChat = async ({ from, to, content, chatId, createTime }) => {
-    const findOne = await NewChats.findOne({ chatId });
-    if (findOne) {
-      await NewChats.updateOne(
-        { chatId },
-        {
-          $set: {
-            from,
-            to,
-            content,
-            chatId,
-            createTime,
-          },
-        }
-      );
-    } else {
-      await NewChats.create({
-        from,
-        to,
-        content,
-        chatId,
-        createTime,
-      });
-    }
-    return {
-      from,
-      to,
-      content,
-      chatId,
-      createTime,
-    };
-  };
-
-  // 更新最新消息
-  updateNewChat = async ({ from, to, content, chatId, createTime }) => {
-    const res = await NewChats.updateOne(
-      { chatId },
+  addChat = async ({ from, to, content, chatId, createTime }) => {
+    const chat = [
       {
-        $set: {
+        userId: from,
+        chat: {
           from,
           to,
           content,
           chatId,
           createTime,
+        }
+      },
+      {
+        userId: to,
+        chat: {
+          from,
+          to,
+          content,
+          chatId,
+          createTime,
+        }
+      },
+    ]
+
+    const res = await CacheChats.create(chat);
+    this.addNewChat(chat);
+    return res;
+  };
+
+  // 添加最新聊天
+  addNewChat = async (chat) => {
+    // const findOne = await NewChats.findOne({ chatId });
+    // if (findOne) {
+    //   await NewChats.updateOne(
+    //     { chatId },
+    //     {
+    //       $set: {
+    //         from,
+    //         to,
+    //         content,
+    //         chatId,
+    //         createTime,
+    //         userId,
+    //       },
+    //     }
+    //   );
+    // } else {
+    // }
+    await NewChats.create(chat);
+    return chat;
+  };
+
+  // 更新最新消息
+  updateNewChat = async ({ from, to, content, chatId, createTime }) => {
+    const res = await NewChats.updateOne(
+      { 'chat.chatId': chatId },
+      {
+        $set: {
+          chat: {
+            from,
+            to,
+            content,
+            chatId,
+            createTime
+          }
         },
       }
     );
@@ -89,49 +97,43 @@ class chatServer {
   // 获取最新聊天
   getNewChat = async (chatIds) => {
     const res = await NewChats.find(
-      { chatId: { $in: chatIds } },
+      { 'chat.chatId': { $in: chatIds } },
       {
         _id: 0,
         id: "$_id",
-        from: 1,
-        to: 1,
-        chatId: 1,
-        createTime: 1,
-        content: 1,
+        userId: 1,
+        chat: 1,
       }
     );
     return res;
   };
 
   // 获取新增的缓存消息
-  getCacheChats = async (chatId) => {
+  getCacheChats = async ({ chatId, userId }) => {
     const res = await CacheChats.find(
-      { chatId },
+      { 'chat.chatId': chatId },
       {
         _id: 0,
         id: "$_id",
-        from: 1,
-        to: 1,
-        chatId: 1,
-        createTime: 1,
-        content: 1,
+        userId: 1,
+        chat: 1,
       }
     );
     return res;
   };
 
   // 获取未读消息
-  getUnReadChat = async (chatId) => {
-    const res = await this.getCacheChats(chatId);
+  getUnReadChat = async ({ chatId, userId }) => {
+    const res = await this.getCacheChats({ chatId, userId });
     return res;
   };
 
   // 合并消息列表
-  mergeChats = async ({ chatId }) => {
-    const chats = await this.getCacheChats(chatId);
+  mergeChats = async ({ chatId, userId }) => {
+    const chats = await this.getCacheChats({ chatId, userId });
     if (chats?.length) {
       await Chat.insertMany(chats);
-      await CacheChats.deleteMany({ chatId });
+      await CacheChats.deleteMany({ 'chat.chatId': chatId });
     }
   };
 
@@ -156,7 +158,7 @@ class chatServer {
   // 分页获取聊天消息列表
   getChatListWithTotal = async ({ chatId, pageNo, pageSize }) => {
     const list = await Chat.aggregate([
-      { $match: { chatId } },
+      { $match: { 'chat.chatId': chatId } },
       {
         $facet: {
           total: [{ $count: "count" }],
@@ -165,14 +167,11 @@ class chatServer {
               $project: {
                 _id: 0,
                 id: "$_id",
-                from: 1,
-                to: 1,
-                chatId: 1,
-                createTime: 1,
-                content: 1,
+                userId: 1,
+                chat: 1,
               },
             },
-            { $sort: { createTime: -1 } },
+            { $sort: { 'chat.createTime': -1 } },
             { $skip: (pageNo - 1) * pageSize },
             { $limit: pageSize },
           ],
@@ -181,7 +180,7 @@ class chatServer {
     ]);
     if (list?.length) {
       const { total, data } = list[0];
-      const sortData = data.sort((a, b) => a.createTime - b.createTime);
+      const sortData = data.sort((a, b) => a.chat.createTime - b.chat.createTime);
       return {
         total: total[0]?.count || 0,
         list: sortData || [],

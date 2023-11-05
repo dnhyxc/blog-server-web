@@ -97,7 +97,7 @@ class codesController {
   async getUnReadChatCtr(ctx, next) {
     try {
       const params = ctx.request.body;
-      const res = await getUnReadChat(params.chatId);
+      const res = await getUnReadChat(params);
       ctx.body = {
         code: 200,
         success: true,

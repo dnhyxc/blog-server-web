@@ -127,9 +127,9 @@ class contactsServer {
           }
         });
         chats.forEach((j) => {
-          if (j.chatId === i.chatId) {
-            i.message = j.content;
-            i.sendTime = j.createTime;
+          if (j.chat.chatId === i.chatId) {
+            i.message = j.chat.content;
+            i.sendTime = j.chat.createTime;
           }
         });
       });
