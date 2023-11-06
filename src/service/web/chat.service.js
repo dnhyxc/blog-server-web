@@ -12,7 +12,7 @@ class chatServer {
           content,
           chatId,
           createTime,
-        }
+        },
       },
       {
         userId: to,
@@ -22,9 +22,9 @@ class chatServer {
           content,
           chatId,
           createTime,
-        }
+        },
       },
-    ]
+    ];
 
     const res = await CacheChats.create(chat);
     this.addNewChat(chat);
@@ -32,41 +32,32 @@ class chatServer {
   };
 
   // 添加最新聊天
-  addNewChat = async (chat) => {
-    // const findOne = await NewChats.findOne({ chatId });
-    // if (findOne) {
-    //   await NewChats.updateOne(
-    //     { chatId },
-    //     {
-    //       $set: {
-    //         from,
-    //         to,
-    //         content,
-    //         chatId,
-    //         createTime,
-    //         userId,
-    //       },
-    //     }
-    //   );
-    // } else {
-    // }
-    await NewChats.create(chat);
-    return chat;
+  addNewChat = async (params) => {
+    const findOne = await NewChats.findOne({
+      "chat.chatId": params[0]?.chat?.chatId,
+    });
+    if (findOne) {
+      await NewChats.updateMany(
+        { "chat.chatId": params[0]?.chat?.chatId },
+        {
+          $set: {
+            chat: params[0]?.chat,
+          },
+        }
+      );
+    } else {
+      await NewChats.create(params);
+      return params;
+    }
   };
 
   // 更新最新消息
-  updateNewChat = async ({ from, to, content, chatId, createTime }) => {
-    const res = await NewChats.updateOne(
-      { 'chat.chatId': chatId },
+  updateNewChat = async ({ chat }) => {
+    const res = await NewChats.updateMany(
+      { "chat.chatId": chat.chatId },
       {
         $set: {
-          chat: {
-            from,
-            to,
-            content,
-            chatId,
-            createTime
-          }
+          chat,
         },
       }
     );
@@ -84,7 +75,7 @@ class chatServer {
 
   // 删除最新消息
   deleteNewChat = async ({ chatId }) => {
-    const res = await NewChats.deleteOne({ chatId });
+    const res = await NewChats.deleteMany({ "chat.chatId": chatId });
     return res;
   };
 
@@ -97,7 +88,7 @@ class chatServer {
   // 获取最新聊天
   getNewChat = async (chatIds) => {
     const res = await NewChats.find(
-      { 'chat.chatId': { $in: chatIds } },
+      { "chat.chatId": { $in: chatIds } },
       {
         _id: 0,
         id: "$_id",
@@ -110,8 +101,9 @@ class chatServer {
 
   // 获取新增的缓存消息
   getCacheChats = async ({ chatId, userId }) => {
+    const chatIds = Array.isArray(chatId) ? chatId : [chatId];
     const res = await CacheChats.find(
-      { 'chat.chatId': chatId },
+      { userId, "chat.chatId": { $in: chatIds } },
       {
         _id: 0,
         id: "$_id",
@@ -133,8 +125,9 @@ class chatServer {
     const chats = await this.getCacheChats({ chatId, userId });
     if (chats?.length) {
       await Chat.insertMany(chats);
-      await CacheChats.deleteMany({ 'chat.chatId': chatId });
+      await CacheChats.deleteMany({ "chat.chatId": chatId });
     }
+    return [];
   };
 
   // 添加聊天
@@ -156,9 +149,9 @@ class chatServer {
   };
 
   // 分页获取聊天消息列表
-  getChatListWithTotal = async ({ chatId, pageNo, pageSize }) => {
+  getChatListWithTotal = async ({ chatId, pageNo, pageSize, userId }) => {
     const list = await Chat.aggregate([
-      { $match: { 'chat.chatId': chatId } },
+      { $match: { userId, "chat.chatId": chatId } },
       {
         $facet: {
           total: [{ $count: "count" }],
@@ -171,7 +164,7 @@ class chatServer {
                 chat: 1,
               },
             },
-            { $sort: { 'chat.createTime': -1 } },
+            { $sort: { "chat.createTime": -1 } },
             { $skip: (pageNo - 1) * pageSize },
             { $limit: pageSize },
           ],
@@ -180,7 +173,9 @@ class chatServer {
     ]);
     if (list?.length) {
       const { total, data } = list[0];
-      const sortData = data.sort((a, b) => a.chat.createTime - b.chat.createTime);
+      const sortData = data.sort(
+        (a, b) => a.chat.createTime - b.chat.createTime
+      );
       return {
         total: total[0]?.count || 0,
         list: sortData || [],

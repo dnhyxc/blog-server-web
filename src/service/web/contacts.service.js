@@ -118,11 +118,12 @@ class contactsServer {
       // 获取新消息
       const chats = await (chatIds?.length && getNewChat(chatIds));
       // 获取未读消息
-      const unReadChats = await (chatIds?.length && getUnReadChat(chatIds));
+      const unReadChats = await (chatIds?.length &&
+        getUnReadChat({ chatId: chatIds, userId }));
       data.forEach((i) => {
         unReadChats.forEach((u) => {
           // u.from 判断未读消息是否是别人发给我的，并且判断联系人Id（contactId） 是否是否是发送消息的人
-          if (i.contactId === u.from && !i.isUnDisturb) {
+          if (i.contactId === u.chat.from && !i.isUnDisturb) {
             i.noReadCount += 1;
           }
         });

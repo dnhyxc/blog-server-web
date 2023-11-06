@@ -31,10 +31,13 @@ class codesController {
   async mergeChatsCtr(ctx, next) {
     try {
       const params = ctx.request.body;
-      await mergeChats(params);
+      const res = await mergeChats(params);
       ctx.body = {
         code: 200,
         success: true,
+        data: {
+          noReadCount: res.length,
+        },
       };
     } catch (error) {
       console.error("mergeChatsCtr", error);

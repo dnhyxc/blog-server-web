@@ -60,14 +60,15 @@ class WS {
           ) {
             const res = await chatServer.addChat({
               ...messages.data,
-              userId: messages.userId
+              userId: messages.userId,
             });
+            const findOne = res.find((i) => i.userId === messages.userId);
             const sendData = {
               ...messages,
               data: {
                 ...messages.data,
                 userId: messages.userId,
-                id: res._id,
+                id: findOne._id,
               },
               code: 200,
             };
