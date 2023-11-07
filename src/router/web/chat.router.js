@@ -2,11 +2,13 @@ const Router = require("koa-router");
 const {
   getChatListCtr,
   deleteChatsCtr,
+  getCacheChatsCtr,
   mergeChatsCtr,
   getUnReadChatCtr,
   updateNewChatCtr,
   deleteNewChatCtr,
   deleteCatchChatCtr,
+  deleteChatMesaageCtr,
 } = require("../../controller");
 
 const { auth } = require("../../middleware");
@@ -19,8 +21,14 @@ router.post("/getChatList", auth, getChatListCtr);
 // 合并消息
 router.post("/mergeChats", auth, mergeChatsCtr);
 
+// 获取缓存消息
+router.post("/getCacheChats", auth, getCacheChatsCtr);
+
 // 删除聊天消息
 router.post("/deleteChats", auth, deleteChatsCtr);
+
+// 删除联系人时，清空聊天消息
+router.post("/deleteChatMesaage", auth, deleteChatMesaageCtr);
 
 // 获取未读聊天消息数量
 router.post("/getUnReadChat", auth, getUnReadChatCtr);

@@ -116,7 +116,7 @@ class contactsServer {
         });
       });
       // 获取新消息
-      const chats = await (chatIds?.length && getNewChat(chatIds));
+      const chats = await (chatIds?.length && getNewChat(chatIds, userId));
       // 获取未读消息
       const unReadChats = await (chatIds?.length &&
         getUnReadChat({ chatId: chatIds, userId }));
@@ -125,6 +125,9 @@ class contactsServer {
           // u.from 判断未读消息是否是别人发给我的，并且判断联系人Id（contactId） 是否是否是发送消息的人
           if (i.contactId === u.chat.from && !i.isUnDisturb) {
             i.noReadCount += 1;
+          }
+          if (i.contactId === u.chat.from && i.isUnDisturb) {
+            i.hasUnRead = true;
           }
         });
         chats.forEach((j) => {

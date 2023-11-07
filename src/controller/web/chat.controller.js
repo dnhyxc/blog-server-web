@@ -6,6 +6,8 @@ const {
   deleteNewChat,
   deleteCatchChat,
   getUnReadChat,
+  getCacheChats,
+  deleteChatMesaage,
 } = require("../../service");
 const { databaseError } = require("../../constant");
 
@@ -114,6 +116,22 @@ class codesController {
     }
   }
 
+  // 获取缓存消息
+  async getCacheChatsCtr(ctx, next) {
+    try {
+      const params = ctx.request.body;
+      const res = await getCacheChats(params);
+      ctx.body = {
+        code: 200,
+        success: true,
+        data: res,
+      };
+    } catch (error) {
+      console.error("getCacheChatsCtr", error);
+      ctx.app.emit("error", databaseError, ctx);
+    }
+  }
+
   // 删除聊天
   async deleteChatsCtr(ctx, next) {
     try {
@@ -127,6 +145,23 @@ class codesController {
       };
     } catch (error) {
       console.error("deleteChatsCtr", error);
+      ctx.app.emit("error", databaseError, ctx);
+    }
+  }
+
+  // 删除联系人时，清空聊天记录
+  async deleteChatMesaageCtr(ctx, next) {
+    try {
+      const params = ctx.request.body;
+      const res = await deleteChatMesaage(params);
+      ctx.body = {
+        code: 200,
+        success: true,
+        message: "删除成功",
+        data: res,
+      };
+    } catch (error) {
+      console.error("deleteChatMesaageCtr", error);
       ctx.app.emit("error", databaseError, ctx);
     }
   }

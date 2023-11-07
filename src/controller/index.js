@@ -144,6 +144,8 @@ const {
 const {
   getChatListCtr,
   deleteChatsCtr,
+  deleteChatMesaageCtr,
+  getCacheChatsCtr,
   mergeChatsCtr,
   getUnReadChatCtr,
   updateNewChatCtr,
@@ -324,7 +326,9 @@ module.exports = {
   getCodeListCtr,
   getCodeByIdCtr,
   getChatListCtr,
+  getCacheChatsCtr,
   deleteChatsCtr,
+  deleteChatMesaageCtr,
   mergeChatsCtr,
   getUnReadChatCtr,
   updateNewChatCtr,

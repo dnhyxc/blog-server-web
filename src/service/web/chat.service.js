@@ -33,10 +33,11 @@ class chatServer {
 
   // 添加最新聊天
   addNewChat = async (params) => {
-    const findOne = await NewChats.findOne({
+    const finds = await NewChats.find({
       "chat.chatId": params[0]?.chat?.chatId,
     });
-    if (findOne) {
+
+    if (finds.length === 2) {
       await NewChats.updateMany(
         { "chat.chatId": params[0]?.chat?.chatId },
         {
@@ -45,16 +46,19 @@ class chatServer {
           },
         }
       );
+    } else if (finds.length === 1) {
+      // 如果只找到一个,则先将其删除再重新创建
+      await NewChats.deleteOne({ "chat.chatId": finds[0]?.chat.chatId });
+      await NewChats.create(params);
     } else {
       await NewChats.create(params);
-      return params;
     }
   };
 
   // 更新最新消息
-  updateNewChat = async ({ chat }) => {
+  updateNewChat = async ({ chat, userId }) => {
     const res = await NewChats.updateMany(
-      { "chat.chatId": chat.chatId },
+      { userId, "chat.chatId": chat.chatId },
       {
         $set: {
           chat,
@@ -65,30 +69,47 @@ class chatServer {
   };
 
   // 删除缓存及最新消息
-  deleteChatMesaage = async (params) => {
+  deleteChatMesaage = async ({ chatId, userId }) => {
     const res = await Promise.all([
-      this.deleteNewChat(params),
-      this.deleteCatchChat(params),
+      this.deleteNewChat({ chatId, userId }),
+      this.deleteCatchChats({ chatId, userId }),
+      this.deleteChatsByUserId({ chatId, userId }),
     ]);
-    return res;
+    return {
+      delNewChatCount: res[0]?.deletedCount,
+      delCatchChat: res[1]?.deletedCount,
+      delChatCount: res[2]?.deletedCount,
+    };
   };
 
   // 删除最新消息
-  deleteNewChat = async ({ chatId }) => {
-    const res = await NewChats.deleteMany({ "chat.chatId": chatId });
+  deleteNewChat = async ({ chatId, userId }) => {
+    const res = await NewChats.deleteMany({ userId, "chat.chatId": chatId });
+    return res;
+  };
+
+  // 根据userId和chatId删除缓存聊天
+  deleteCatchChats = async ({ chatId, userId }) => {
+    const res = await CacheChats.deleteMany({ userId, "chat.chatId": chatId });
+    return res;
+  };
+
+  // 根据userId和chatId删除缓存聊天
+  deleteChatsByUserId = async ({ chatId, userId }) => {
+    const res = await Chat.deleteMany({ userId, "chat.chatId": chatId });
     return res;
   };
 
   // 删除缓存聊天记录
-  deleteCatchChat = async ({ id }) => {
-    const res = await CacheChats.deleteOne({ _id: id });
+  deleteCatchChat = async ({ id, userId }) => {
+    const res = await CacheChats.deleteOne({ userId, _id: id });
     return res;
   };
 
   // 获取最新聊天
-  getNewChat = async (chatIds) => {
+  getNewChat = async (chatIds, userId) => {
     const res = await NewChats.find(
-      { "chat.chatId": { $in: chatIds } },
+      { userId, "chat.chatId": { $in: chatIds } },
       {
         _id: 0,
         id: "$_id",
@@ -102,15 +123,15 @@ class chatServer {
   // 获取新增的缓存消息
   getCacheChats = async ({ chatId, userId }) => {
     const chatIds = Array.isArray(chatId) ? chatId : [chatId];
-    const res = await CacheChats.find(
-      { userId, "chat.chatId": { $in: chatIds } },
-      {
-        _id: 0,
-        id: "$_id",
-        userId: 1,
-        chat: 1,
-      }
-    );
+    const match = userId
+      ? { userId, "chat.chatId": { $in: chatIds } }
+      : { "chat.chatId": { $in: chatIds } };
+    const res = await CacheChats.find(match, {
+      _id: 0,
+      id: "$_id",
+      userId: 1,
+      chat: 1,
+    });
     return res;
   };
 
@@ -121,8 +142,8 @@ class chatServer {
   };
 
   // 合并消息列表
-  mergeChats = async ({ chatId, userId }) => {
-    const chats = await this.getCacheChats({ chatId, userId });
+  mergeChats = async ({ chatId }) => {
+    const chats = await this.getCacheChats({ chatId });
     if (chats?.length) {
       await Chat.insertMany(chats);
       await CacheChats.deleteMany({ "chat.chatId": chatId });
