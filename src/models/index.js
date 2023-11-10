@@ -13,7 +13,7 @@ const Atlas = require("./web/atlas.model");
 const Convert = require("./web/convert.model");
 const Codes = require("./web/code.model");
 const { Chat, CacheChats, NewChats } = require("./web/chat.model");
-const Contacts = require("./web/contacts.model");
+const { Contacts, CatchContacts } = require("./web/contacts.model");
 
 // 后台model
 const AdminUsers = require("./admin/user.model");
@@ -43,6 +43,7 @@ module.exports = {
   CacheChats,
   NewChats,
   Contacts,
+  CatchContacts,
   PageConfig,
   Classify,
   Tools,

@@ -74,9 +74,9 @@ class WS {
             };
 
             this.sendMessage(sendData);
-
+            // 当发送消息的人不在接收消息的人的联系人列表中时，需要向接收消息的人的联系人列表中添加发送消息的人
             if (messages.data.to !== messages.userId) {
-              await contactServer.addContacts({
+              await contactServer.addCatchContacts({
                 contactId: messages.data.from,
                 userId: messages.data.to,
                 createTime: messages.data.createTime,

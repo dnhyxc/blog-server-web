@@ -134,8 +134,12 @@ const {
   addContacts,
   deleteContacts,
   onUpdateContact,
+  onUpdateCatchContact,
+  mergeContacts,
+  getCatchContactList,
   getContactList,
   searchContacts,
+  deleteCatchContacts,
 } = require("./web/contacts.service");
 
 // 后台数据库接口
@@ -308,8 +312,12 @@ module.exports = {
   addContacts,
   deleteContacts,
   onUpdateContact,
+  onUpdateCatchContact,
+  mergeContacts,
+  getCatchContactList,
   getContactList,
   searchContacts,
+  deleteCatchContacts,
 
   // 后台
   adminFindOneUser,

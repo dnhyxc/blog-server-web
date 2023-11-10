@@ -1,4 +1,4 @@
-const { Contacts, User } = require("../../models");
+const { Contacts, User, CatchContacts } = require("../../models");
 const { getNewChat, getUnReadChat } = require("./chat.service");
 const { adminGetUserList } = require("../admin/user.service");
 const { contactsRes } = require("../../constant");
@@ -24,17 +24,57 @@ class contactsServer {
     }
   };
 
+  // 添加缓存聊天联系人
+  addCatchContacts = async ({ userId, contactId, createTime }) => {
+    // 联系人禁止自己添加自己
+    if (contactId === userId) return;
+    const findCatchOne = await this.findCatchContact({ contactId, userId });
+    if (findCatchOne) {
+      return false;
+    } else {
+      const res = await CatchContacts.create({
+        userId,
+        contactId,
+        createTime,
+        noReadCount: 0,
+        isUnDisturb: false,
+        isTop: false,
+      });
+      return res;
+    }
+  };
+
   // 查找是否已添加联系人
   findContact = async ({ contactId, userId }) => {
-    const res = Contacts.findOne({ userId, contactId }, { contactId });
+    const res = await Contacts.findOne({ userId, contactId }, { contactId });
     return res;
+  };
+
+  // 查找是否缓存中已添加联系人
+  findCatchContact = async ({ contactId, userId }) => {
+    const res = await CatchContacts.findOne(
+      { userId, contactId },
+      { contactId }
+    );
+    return res;
+  };
+
+  // 删除缓存联系人
+  deleteCatchContacts = async ({ contactId, userId }) => {
+    const res = await CatchContacts.deleteOne({ userId, contactId });
+    return res.deletedCount;
   };
 
   // 删除联系人
   deleteContacts = async ({ contactIds }) => {
-    const res = await Contacts.deleteMany({
-      contactId: { $in: contactIds },
-    });
+    const res = await Promise.all([
+      await Contacts.deleteMany({
+        contactId: { $in: contactIds },
+      }),
+      await CatchContacts.deleteMany({
+        contactId: { $in: contactIds },
+      }),
+    ]);
     return res;
   };
 
@@ -46,7 +86,43 @@ class contactsServer {
     isTop,
     userId,
   }) => {
-    const res = await Contacts.updateOne(
+    const res = await Promise.all([
+      await Contacts.updateOne(
+        { userId, contactId },
+        {
+          $set: {
+            createTime,
+            isUnDisturb,
+            isTop,
+          },
+        }
+      ),
+      await CatchContacts.updateOne(
+        { userId, contactId },
+        {
+          $set: {
+            createTime,
+            isUnDisturb,
+            isTop,
+          },
+        }
+      ),
+    ]);
+    return {
+      modifiedCount: res[0]?.modifiedCount || 0,
+      modifiedCatchCount: res[1]?.modifiedCount || 0,
+    };
+  };
+
+  // 更新缓存联系人
+  onUpdateCatchContact = async ({
+    contactId,
+    createTime,
+    isUnDisturb,
+    isTop,
+    userId,
+  }) => {
+    const res = await CatchContacts.updateOne(
       { userId, contactId },
       {
         $set: {
@@ -57,6 +133,40 @@ class contactsServer {
       }
     );
     return res;
+  };
+
+  // 合并联系人列表
+  mergeContacts = async ({ userId }) => {
+    const contacts = await this.getCatchContactList({ userId });
+    const contactIds = contacts.map((i) => i.contactId);
+    // 删除原有聊天列表中已经存在的联系人，以保证，存在最新消息的好友在前面
+    await Contacts.deleteMany({
+      userId,
+      contactId: { $in: contactIds },
+    });
+    if (contacts?.length) {
+      await Contacts.insertMany(contacts);
+      await CatchContacts.deleteMany({
+        userId,
+        contactId: { $in: contactIds },
+      });
+    }
+    return [];
+  };
+
+  // 获取缓存联系人
+  getCatchContactList = async ({ userId }) => {
+    const contacts = await CatchContacts.find(
+      {
+        userId,
+      },
+      {
+        _id: 0,
+        id: "$_id",
+        ...contactsRes,
+      }
+    );
+    return contacts;
   };
 
   // 获取用户列表
