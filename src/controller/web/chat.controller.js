@@ -8,7 +8,12 @@ const {
   getUnReadChat,
   getCacheChats,
   deleteChatMesaage,
+  findDelContactChats,
+  findDelChats,
+  findDelCatchChats,
+  findDelNewChats,
 } = require("../../service");
+const { removeAtlasImage } = require("./upload.controller");
 const { databaseError } = require("../../constant");
 
 class codesController {
@@ -68,6 +73,8 @@ class codesController {
   async deleteNewChatCtr(ctx, next) {
     try {
       const params = ctx.request.body;
+      const delUrls = await findDelNewChats(params);
+      await removeAtlasImage(delUrls);
       await deleteNewChat(params);
       ctx.body = {
         code: 200,
@@ -85,6 +92,8 @@ class codesController {
   async deleteCatchChatCtr(ctx, next) {
     try {
       const params = ctx.request.body;
+      const delUrls = await findDelCatchChats(params);
+      await removeAtlasImage(delUrls);
       await deleteCatchChat(params);
       ctx.body = {
         code: 200,
@@ -136,6 +145,8 @@ class codesController {
   async deleteChatsCtr(ctx, next) {
     try {
       const params = ctx.request.body;
+      const delUrls = await findDelChats(params);
+      await removeAtlasImage(delUrls);
       const res = await deleteChats(params);
       ctx.body = {
         code: 200,
@@ -153,6 +164,9 @@ class codesController {
   async deleteChatMesaageCtr(ctx, next) {
     try {
       const params = ctx.request.body;
+      const delUrls = await findDelContactChats(params);
+      // 删除聊天时，删除其中的图片资源
+      await removeAtlasImage(delUrls);
       const res = await deleteChatMesaage(params);
       ctx.body = {
         code: 200,

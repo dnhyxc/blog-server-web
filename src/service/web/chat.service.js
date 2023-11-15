@@ -82,6 +82,27 @@ class chatServer {
     };
   };
 
+  // 查找要删除的消息列表
+  findDelContactChats = async ({ chatId, userId }) => {
+    const res = await Promise.all([
+      NewChats.find(
+        { userId, "chat.chatId": chatId },
+        { _id: 0, id: "$_id", userId: 1, chat: 1 }
+      ),
+      CacheChats.find(
+        { userId, "chat.chatId": chatId },
+        { _id: 0, id: "$_id", userId: 1, chat: 1 }
+      ),
+      Chat.find(
+        { userId, "chat.chatId": chatId },
+        { _id: 0, id: "$_id", userId: 1, chat: 1 }
+      ),
+    ]);
+    const chats = [...res[0], ...res[1], ...res[2]];
+    const imgUrls = this.getDelChatUrls(chats);
+    return imgUrls;
+  };
+
   // 删除最新消息
   deleteNewChat = async ({ chatId, userId }) => {
     const res = await NewChats.deleteMany({ userId, "chat.chatId": chatId });
@@ -167,6 +188,53 @@ class chatServer {
   deleteChats = async ({ delIds }) => {
     const res = await Chat.deleteMany({ _id: { $in: delIds } });
     return res.deletedCount;
+  };
+
+  // 获取需要删除的图片链接
+  getDelChatUrls = (chats) => {
+    const imgUrls = [];
+    chats.forEach((i) => {
+      const regex = /<[^>]+>/g;
+      const content = i.chat.content;
+      const matches = content.match(regex);
+      if (matches) {
+        const link = matches?.map(
+          (match) => match.substring(1, match.length - 1).split(",")[1]
+        );
+        imgUrls.push(...link);
+      }
+    });
+    return imgUrls;
+  };
+
+  // 获取需要删除的聊天
+  findDelChats = async ({ delIds }) => {
+    const res = await Chat.find(
+      { _id: { $in: delIds } },
+      { _id: 0, id: "$_id", userId: 1, chat: 1 }
+    );
+    const imgUrls = this.getDelChatUrls(res);
+    return imgUrls;
+  };
+
+  // 获取需要删除的聊天
+  findDelCatchChats = async ({ id, userId }) => {
+    const res = await CacheChats.find(
+      { userId, _id: id },
+      { _id: 0, id: "$_id", userId: 1, chat: 1 }
+    );
+    const imgUrls = this.getDelChatUrls(res);
+    return imgUrls;
+  };
+
+  // 获取需要删除的聊天
+  findDelNewChats = async ({ chatId, userId }) => {
+    const res = await NewChats.find(
+      { userId, "chat.chatId": chatId },
+      { _id: 0, id: "$_id", userId: 1, chat: 1 }
+    );
+    const imgUrls = this.getDelChatUrls(res);
+    return imgUrls;
   };
 
   // 分页获取聊天消息列表

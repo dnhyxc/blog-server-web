@@ -128,6 +128,10 @@ const {
   getUnReadChat,
   getCacheChats,
   deleteChatMesaage,
+  findDelContactChats,
+  findDelChats,
+  findDelCatchChats,
+  findDelNewChats,
 } = require("./web/chat.service");
 
 const {
@@ -302,6 +306,10 @@ module.exports = {
   getCodeById,
   deleteChats,
   deleteChatMesaage,
+  findDelContactChats,
+  findDelChats,
+  findDelCatchChats,
+  findDelNewChats,
   getChatListWithTotal,
   mergeChats,
   updateNewChat,

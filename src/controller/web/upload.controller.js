@@ -76,7 +76,7 @@ class UploadController {
   }
 
   // 删除图片
-  removeAtlasImage(url) {
+  async removeAtlasImage(url) {
     const urls = url && Array.isArray(url) ? url : [url];
     urls.forEach((url) => {
       const dirName = url.includes("__ATLAS__") ? atlasPublicPath : publicPath;
