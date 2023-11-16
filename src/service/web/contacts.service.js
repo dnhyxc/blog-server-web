@@ -29,7 +29,8 @@ class contactsServer {
     // 联系人禁止自己添加自己
     if (contactId === userId) return;
     const findCatchOne = await this.findCatchContact({ contactId, userId });
-    if (findCatchOne) {
+    const findOne = await this.findContact({ contactId, userId });
+    if (findCatchOne || findOne) {
       return false;
     } else {
       const res = await CatchContacts.create({
