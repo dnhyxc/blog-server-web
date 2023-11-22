@@ -11,6 +11,7 @@ const {
   userAlreadyExited,
   userNotFind,
   userPwdError,
+  userPhoneError,
   pwdNotChange,
   fieldFormateError,
   userNotExist,
@@ -163,6 +164,39 @@ const bcryptPassword = async (ctx, next) => {
   await next();
 };
 
+// 密码电话号码
+const bcryptPhone = async (ctx, next) => {
+  const { phone } = ctx.request.body;
+  if (!phone) {
+    ctx.app.emit("error", fieldFormateError, ctx);
+    return;
+  }
+  const salt = bcrypt.genSaltSync(10);
+  const phoneHash = bcrypt.hashSync(phone, salt);
+  ctx.request.body.phone = phoneHash;
+
+  await next();
+};
+
+// 校验用户手机号是否正确
+const verifyPhone = async (ctx, next) => {
+  try {
+    const { phone, username } = ctx.request.body;
+    const filter = { username };
+    const user = await findOneUser(filter);
+    if (!user) {
+      return ctx.app.emit("error", userNotFind, ctx);
+    }
+    const checkPhone = bcrypt.compareSync(phone, user.phone);
+    if (!checkPhone) {
+      return ctx.app.emit("error", userPhoneError, ctx);
+    }
+    await next();
+  } catch (error) {
+    ctx.app.emit("error", verifyUserError, ctx);
+  }
+};
+
 // 校验用户用户名或者密码是否正确
 const verifyLogin = async (ctx, next) => {
   try {
@@ -237,6 +271,8 @@ module.exports = {
   userValidator,
   verifyUser,
   bcryptPassword,
+  bcryptPhone,
+  verifyPhone,
   verifyLogin,
   verifyUpdateInfo,
   verifyUserExists,

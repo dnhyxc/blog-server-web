@@ -20,8 +20,9 @@ class UserController {
   // 账号注册
   async registerCtr(ctx, next) {
     try {
-      const { username, password } = ctx.request.body;
-      const res = await createUserServer({ username, password });
+      const { username, password, phone } = ctx.request.body;
+      console.log(phone, "phone---registerCtr");
+      const res = await createUserServer({ username, password, phone });
       ctx.body = {
         code: 200,
         message: "注册成功",

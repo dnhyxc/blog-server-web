@@ -2,10 +2,11 @@ const { User } = require("../../models");
 const { userFields } = require("../../constant");
 class UserServer {
   // 注册用户
-  async createUserServer({ username, password }) {
+  async createUserServer({ username, password, phone }) {
     return await User.create({
       username,
       password,
+      phone,
       registerTime: new Date().valueOf(),
     });
   }

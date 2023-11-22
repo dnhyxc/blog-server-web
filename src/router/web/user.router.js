@@ -13,6 +13,8 @@ const {
   userValidator,
   verifyUser,
   bcryptPassword,
+  bcryptPhone,
+  verifyPhone,
   verifyLogin,
   auth,
   verifyUpdateInfo,
@@ -28,6 +30,7 @@ router.post(
   userValidator, // 检验用户名或密码是否为空中间件
   verifyUser, // 检验用户名是否存在中间件
   bcryptPassword, // 密码加密中间件
+  bcryptPhone, // 密码号码中间件
   registerCtr
 );
 
@@ -55,6 +58,7 @@ router.put(
   // auth,
   verifyUserExistsByUsername,
   // verifyUpdateInfo,
+  verifyPhone,
   bcryptPassword,
   resetPwdCtr
 );

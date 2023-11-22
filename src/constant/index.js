@@ -56,6 +56,13 @@ const userNotFind = {
   data: "",
 };
 
+const userPhoneError = {
+  code: "10006",
+  success: false,
+  message: "手机号不一致",
+  data: "",
+};
+
 const userPwdError = {
   code: "10006",
   success: false,
@@ -163,6 +170,7 @@ const detailFields = {
 
 const userFields = {
   username: 1,
+  phone: 1,
   job: 1,
   motto: 1,
   headUrl: 1,
@@ -232,6 +240,7 @@ module.exports = {
   userRegisterError,
   userLoginError,
   userPwdError,
+  userPhoneError,
   userNotFind,
   ArticleNotFind,
   pwdNotChange,
