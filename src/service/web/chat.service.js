@@ -2,7 +2,7 @@ const { Chat, CacheChats, NewChats } = require("../../models");
 
 class chatServer {
   // 添加聊天
-  addChat = async ({ from, to, content, chatId, createTime }) => {
+  addChat = async ({ from, to, content, chatId, createTime, replyInfo }) => {
     const chat = [
       {
         userId: from,
@@ -12,6 +12,7 @@ class chatServer {
           content,
           chatId,
           createTime,
+          replyInfo,
         },
       },
       {
@@ -22,6 +23,7 @@ class chatServer {
           content,
           chatId,
           createTime,
+          replyInfo,
         },
       },
     ];
