@@ -17,7 +17,7 @@ router.post("/getClassifyList", getClassifyListCtr);
 router.post("/getTagList", getTagListCtr);
 
 // 获取时间轴列表
-router.post("/getTimelineList", getTimelineListCtr);
+router.post("/getTimelineList", auth, getTimelineListCtr);
 
 // 获取后台添加的文章列表
 router.post("/getAddedClassifys", auth, getAddedClassifysCtr);
