@@ -10,6 +10,7 @@ const Message = require("./web/message.model");
 const Interact = require("./web/interact.model");
 const Follow = require("./web/follow.model");
 const Atlas = require("./web/atlas.model");
+const Books = require("./web/book.model");
 const Convert = require("./web/convert.model");
 const Codes = require("./web/code.model");
 const { Chat, CacheChats, NewChats } = require("./web/chat.model");
@@ -37,6 +38,7 @@ module.exports = {
   Interact,
   Follow,
   Atlas,
+  Books,
   Convert,
   Codes,
   Chat,

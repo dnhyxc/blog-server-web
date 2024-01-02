@@ -105,6 +105,15 @@ const {
 } = require("./web/atlas.service");
 
 const {
+  addBook,
+  findBook,
+  getBooksWithTotal,
+  findBookUrl,
+  deleteBook,
+  updateBookInfo,
+} = require("./web/book.service");
+
+const {
   createConvert,
   deleteConvert,
   getConvertList,
@@ -296,6 +305,12 @@ module.exports = {
   deleteAtlasImages,
   findImageUrls,
   updateFileInfo,
+  addBook,
+  findBook,
+  findBookUrl,
+  getBooksWithTotal,
+  deleteBook,
+  updateBookInfo,
   createConvert,
   deleteConvert,
   getConvertList,

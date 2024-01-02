@@ -8,14 +8,25 @@ const {
 
 const publicPath = path.join(__dirname, "../../upload/image");
 const atlasPublicPath = path.join(__dirname, "../../upload/atlas");
+const filesPublicPath = path.join(__dirname, "../../upload/files");
 
 class UploadController {
   // 文件上传
   async uploadFileCtr(ctx, next) {
     const { file } = ctx.request.files;
-    const dirName = file.originalFilename.includes("__ATLAS__")
-      ? "atlas"
-      : "image";
+    const isAtlas = file.originalFilename.includes("__ATLAS__");
+    const isFile = file.originalFilename.includes("__FILE__");
+
+    const dirName = () => {
+      if (isAtlas) {
+        return "atlas";
+      } else if (isFile) {
+        return "files";
+      } else {
+        return "image";
+      }
+    };
+
     if (file) {
       const basename = path.basename(file.filepath);
       ctx.body = {
@@ -23,7 +34,7 @@ class UploadController {
         message: "文件上传成功",
         success: true,
         data: {
-          filePath: `${ctx.origin}/${dirName}/${basename}`,
+          filePath: `${ctx.origin}/${dirName()}/${basename}`,
         },
       };
     } else {
@@ -40,10 +51,22 @@ class UploadController {
     const urls = url && Array.isArray(url) ? url : [url];
 
     urls.forEach((url) => {
-      const dirName = url.includes("__ATLAS__") ? atlasPublicPath : publicPath;
+      const isAtlas = url.includes("__ATLAS__");
+      const isFile = url.includes("__FILE__");
+
+      const dirName = () => {
+        if (isAtlas) {
+          return atlasPublicPath;
+        } else if (isFile) {
+          return filesPublicPath;
+        } else {
+          return publicPath;
+        }
+      };
+
       const index = url.lastIndexOf("/");
       const sliceUrl = url.substring(index + 1, url.length);
-      const filePath = path.normalize(`${dirName}/${sliceUrl}`);
+      const filePath = path.normalize(`${dirName()}/${sliceUrl}`);
       try {
         // 判断文件是否存在
         if (fs.existsSync(filePath)) {

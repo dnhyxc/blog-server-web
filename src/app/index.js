@@ -30,12 +30,20 @@ app.use(
       maxFieldsSize: 20 * 1024 * 1024,
       onFileBegin: (name, file) => {
         const isAtlas = file.originalFilename.includes("__ATLAS__");
+        const isFile = file.originalFilename.includes("__FILE__");
         // 修改 filepath 使用前端生成文件唯一 filename 覆盖 koa-body 自动生成的 filename 属性
+        const filePath = () => {
+          if (isAtlas) {
+            return "../upload/atlas";
+          } else if (isFile) {
+            return "../upload/files";
+          } else {
+            return "../upload/image";
+          }
+        };
+
         file.filepath = path.normalize(
-          `${path.join(
-            __dirname,
-            !isAtlas ? "../upload/image" : "../upload/atlas"
-          )}/${file.originalFilename}`
+          `${path.join(__dirname, filePath())}/${file.originalFilename}`
         );
       },
     },
