@@ -122,6 +122,39 @@ class UploadController {
     });
   }
 
+  // 删除文件
+  async deleteFile(url) {
+    const isAtlas = url.includes("__ATLAS__");
+    const isFile = url.includes("__FILE__");
+
+    const dirName = () => {
+      if (isAtlas) {
+        return atlasPublicPath;
+      } else if (isFile) {
+        return filesPublicPath;
+      } else {
+        return publicPath;
+      }
+    };
+
+    const index = url.lastIndexOf("/");
+    const sliceUrl = url.substring(index + 1, url.length);
+    const filePath = path.normalize(`${dirName()}/${sliceUrl}`);
+    try {
+      // 判断文件是否存在
+      if (fs.existsSync(filePath)) {
+        const stats = fs.statSync(filePath);
+        // 判断是否是文件
+        if (stats?.isFile()) {
+          // 删除文件
+          fs.unlinkSync(filePath);
+        }
+      }
+    } catch (error) {
+      throw new Error("删除失败");
+    }
+  }
+
   // 文件下载
   async downLoadFileCtr(ctx, next) {
     const { system } = ctx.request.body;

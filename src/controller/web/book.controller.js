@@ -6,7 +6,7 @@ const {
   findBookUrl,
   deleteBook,
 } = require("../../service");
-const { removeFileCtr } = require("./upload.controller");
+const { deleteFile } = require("./upload.controller");
 const { databaseError } = require("../../constant");
 
 class booksController {
@@ -78,7 +78,7 @@ class booksController {
       // 查找对应的书籍url
       const book = await findBookUrl(params);
       const res = await deleteBook(params);
-      await removeFileCtr(book.url);
+      await deleteFile(book?.url);
       ctx.body = {
         code: 200,
         success: true,

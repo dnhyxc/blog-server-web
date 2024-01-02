@@ -105,7 +105,7 @@ class BooksServer {
 
   // 查找书籍url
   async findBookUrl({ id }) {
-    const res = await Books.findOne({ _id: id }, { url: 1, _id: 0 });
+    const res = await Books.findOne({ _id: id }, { url: 1 });
     return res;
   }
 
