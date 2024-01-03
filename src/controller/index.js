@@ -11,6 +11,7 @@ const interactController = require("./web/interact.controller");
 const followController = require("./web/follow.controller");
 const atlasController = require("./web/atlas.controller");
 const booksController = require("./web/book.controller");
+const bookRecordsController = require("./web/bookRecords.controller");
 const convertController = require("./web/convert.controller");
 const codesController = require("./web/code.controller");
 const chatsController = require("./web/chat.controller");
@@ -133,6 +134,12 @@ const {
 
 const { addBookCtr, updateBookInfoCtr, getBookListCtr, deleteBookCtr } =
   booksController;
+
+const {
+  createReadBookRecordsCtr,
+  getReadBookRecordsCtr,
+  deleteReadBookRecordsCtr,
+} = bookRecordsController;
 
 const { createConvertCtr, getConvertListCtr, deleteConvertCtr } =
   convertController;
@@ -329,6 +336,9 @@ module.exports = {
   updateBookInfoCtr,
   getBookListCtr,
   deleteBookCtr,
+  createReadBookRecordsCtr,
+  getReadBookRecordsCtr,
+  deleteReadBookRecordsCtr,
   createConvertCtr,
   getConvertListCtr,
   deleteConvertCtr,

@@ -114,6 +114,12 @@ const {
 } = require("./web/book.service");
 
 const {
+  createReadBookRecords,
+  getReadBookRecords,
+  deleteReadBookRecords,
+} = require("./web/bookRecords.service");
+
+const {
   createConvert,
   deleteConvert,
   getConvertList,
@@ -311,6 +317,9 @@ module.exports = {
   getBooksWithTotal,
   deleteBook,
   updateBookInfo,
+  createReadBookRecords,
+  getReadBookRecords,
+  deleteReadBookRecords,
   createConvert,
   deleteConvert,
   getConvertList,
