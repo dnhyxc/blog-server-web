@@ -41,12 +41,18 @@ class booksController {
   async updateBookInfoCtr(ctx, next) {
     try {
       const params = ctx.request.body;
-      const res = await updateBookInfo(params);
+      // 如果传了params.coverImg 这个需要删除之前的封面
+      if (params.coverImg) {
+        // 查找对应的书籍url
+        const book = await findBookUrl(params);
+        await deleteFile(book?.coverImg);
+      }
+      await updateBookInfo(params);
       ctx.body = {
         code: 200,
         success: true,
         message: "更新成功",
-        data: res,
+        data: params,
       };
     } catch (error) {
       console.error("updateBookCtr", error);
@@ -79,6 +85,7 @@ class booksController {
       const book = await findBookUrl(params);
       const res = await deleteBook(params);
       await deleteFile(book?.url);
+      await deleteFile(book?.coverImg);
       ctx.body = {
         code: 200,
         success: true,

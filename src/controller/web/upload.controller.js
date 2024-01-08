@@ -124,6 +124,8 @@ class UploadController {
 
   // 删除文件
   async deleteFile(url) {
+    if (!url) return;
+
     const isAtlas = url.includes("__ATLAS__");
     const isFile = url.includes("__FILE__");
 

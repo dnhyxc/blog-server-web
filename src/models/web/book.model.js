@@ -6,8 +6,12 @@ const bookSchema = new mongoose.Schema({
   createTime: Number,
   isDelete: Boolean,
   fileName: String,
+  coverImg: String,
   size: Number,
   type: String,
+  author: String,
+  translator: String,
+  language: String,
 });
 
 const Books = mongoose.model("books", bookSchema);

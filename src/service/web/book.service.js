@@ -44,7 +44,14 @@ class BooksServer {
   }
 
   // 更新书信息
-  async updateBookInfo({ id, fileName }) {
+  async updateBookInfo({
+    id,
+    fileName,
+    coverImg,
+    author,
+    translator,
+    language,
+  }) {
     const res = await Books.updateOne(
       {
         _id: id,
@@ -52,6 +59,10 @@ class BooksServer {
       {
         $set: {
           fileName,
+          coverImg,
+          author,
+          translator,
+          language,
         },
       }
     );
@@ -75,6 +86,10 @@ class BooksServer {
                 createTime: 1,
                 isDelete: 1,
                 fileName: 1,
+                coverImg: 1,
+                author: 1,
+                translator: 1,
+                language: 1,
                 size: 1,
                 type: 1,
               },
@@ -105,7 +120,7 @@ class BooksServer {
 
   // 查找书籍url
   async findBookUrl({ id }) {
-    const res = await Books.findOne({ _id: id }, { url: 1 });
+    const res = await Books.findOne({ _id: id }, { url: 1, coverImg: 1 });
     return res;
   }
 
