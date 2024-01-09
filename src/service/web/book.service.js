@@ -70,9 +70,10 @@ class BooksServer {
   }
 
   // 获取书集列表
-  async getBooksWithTotal({ pageNo, pageSize, userId }) {
+  async getBooksWithTotal({ pageNo, pageSize, userId, bookType = "epub" }) {
+    const type = bookType !== "pdf" ? /epub|epub\.zip/ : /pdf/;
     const list = await Books.aggregate([
-      // { $match: { myUserId: userId } },
+      { $match: { type } },
       {
         $facet: {
           total: [{ $count: "count" }],
