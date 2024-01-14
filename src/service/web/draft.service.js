@@ -69,25 +69,9 @@ class draftServer {
   };
 
   // 获取草稿列表
-  findDraftList = async ({ pageNo = 1, pageSize = 20, filter, tagName }) => {
-    let filterKey;
-    if (tagName) {
-      filterKey = { tag: tagName, isDelete: { $nin: [true] } };
-    } else {
-      // 不区分大小写
-      const reg = (filter && new RegExp(filter, "i")) || "";
-      filterKey = {
-        $or: [
-          { title: { $regex: reg } },
-          { tag: { $regex: reg } },
-          { classify: { $regex: reg } },
-          { authorId: { $regex: reg } },
-          { authorName: { $regex: reg } },
-          { abstract: { $regex: reg } },
-        ],
-        isDelete: { $nin: [true] },
-      };
-    }
+  findDraftList = async ({ pageNo = 1, pageSize = 20, userId }) => {
+    const filterKey = { authorId: userId };
+
     return await this.getDraftListWithTotal({
       filterKey,
       pageNo,
