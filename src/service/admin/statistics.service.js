@@ -81,7 +81,7 @@ class statisticsServer {
           // isDelete: { $nin: [true] },
           // 查询当前年的数据
           registerTime: {
-            $gte: new Date(`${currentYear}-01-01`).getTime(),
+            $gte: new Date(`${currentYear - 1}-01-01`).getTime(),
             $lt: new Date(`${currentYear + 1}-01-01`).getTime(),
           },
         },
