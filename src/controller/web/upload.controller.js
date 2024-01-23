@@ -170,7 +170,7 @@ class UploadController {
       message: "获取文件成功",
       success: true,
       data: {
-        filePath: `${ctx.origin}/image/${file}`,
+        filePath: `${ctx.origin}/files/${file}`,
       },
     };
   }
