@@ -22,7 +22,10 @@ class articleServer {
 
   // 根据文章id更新
   async adminUpdateArticle({ articleId: _id, ...params }) {
-    await Article.updateOne({ _id }, { $set: params });
+    // 如果isTop传的是0，则删除isTop字段。以防排序出现问题
+    const paramsData =
+      params?.isTop === 0 ? { $unset: { isTop: "" } } : { $set: params };
+    await Article.updateOne({ _id }, paramsData);
   }
 
   // 删除文章
