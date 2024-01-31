@@ -13,6 +13,7 @@ const {
   searchArticles,
   getLikenessArticles,
   checkArticleLikeStatus,
+  findMostLikeAndNewArticles,
 } = require("../../service");
 const {
   databaseError,
@@ -346,6 +347,23 @@ class ArticleController {
       };
     } catch (error) {
       console.error("getLikenessArticlesCtr", error);
+      ctx.app.emit("error", databaseError, ctx);
+    }
+  }
+
+  // 获取最新及最多点赞的文章
+  async findMostLikeAndNewArticlesCtr(ctx, next) {
+    try {
+      const params = ctx.request.body;
+      const res = await findMostLikeAndNewArticles(params);
+      ctx.body = {
+        code: 200,
+        success: true,
+        message: "获取成功",
+        data: res,
+      };
+    } catch (error) {
+      console.error("findMostLikeAndNewArticlesCtr", error);
       ctx.app.emit("error", databaseError, ctx);
     }
   }

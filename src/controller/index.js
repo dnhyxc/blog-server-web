@@ -53,6 +53,7 @@ const {
   advancedSearchCtr,
   getLikenessArticlesCtr,
   checkArticleLikeStatusCtr,
+  findMostLikeAndNewArticlesCtr,
 } = articleController;
 
 const { uploadFileCtr, removeFileCtr, downLoadFileCtr } = uploadController;
@@ -296,6 +297,7 @@ module.exports = {
   advancedSearchCtr,
   getLikenessArticlesCtr,
   checkArticleLikeStatusCtr,
+  findMostLikeAndNewArticlesCtr,
   verifyTokenCtr,
   createDraftCtr,
   updateDraftCtr,

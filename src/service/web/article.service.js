@@ -681,6 +681,32 @@ class articleServer {
       isLike: false,
     };
   };
+
+  // 获取最新及最多点赞的文章
+  findMostLikeAndNewArticles = async () => {
+    // 获取最新发布的一篇文章
+    const latestArticlePromise = Article.findOne(
+      { isDelete: { $nin: [true] } },
+      anotherFields
+    )
+      .sort({ createTime: -1 })
+      .limit(1);
+    // 获取点赞最多的一篇文章
+    const mostLikedArticlePromise = Article.findOne(
+      {
+        isDelete: { $nin: [true] },
+      },
+      anotherFields
+    )
+      .sort({ likeCount: -1 })
+      .limit(1);
+    const res = await Promise.all([
+      mostLikedArticlePromise,
+      latestArticlePromise,
+    ]);
+
+    return res;
+  };
 }
 
 module.exports = new articleServer();
