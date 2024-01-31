@@ -701,8 +701,8 @@ class articleServer {
       .sort({ likeCount: -1 })
       .limit(1);
     const res = await Promise.all([
-      mostLikedArticlePromise,
       latestArticlePromise,
+      mostLikedArticlePromise,
     ]);
 
     return res;
