@@ -691,15 +691,17 @@ class articleServer {
     )
       .sort({ createTime: -1 })
       .limit(1);
-    // 获取点赞最多的一篇文章
+
+    // 获取阅读数最多的一篇文章
     const mostLikedArticlePromise = Article.findOne(
       {
         isDelete: { $nin: [true] },
       },
       anotherFields
     )
-      .sort({ likeCount: -1 })
+      .sort({ readCount: -1 })
       .limit(1);
+
     const res = await Promise.all([
       latestArticlePromise,
       mostLikedArticlePromise,
