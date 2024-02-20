@@ -220,6 +220,7 @@ const articleListRes = {
   readCount: 1,
   isDelete: 1,
   isTop: 1,
+  gradient: 1,
 };
 
 // 联系人返回字段

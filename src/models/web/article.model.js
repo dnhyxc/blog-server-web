@@ -24,6 +24,10 @@ const ArticleSchema = new mongoose.Schema({
   readCount: Number,
   collectCount: Number,
   isTop: Number,
+  gradient: [
+    [Number, Number, Number],
+    [Number, Number, Number],
+  ],
 });
 
 const Article = mongoose.model("articles", ArticleSchema);
