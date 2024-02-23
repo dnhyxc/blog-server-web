@@ -13,6 +13,7 @@ const {
   updateFollowUserInfo,
   adminFindMenus,
   updateCommentUserInfo,
+  findPhone,
 } = require("../../service");
 const WS = require("../../socket");
 
@@ -20,15 +21,24 @@ class UserController {
   // 账号注册
   async registerCtr(ctx, next) {
     try {
-      const { username, password, phone } = ctx.request.body;
-      console.log(phone, "phone---registerCtr");
-      const res = await createUserServer({ username, password, phone });
-      ctx.body = {
-        code: 200,
-        message: "注册成功",
-        success: true,
-        data: res?.id,
-      };
+      const params = ctx.request.body;
+      const hashInfo = await findPhone(params);
+      if (hashInfo?.hash) {
+        ctx.body = {
+          code: 201,
+          success: false,
+          message: "该手机号已被注册",
+          data: null,
+        };
+      } else {
+        const res = await createUserServer(params);
+        ctx.body = {
+          code: 200,
+          message: "注册成功",
+          success: true,
+          data: res?.id,
+        };
+      }
     } catch (error) {
       console.error("registerCtr", error);
       ctx.app.emit("error", databaseError, ctx);

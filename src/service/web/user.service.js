@@ -2,13 +2,19 @@ const { User } = require("../../models");
 const { userFields } = require("../../constant");
 class UserServer {
   // 注册用户
-  async createUserServer({ username, password, phone }) {
+  async createUserServer({ username, password, phone, hash }) {
     return await User.create({
       username,
       password,
       phone,
+      hash,
       registerTime: new Date().valueOf(),
     });
+  }
+
+  async findPhone({ hash }) {
+    const _hash = await User.findOne({ hash }, { hash: 1, _id: 0 });
+    return _hash;
   }
 
   // 用户登录

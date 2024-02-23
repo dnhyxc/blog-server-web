@@ -4,6 +4,7 @@ const {
   createUserServer,
   updateUser,
   logout,
+  findPhone,
 } = require("./web/user.service");
 const {
   createArticle,
@@ -236,6 +237,7 @@ module.exports = {
   findUserById,
   updateUser,
   logout,
+  findPhone,
   createUserServer,
   // 前台文章
   createArticle,

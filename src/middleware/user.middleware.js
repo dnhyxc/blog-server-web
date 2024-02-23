@@ -164,7 +164,7 @@ const bcryptPassword = async (ctx, next) => {
   await next();
 };
 
-// 密码电话号码
+// 电话号码加密
 const bcryptPhone = async (ctx, next) => {
   const { phone } = ctx.request.body;
   if (!phone) {
@@ -174,6 +174,7 @@ const bcryptPhone = async (ctx, next) => {
   const salt = bcrypt.genSaltSync(10);
   const phoneHash = bcrypt.hashSync(phone, salt);
   ctx.request.body.phone = phoneHash;
+  ctx.request.body.hash = phone;
 
   await next();
 };
