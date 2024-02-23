@@ -146,6 +146,7 @@ const anotherFields = {
   coverImage: 1,
   likeCount: 1,
   readCount: 1,
+  gradient: 1,
 };
 
 const detailFields = {
