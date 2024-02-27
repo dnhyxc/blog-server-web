@@ -21,12 +21,14 @@ class articleServer {
       collectCount: 0,
       authorName: userInfo.username,
     });
-    // 创建文章时，更新分类文章数、添加数等
-    await adminUpdateClassify({
-      classifyNames: params.classify,
-      articleIds: res._id,
-      userIds: params.authorId,
-    });
+    if (params.classify && res._id) {
+      // 创建文章时，更新分类文章数、添加数等
+      await adminUpdateClassify({
+        classifyNames: params.classify,
+        articleIds: res._id,
+        userIds: params.authorId,
+      });
+    }
     return res;
   }
 
