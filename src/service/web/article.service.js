@@ -3,6 +3,7 @@ const { Article, LikeArticle } = require("../../models");
 const { findUserById, findOneUser } = require("./user.service");
 const { adminUpdateClassify } = require("../admin/classify.service");
 const { findCommentById } = require("./comments.service");
+const { deleteFile } = require("../../controller/web/upload.controller");
 const {
   anotherFields,
   detailFields,
@@ -35,6 +36,10 @@ class articleServer {
   // 根据文章id查找文章详情
   async updateArticle({ articleId: _id, ...params }) {
     await Article.updateOne({ _id }, { $set: params });
+    // 如果更新的封面图片有变化，删除旧的封面图片
+    if (params.coverImage !== params.oldCoverImage) {
+      await deleteFile(params.oldCoverImage);
+    }
   }
 
   // 修改作者名称

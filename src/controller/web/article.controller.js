@@ -28,9 +28,8 @@ class ArticleController {
       const params = ctx.request.body;
       const { articleId } = params;
       if (articleId) {
-        // 操作数据库
+        // 更新文章
         await updateArticle({ ...params });
-        // 返回结果
         ctx.body = {
           code: 200,
           success: true,
@@ -40,17 +39,29 @@ class ArticleController {
           },
         };
       } else {
-        // 操作数据库
-        const res = await createArticle({ ...params });
-        // 返回结果
-        ctx.body = {
-          code: 200,
-          success: true,
-          message: "发布成功",
-          data: {
-            id: res.id,
-          },
-        };
+        if (
+          !params.title ||
+          !params.content ||
+          !params.classify ||
+          !params.tag
+        ) {
+          ctx.body = {
+            code: 400,
+            success: false,
+            message: "参数有误",
+            data: params,
+          };
+        } else {
+          const res = await createArticle({ ...params });
+          ctx.body = {
+            code: 200,
+            success: true,
+            message: "发布成功",
+            data: {
+              id: res.id,
+            },
+          };
+        }
       }
     } catch (error) {
       console.error("createArticleCtr", error);
