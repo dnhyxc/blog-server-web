@@ -7,6 +7,11 @@ const {
   findPhone,
 } = require("./web/user.service");
 const {
+  verifyCode,
+  deleteVerifyCode,
+  checkVerifyCode,
+} = require("./web/verifyCode.service");
+const {
   createArticle,
   findArticles,
   findArticleById,
@@ -238,6 +243,9 @@ module.exports = {
   updateUser,
   logout,
   findPhone,
+  verifyCode,
+  deleteVerifyCode,
+  checkVerifyCode,
   createUserServer,
   // 前台文章
   createArticle,

@@ -14,10 +14,28 @@ const {
   adminFindMenus,
   updateCommentUserInfo,
   findPhone,
+  verifyCode,
+  checkVerifyCode,
 } = require("../../service");
 const WS = require("../../socket");
 
 class UserController {
+  // 随机返回验证码
+  async getVerifyCodeCtr(ctx, next) {
+    try {
+      const params = ctx.request.body;
+      const res = await verifyCode(params);
+      ctx.body = {
+        code: 200,
+        success: true,
+        message: "获取验证码成功",
+        data: res,
+      };
+    } catch (error) {
+      console.error("getVerifyCodeCtr", error);
+      ctx.app.emit("error", databaseError, ctx);
+    }
+  }
   // 账号注册
   async registerCtr(ctx, next) {
     try {
@@ -49,33 +67,43 @@ class UserController {
   async loginCtr(ctx, next) {
     // 1. 获取用户信息（在token的playload中，记录id，username）
     try {
-      const { username } = ctx.request.body;
-      const { password, ...props } = (await findOneUser({ username })) || {};
-      delete props?._doc.password;
-      delete props?._doc._id;
-      ctx.body = {
-        code: 201,
-        success: true,
-        message: "登录成功",
-        data: {
-          ...props?._doc,
-          token: jwt.sign(
-            {
-              ...props,
-              time: new Date().getTime(),
-              timeout: 1000 * 60 * 60 * 1,
-            },
-            JWT_SECRET,
-            { expiresIn: "1d" }
-          ),
-        },
-      };
+      const { username, codeId, code } = ctx.request.body;
+      // 检验验证码
+      const res = await checkVerifyCode({ codeId, code });
+      if (res) {
+        const { password, ...props } = (await findOneUser({ username })) || {};
+        delete props?._doc.password;
+        delete props?._doc._id;
+        ctx.body = {
+          code: 200,
+          success: true,
+          message: "登录成功",
+          data: {
+            ...props?._doc,
+            token: jwt.sign(
+              {
+                ...props,
+                time: new Date().getTime(),
+                timeout: 1000 * 60 * 60 * 1,
+              },
+              JWT_SECRET,
+              { expiresIn: "1d" }
+            ),
+          },
+        };
 
-      WS.singleSendMessage({
-        action: "logout",
-        userId: props._doc.userId.toString(),
-        code: 200,
-      });
+        WS.singleSendMessage({
+          action: "logout",
+          userId: props._doc.userId.toString(),
+          code: 200,
+        });
+      } else {
+        ctx.body = {
+          code: 200,
+          success: false,
+          message: "验证码错误",
+        };
+      }
     } catch (error) {
       console.error("loginCtr", error);
       ctx.app.emit("error", databaseError, ctx);

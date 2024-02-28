@@ -36,6 +36,7 @@ const {
   findMenusCtr,
   getUserInfoCtr,
   verifyTokenCtr,
+  getVerifyCodeCtr,
 } = userController;
 
 const {
@@ -299,6 +300,7 @@ module.exports = {
   checkArticleLikeStatusCtr,
   findMostLikeAndNewArticlesCtr,
   verifyTokenCtr,
+  getVerifyCodeCtr,
   createDraftCtr,
   updateDraftCtr,
   deleteDraftCtr,

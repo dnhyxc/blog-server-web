@@ -16,6 +16,7 @@ const Convert = require("./web/convert.model");
 const Codes = require("./web/code.model");
 const { Chat, CacheChats, NewChats } = require("./web/chat.model");
 const { Contacts, CatchContacts } = require("./web/contacts.model");
+const VerifyCodes = require("./web/verifyCode.model");
 
 // 后台model
 const AdminUsers = require("./admin/user.model");
@@ -28,6 +29,7 @@ const Menus = require("./admin/menu.model");
 
 module.exports = {
   User,
+  VerifyCodes,
   Article,
   Draft,
   Comments,

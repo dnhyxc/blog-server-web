@@ -7,6 +7,7 @@ const {
   logoutCtr,
   getUserInfoCtr,
   verifyTokenCtr,
+  getVerifyCodeCtr,
   findMenusCtr,
 } = require("../../controller");
 const {
@@ -33,6 +34,9 @@ router.post(
   bcryptPhone, // 密码号码中间件
   registerCtr
 );
+
+// 获取验证码
+router.post("/verifyCode", getVerifyCodeCtr);
 
 // 登录接口
 router.post("/login", userValidator, verifyLogin, loginCtr);
