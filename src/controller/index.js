@@ -134,8 +134,13 @@ const {
   updateFileInfoCtr,
 } = atlasController;
 
-const { addBookCtr, updateBookInfoCtr, getBookListCtr, deleteBookCtr } =
-  booksController;
+const {
+  addBookCtr,
+  updateBookInfoCtr,
+  getBookListCtr,
+  findBookCtr,
+  deleteBookCtr,
+} = booksController;
 
 const {
   createReadBookRecordsCtr,
@@ -339,6 +344,7 @@ module.exports = {
   addBookCtr,
   updateBookInfoCtr,
   getBookListCtr,
+  findBookCtr,
   deleteBookCtr,
   createReadBookRecordsCtr,
   getReadBookRecordsCtr,

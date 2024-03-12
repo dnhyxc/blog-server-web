@@ -23,22 +23,18 @@ class BooksServer {
     };
   }
 
-  async findBook({ url }) {
-    const res = await Books.findOne(
-      {
-        url,
-      },
-      {
-        id: "$_id",
-        _id: 0,
-        createTime: 1,
-        url: 1,
-        userId: 1,
-        type: 1,
-        fileName: 1,
-        size: 1,
-      }
-    );
+  async findBook({ url, userId }) {
+    const params = userId ? { userId, url } : { url };
+    const res = await Books.findOne(params, {
+      id: "$_id",
+      _id: 0,
+      createTime: 1,
+      url: 1,
+      userId: 1,
+      type: 1,
+      fileName: 1,
+      size: 1,
+    });
 
     return res;
   }

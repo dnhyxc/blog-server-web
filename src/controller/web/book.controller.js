@@ -60,6 +60,23 @@ class booksController {
     }
   }
 
+  // 查找书籍信息
+  async findBookCtr(ctx, next) {
+    try {
+      const params = ctx.request.body;
+      const res = await findBook(params);
+      ctx.body = {
+        code: 200,
+        success: true,
+        message: "获取成功",
+        data: res,
+      };
+    } catch (error) {
+      console.error("findBookCtr", error);
+      ctx.app.emit("error", databaseError, ctx);
+    }
+  }
+
   // 获取书籍列表
   async getBookListCtr(ctx, next) {
     try {
