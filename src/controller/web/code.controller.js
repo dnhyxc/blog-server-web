@@ -1,4 +1,4 @@
-const { exec } = require("child_process");
+const { exec, spawn } = require("child_process");
 const fs = require("fs");
 const path = require("path");
 const { databaseError } = require("../../constant");
@@ -115,21 +115,18 @@ class codesController {
       // 调用系统命令编译代码
       return new Promise((resolve, reject) => {
         exec(
-          `gcc ${filePath} -o ${compiled}`,
-          { encoding: "utf8" },
+          `gcc ${filePath} -o ${compiled} && ${compiled}`,
           (error, stdout, stderr) => {
             if (error) {
-              resolve(getResult(false, "编译错误", stderr));
-            } else {
-              // 执行编译后的程序
-              exec(compiled, { encoding: "utf8" }, (error, stdout, stderr) => {
-                if (error) {
-                  resolve(getResult(false, "执行错误", stderr));
-                } else {
-                  resolve(getResult(true, "执行成功", stdout));
-                }
-              });
+              resolve(getResult(false, "执行错误", stderr));
+              return;
             }
+            // 编译出错
+            if (stderr) {
+              resolve(getResult(false, "编译错误", stderr));
+              return;
+            }
+            resolve(getResult(true, "执行成功", stdout));
           }
         );
       });
@@ -158,9 +155,23 @@ class codesController {
       const res = await runCode({ filePath, compiled });
 
       ctx.body = res;
+
+      // 运行完成之后，检查目录是否存在，存在则删除
+      if (fs.existsSync(folderPath)) {
+        // 删除目录及其下所有文件和子目录
+        fs.rmdirSync(folderPath, { recursive: true });
+      }
     } catch (error) {
       console.error("compileCCodeCtr", error);
-      ctx.app.emit("error", databaseError, ctx);
+      ctx.app.emit(
+        "error",
+        {
+          code: "10000",
+          success: false,
+          message: "程序执行出错",
+        },
+        ctx
+      );
     }
   }
 }
