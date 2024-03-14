@@ -1,3 +1,7 @@
+const { exec } = require("child_process");
+const fs = require("fs");
+const path = require("path");
+const { databaseError } = require("../../constant");
 const {
   addCode,
   updateCode,
@@ -5,7 +9,6 @@ const {
   getCodeListWithTotal,
   getCodeById,
 } = require("../../service");
-const { databaseError } = require("../../constant");
 
 class codesController {
   // 添加代码示例
@@ -93,6 +96,70 @@ class codesController {
       };
     } catch (error) {
       console.error("deleteCodeCtr", error);
+      ctx.app.emit("error", databaseError, ctx);
+    }
+  }
+
+  // 编译 C 语言
+  async compileCCodeCtr(ctx, next) {
+    const getResult = (success, message, data) => {
+      return {
+        code: 200,
+        success,
+        message,
+        data,
+      };
+    };
+
+    const runCode = ({ filePath, compiled }) => {
+      // 调用系统命令编译代码
+      return new Promise((resolve, reject) => {
+        exec(
+          `gcc ${filePath} -o ${compiled}`,
+          { encoding: "utf8" },
+          (error, stdout, stderr) => {
+            if (error) {
+              resolve(getResult(false, "编译错误", stderr));
+            } else {
+              // 执行编译后的程序
+              exec(compiled, { encoding: "utf8" }, (error, stdout, stderr) => {
+                if (error) {
+                  resolve(getResult(false, "执行错误", stderr));
+                } else {
+                  resolve(getResult(true, "执行成功", stdout));
+                }
+              });
+            }
+          }
+        );
+      });
+    };
+
+    try {
+      const { code } = ctx.request.body;
+
+      // 保存需要运行代码文件的文件夹
+      const folderPath = path.join(__dirname, "../../compile");
+      // 编译前的文件路径
+      const filePath = path.join(folderPath, "compile.c");
+      // 编译后的文件路径
+      const compiled = `${folderPath}/compiled`;
+
+      // 检查文件夹是否存在
+      if (!fs.existsSync(folderPath)) {
+        // 如果文件夹不存在，则创建文件夹
+        fs.mkdirSync(folderPath);
+        // 写入代码到 compile.c 文件中
+        fs.writeFileSync(filePath, code);
+      } else {
+        fs.writeFileSync(filePath, code);
+      }
+
+      const res = await runCode({ filePath, compiled });
+
+      ctx.body = res;
+    } catch (error) {
+      console.error("compileCCodeCtr", error);
       ctx.app.emit("error", databaseError, ctx);
     }
   }

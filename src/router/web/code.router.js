@@ -5,6 +5,7 @@ const {
   deleteCodeCtr,
   getCodeListCtr,
   getCodeByIdCtr,
+  compileCCodeCtr,
 } = require("../../controller");
 
 const { auth } = require("../../middleware");
@@ -25,5 +26,8 @@ router.post("/updateCode", auth, updateCodeCtr);
 
 // 获取代码示例
 router.post("/getCodeById", auth, getCodeByIdCtr);
+
+// 编译C语言
+router.post("/compileCCode", auth, compileCCodeCtr);
 
 module.exports = router;

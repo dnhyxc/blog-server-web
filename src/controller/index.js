@@ -157,6 +157,7 @@ const {
   deleteCodeCtr,
   getCodeListCtr,
   getCodeByIdCtr,
+  compileCCodeCtr,
 } = codesController;
 
 const {
@@ -357,6 +358,7 @@ module.exports = {
   deleteCodeCtr,
   getCodeListCtr,
   getCodeByIdCtr,
+  compileCCodeCtr,
   getChatListCtr,
   getCacheChatsCtr,
   deleteChatsCtr,
