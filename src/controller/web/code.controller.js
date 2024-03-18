@@ -102,6 +102,8 @@ class codesController {
 
   // 编译 C 语言
   async compileCCodeCtr(ctx, next) {
+    const { code, option = "-lm" } = ctx.request.body;
+
     const getResult = (success, message, data) => {
       return {
         code: 200,
@@ -115,7 +117,7 @@ class codesController {
       // 调用系统命令编译代码
       return new Promise((resolve, reject) => {
         exec(
-          `gcc ${filePath} -o ${compiled} && ${compiled}`,
+          `gcc ${filePath} -o ${compiled} ${option} && ${compiled}`,
           (error, stdout, stderr) => {
             if (error) {
               resolve(getResult(false, "执行错误", stderr));
@@ -133,8 +135,6 @@ class codesController {
     };
 
     try {
-      const { code } = ctx.request.body;
-
       // 保存需要运行代码文件的文件夹
       const folderPath = path.join(__dirname, "../../compile");
       // 编译前的文件路径
