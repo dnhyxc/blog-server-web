@@ -64,7 +64,7 @@ const userPhoneError = {
 };
 
 const userPwdError = {
-  code: "10006",
+  code: "10008",
   success: false,
   message: "密码错误",
   data: "",

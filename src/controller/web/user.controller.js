@@ -99,7 +99,7 @@ class UserController {
         });
       } else {
         ctx.body = {
-          code: 200,
+          code: 406,
           success: false,
           message: "验证码错误",
         };

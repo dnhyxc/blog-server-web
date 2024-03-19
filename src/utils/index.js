@@ -51,6 +51,8 @@ const errorHandler = (err, ctx) => {
       break;
     case "10009":
       status = 406;
+    case "10008":
+      status = 200;
       break;
     case "10101":
       status = 401;
