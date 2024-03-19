@@ -1,5 +1,6 @@
 const { VerifyCodes } = require("../../models");
 const { CHARACTERS } = require("../../config");
+const { decryptCode, encryptCode } = require("../../utils");
 
 class VerifyCodeServer {
   // 添加验证码
@@ -12,7 +13,7 @@ class VerifyCodeServer {
     }
     const res = await VerifyCodes.create({
       createTime: new Date().valueOf(),
-      code: txt,
+      code: encryptCode(txt),
     });
     return {
       id: res._id,
@@ -26,7 +27,10 @@ class VerifyCodeServer {
     const res = await VerifyCodes.findOne({ _id: codeId });
     if (!res) return false;
     await VerifyCodes.deleteOne({ _id: codeId });
-    if (res.code.toLocaleLowerCase() === code.toLocaleLowerCase()) {
+    if (
+      decryptCode(res.code).toLocaleLowerCase() ===
+      decryptCode(code).toLocaleLowerCase()
+    ) {
       return true;
     }
     return false;
