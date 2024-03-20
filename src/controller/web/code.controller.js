@@ -1,6 +1,7 @@
 const { exec, spawn } = require("child_process");
 const fs = require("fs");
 const path = require("path");
+const { VM } = require("vm2");
 const { databaseError } = require("../../constant");
 const {
   addCode,
@@ -172,6 +173,68 @@ class codesController {
         },
         ctx
       );
+    }
+  }
+
+  // 编译 JS
+  async compileJSCodeCtr(ctx, next) {
+    const { code } = ctx.request.body;
+
+    let logs = null;
+
+    const codeRun = () => {
+      const vm = new VM({
+        compiler: "javascript",
+        sandbox: {
+          name: "dnhyxc",
+          console: {
+            log: (args) => {
+              logs = args;
+            },
+            info: (...args) => {
+              logs = args;
+            },
+            warn: (...args) => {
+              logs = args;
+            },
+            error: (...args) => {
+              logs = args;
+            },
+            table: (...args) => {
+              logs = args;
+            },
+            time: (...args) => {
+              logs = args;
+            },
+            timeEnd: (...args) => {
+              logs = args;
+            },
+            debug: (...args) => {
+              logs = args;
+            },
+          },
+        },
+      });
+      // 执行 JavaScript 代码
+      const result = vm.run(code);
+      return result;
+    };
+
+    try {
+      const result = codeRun();
+      ctx.body = {
+        code: 200,
+        success: true,
+        message: "执行成功",
+        data: JSON.stringify(result) || JSON.stringify(logs),
+      };
+    } catch (error) {
+      ctx.body = {
+        code: 200,
+        success: true,
+        message: "执行出错",
+        data: error.message,
+      };
     }
   }
 }

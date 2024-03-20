@@ -6,6 +6,7 @@ const {
   getCodeListCtr,
   getCodeByIdCtr,
   compileCCodeCtr,
+  compileJSCodeCtr,
 } = require("../../controller");
 
 const { auth } = require("../../middleware");
@@ -29,5 +30,8 @@ router.post("/getCodeById", auth, getCodeByIdCtr);
 
 // 编译C语言
 router.post("/compileCCode", auth, compileCCodeCtr);
+
+// 编译JS
+router.post("/compileJSCode", auth, compileJSCodeCtr);
 
 module.exports = router;

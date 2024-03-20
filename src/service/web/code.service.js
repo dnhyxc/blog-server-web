@@ -56,7 +56,7 @@ class CodesServer {
     return res;
   }
 
-  // 删除图片
+  // 删除代码示例
   async deleteCode({ id }) {
     const ids = Array.isArray(id) ? id : [id];
     const res = await Codes.deleteMany({
