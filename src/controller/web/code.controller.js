@@ -215,7 +215,6 @@ class codesController {
           },
         },
       });
-      // 执行 JavaScript 代码
       const result = vm.run(code);
       return result;
     };
