@@ -7,6 +7,7 @@ const {
   adminCreateToolSortCtr,
   adminUpdateToolSortCtr,
   adminGetToolSortCtr,
+  adminGetPageInfoCtr,
 } = require("../../controller");
 
 const { adminAuth } = require("../../middleware");
@@ -33,5 +34,8 @@ router.post("/updateToolSort", adminAuth, adminUpdateToolSortCtr);
 
 // 获取工具排序
 router.post("/getToolSort", adminAuth, adminGetToolSortCtr);
+
+// 根据url获取网页信息
+router.post("/getPageInfo", adminAuth, adminGetPageInfoCtr);
 
 module.exports = router;

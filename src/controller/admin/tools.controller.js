@@ -1,3 +1,4 @@
+const axios = require('axios')
 const { databaseError } = require("../../constant");
 const {
   adminAddTools,
@@ -135,6 +136,27 @@ class ToolsController {
     } catch (error) {
       console.error("adminGetToolSortCtr", error);
       ctx.app.emit("error", databaseError, ctx);
+    }
+  }
+
+  // 根据url获取网页信息
+  async adminGetPageInfoCtr(ctx, next) {
+    try {
+      const { url } = ctx.request.body;
+      const response = await axios.get(url);
+      const html = response.data;
+      ctx.body = {
+        code: 200,
+        message: "获取成功",
+        success: true,
+        data: html,
+      };
+    } catch (error) {
+      ctx.app.emit("error", {
+        code: '10000',
+        success: false,
+        message: '链接无效'
+      }, ctx);
     }
   }
 }
