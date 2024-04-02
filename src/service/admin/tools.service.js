@@ -30,7 +30,7 @@ class ToolsServer {
 
     const skipRule = [{ $skip: (pageNo - 1) * pageSize }, { $limit: pageSize }];
 
-    const facetDataRule = [
+    let facetDataRule = [
       {
         $project: {
           id: "$_id",
@@ -48,8 +48,9 @@ class ToolsServer {
       },
     ];
 
+    // 判断是否是否是后台获取, type 为 all 就表示是后台获取
     if (type === "all") {
-      facetDataRule.concat(skipRule);
+      facetDataRule = [...facetDataRule, ...skipRule];
     }
 
     const list = await Tools.aggregate([
