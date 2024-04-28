@@ -38,6 +38,9 @@ class articleServer {
     await Article.updateOne({ _id }, { $set: params });
     // 如果更新的封面图片有变化，删除旧的封面图片
     if (params.coverImage !== params.oldCoverImage) {
+      // 删除前先查找是否有文章使用相同的封面图片
+      const findArticle = await Article.findOne({ authorId: params.authorId, coverImage: params.oldCoverImage });
+      if (findArticle) return;
       await deleteFile(params.oldCoverImage);
     }
   }
@@ -295,8 +298,8 @@ class articleServer {
               $sort: Object.keys(sortType).length
                 ? { isTop: -1, ...sortType } // 如果有 sortType，则按照 sortType 排序
                 : hot // 如果有 hot，则按照最热（readCount）排序
-                ? { isTop: -1, readCount: -1, likeCount: -1 }
-                : { isTop: -1, createTime: -1, likeCount: -1 },
+                  ? { isTop: -1, readCount: -1, likeCount: -1 }
+                  : { isTop: -1, createTime: -1, likeCount: -1 },
             },
             { $skip: (pageNo - 1) * pageSize },
             { $limit: !Object.keys(sortType).length ? pageSize : 1 },

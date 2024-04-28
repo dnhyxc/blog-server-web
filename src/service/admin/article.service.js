@@ -1,11 +1,12 @@
-const {Article, Comments} = require("../../models");
-const {findUserById} = require("../web/user.service");
-const {adminUpdateClassify} = require("./classify.service");
-const {detailFields, articleListRes} = require("../../constant");
+const { Article, Comments } = require("../../models");
+const { findUserById } = require("../web/user.service");
+const { adminUpdateClassify } = require("./classify.service");
+const { detailFields, articleListRes } = require("../../constant");
+const { deleteFile } = require("../../controller/web/upload.controller");
 
 class articleServer {
   // 创建文章
-  async adminCreateArticle({...params}) {
+  async adminCreateArticle({ ...params }) {
     const userInfo = await findUserById(params.authorId);
     const article = await Article.create({
       ...params,
@@ -21,17 +22,23 @@ class articleServer {
   }
 
   // 根据文章id更新
-  async adminUpdateArticle({articleId: _id, ...params}) {
+  async adminUpdateArticle({ articleId: _id, ...params }) {
     // 如果isTop传的是0，则删除isTop字段。以防排序出现问题
     const paramsData =
-      params?.isTop === 0 ? {$unset: {isTop: ""}} : {$set: params};
-    await Article.updateOne({_id}, paramsData);
+      params?.isTop === 0 ? { $unset: { isTop: "" } } : { $set: params };
+    await Article.updateOne({ _id }, paramsData);
+    if (params.coverImage !== params.oldCoverImage) {
+      // 删除前先查找是否有文章使用相同的封面图片
+      const findArticle = await Article.findOne({ authorId: params.authorId, coverImage: params.oldCoverImage });
+      if (findArticle) return;
+      await deleteFile(params.oldCoverImage);
+    }
   }
 
   // 删除文章
-  async adminDeleteArticles({articleId}) {
+  async adminDeleteArticles({ articleId }) {
     return await Article.updateOne(
-      {_id: articleId},
+      { _id: articleId },
       {
         $set: {
           isDelete: true,
@@ -41,25 +48,25 @@ class articleServer {
   }
 
   // 获取文章列表同时返回文章总条数
-  async adminGetArticleListWithTotal({filterKey, pageNo, pageSize}) {
+  async adminGetArticleListWithTotal({ filterKey, pageNo, pageSize }) {
     const list = await Article.aggregate([
-      {$match: filterKey},
+      { $match: filterKey },
       {
         $facet: {
-          total: [{$count: "count"}],
+          total: [{ $count: "count" }],
           data: [
             {
               $project: articleListRes,
             },
-            {$sort: {isTop: -1, createTime: -1, likeCount: -1}},
-            {$skip: (pageNo - 1) * pageSize},
-            {$limit: pageSize},
+            { $sort: { isTop: -1, createTime: -1, likeCount: -1 } },
+            { $skip: (pageNo - 1) * pageSize },
+            { $limit: pageSize },
           ],
         },
       },
     ]);
     if (list?.length) {
-      const {total, data} = list[0];
+      const { total, data } = list[0];
       return {
         total: total[0]?.count || 0,
         list: data || [],
@@ -73,12 +80,12 @@ class articleServer {
 
   // 获取文章列表
   async adminFindArticles({
-                            pageNo = 1,
-                            pageSize = 20,
-                            filter,
-                            tagName,
-                            authorIds,
-                          }) {
+    pageNo = 1,
+    pageSize = 20,
+    filter,
+    tagName,
+    authorIds,
+  }) {
     let filterKey;
     if (tagName) {
       filterKey = {
@@ -89,19 +96,19 @@ class articleServer {
       const reg = (filter && new RegExp(filter, "i")) || "";
       filterKey = {
         $or: [
-          {title: {$regex: reg}},
-          {tag: {$regex: reg}},
-          {classify: {$regex: reg}},
-          {authorId: {$regex: reg}},
-          {authorName: {$regex: reg}},
-          {abstract: {$regex: reg}},
+          { title: { $regex: reg } },
+          { tag: { $regex: reg } },
+          { classify: { $regex: reg } },
+          { authorId: { $regex: reg } },
+          { authorName: { $regex: reg } },
+          { abstract: { $regex: reg } },
         ],
       };
     }
 
     // 如果有authorIds，说明不是超级管理员，需要根据绑定的前台账号拉取对应的文章列表
     if (authorIds?.length) {
-      filterKey.authorId = {$in: authorIds};
+      filterKey.authorId = { $in: authorIds };
     }
 
     return await new articleServer().adminGetArticleListWithTotal({
@@ -129,8 +136,8 @@ class articleServer {
   }
 
   // 批量删除文章
-  async adminBatchDeleteArticle({articleIds, classifys}) {
-    const res = await Article.deleteMany({_id: {$in: articleIds}});
+  async adminBatchDeleteArticle({ articleIds, classifys }) {
+    const res = await Article.deleteMany({ _id: { $in: articleIds } });
     await adminUpdateClassify({
       classifyNames: classifys,
       articleIds: articleIds,
@@ -140,9 +147,9 @@ class articleServer {
   }
 
   // 下架文章
-  async adminRemoveArticle({articleIds}) {
+  async adminRemoveArticle({ articleIds }) {
     const res = await Article.updateMany(
-      {_id: {$in: articleIds}},
+      { _id: { $in: articleIds } },
       {
         $set: {
           isDelete: true,
@@ -153,38 +160,38 @@ class articleServer {
   }
 
   // 重新上架文章
-  async adminShelvesArticle({articleIds}) {
+  async adminShelvesArticle({ articleIds }) {
     const res = await Article.updateMany(
-      {_id: {$in: articleIds}},
-      {$unset: {isDelete: true}}
+      { _id: { $in: articleIds } },
+      { $unset: { isDelete: true } }
     );
     return res;
   }
 
   // 根据文章id查找评论
   async adminFindCommentById(articleId) {
-    const comment = await Comments.find({articleId});
+    const comment = await Comments.find({ articleId });
     return comment;
   }
 
   // 删除评论
   async adminDeleteComment(commentId, fromCommentId, articleId) {
     const replyComment = await Comments.findOne(
-      {articleId, "replyList._id": fromCommentId, "replyList.isDelete": true},
-      {replyList: {$elemMatch: {isDelete: true}}}
+      { articleId, "replyList._id": fromCommentId, "replyList.isDelete": true },
+      { replyList: { $elemMatch: { isDelete: true } } }
     );
 
     const res = await Comments.findOne({
       _id: commentId,
       articleId,
-      isDelete: {$nin: [true]},
+      isDelete: { $nin: [true] },
     });
 
     const filter = fromCommentId
       ? {
         "replyList._id": fromCommentId, // 选择数组replyList中某个对象中的_id属性
       }
-      : {_id: commentId};
+      : { _id: commentId };
     let count = 0;
     // fromCommentId有值说明是子级评论，直接减一就行
     if (fromCommentId) {
@@ -203,7 +210,7 @@ class articleServer {
           $and: [filter],
         },
         // $pull 可以删除replyList中id与fromCommentId匹配的数据
-        {$pull: {replyList: {_id: fromCommentId}}}
+        { $pull: { replyList: { _id: fromCommentId } } }
       );
       return delComment;
     } else {
@@ -220,7 +227,7 @@ class articleServer {
       ? {
         "replyList._id": fromCommentId, // 选择数组replyList中某个对象中的_id属性
       }
-      : {_id: commentId};
+      : { _id: commentId };
 
     let count = 0;
 
@@ -229,7 +236,7 @@ class articleServer {
       count = 1;
     }
 
-    const res = await Comments.findOne({_id: commentId, articleId});
+    const res = await Comments.findOne({ _id: commentId, articleId });
 
     // fromCommentId没有值说明是最上层父级评论，删除时需要加上底下所有子级的评论数及自身数量1，并且需要排除之前删除的replyList中的子级评论
     if (res && !fromCommentId) {
@@ -263,7 +270,7 @@ class articleServer {
       ? {
         "replyList._id": fromCommentId, // 选择数组replyList中某个对象中的_id属性
       }
-      : {_id: commentId};
+      : { _id: commentId };
 
     let count = 0;
 
@@ -299,7 +306,7 @@ class articleServer {
   // 后台评论管理评论列表
   async getArticleCommentList(articleIds) {
     const commentList = await Comments.aggregate([
-      {$match: {articleId: {$in: articleIds}}},
+      { $match: { articleId: { $in: articleIds } } },
       {
         $project: {
           id: "$_id",
@@ -317,11 +324,11 @@ class articleServer {
           replyList: 1,
         },
       },
-      {$sort: {date: -1}}, // 将排序放在这里
+      { $sort: { date: -1 } }, // 将排序放在这里
       {
         $group: {
           _id: "$articleId",
-          count: {$sum: 1},
+          count: { $sum: 1 },
           comments: {
             $push: {
               id: "$_id",
@@ -349,17 +356,17 @@ class articleServer {
           comments: 1,
         },
       },
-      {$sort: {date: -1}},
+      { $sort: { date: -1 } },
     ]);
 
     return commentList;
   }
 
   // 获取文章评论列表
-  async adminGetArticlesComments({pageNo, pageSize, bindUsers = []}) {
+  async adminGetArticlesComments({ pageNo, pageSize, bindUsers = [] }) {
     const matchParams = bindUsers?.length
       ? {
-        authorId: {$in: bindUsers},
+        authorId: { $in: bindUsers },
       }
       : {};
 
@@ -377,7 +384,7 @@ class articleServer {
       },
       {
         $facet: {
-          total: [{$count: "count"}],
+          total: [{ $count: "count" }],
           data: [
             {
               $project: {
@@ -389,16 +396,16 @@ class articleServer {
                 createTime: 1,
               },
             },
-            {$sort: {createTime: -1, likeCount: -1}},
-            {$skip: (pageNo - 1) * pageSize},
-            {$limit: pageSize},
+            { $sort: { createTime: -1, likeCount: -1 } },
+            { $skip: (pageNo - 1) * pageSize },
+            { $limit: pageSize },
           ],
         },
       },
     ]);
 
     if (list?.length) {
-      const {total, data} = list[0];
+      const { total, data } = list[0];
 
       const articleIds = data.map((i) => i.id.toString());
 
