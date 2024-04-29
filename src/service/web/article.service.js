@@ -45,6 +45,12 @@ class articleServer {
     }
   }
 
+  // 根据封面图查找文章
+  async findArticleByCoverImage({ coverImage, authorId }) {
+    const article = await Article.findOne({ coverImage, authorId }, { _id: 0, id: '$_id', title: 1, coverImage: 1 });
+    return article;
+  }
+
   // 修改作者名称
   async updateAuthorName(authorId, authorName) {
     await Article.updateMany({ authorId }, { $set: { authorName } });

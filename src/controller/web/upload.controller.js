@@ -5,7 +5,6 @@ const {
   fileNotFound,
   fieldFormateError,
 } = require("../../constant");
-
 const publicPath = path.join(__dirname, "../../upload/image");
 const atlasPublicPath = path.join(__dirname, "../../upload/atlas");
 const filesPublicPath = path.join(__dirname, "../../upload/files");

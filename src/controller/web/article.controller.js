@@ -14,6 +14,7 @@ const {
   getLikenessArticles,
   checkArticleLikeStatus,
   findMostLikeAndNewArticles,
+  findArticleByCoverImage,
 } = require("../../service");
 const {
   databaseError,
@@ -375,6 +376,23 @@ class ArticleController {
       };
     } catch (error) {
       console.error("findMostLikeAndNewArticlesCtr", error);
+      ctx.app.emit("error", databaseError, ctx);
+    }
+  }
+
+  // 根据封面图获取文章
+  async findArticleByCoverImageCtr(ctx, next) {
+    try {
+      const params = ctx.request.body;
+      const res = await findArticleByCoverImage(params);
+      ctx.body = {
+        code: 200,
+        success: true,
+        message: "获取成功",
+        data: res,
+      };
+    } catch (error) {
+      console.error("findArticleByCoverImageCtr", error);
       ctx.app.emit("error", databaseError, ctx);
     }
   }

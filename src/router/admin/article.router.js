@@ -13,6 +13,7 @@ const {
   adminDeleteCommentCtr,
   adminRemoveCommentCtr,
   adminRestoreCommentCtr,
+  adminFindArticleByCoverImageCtr,
   adminGetArticlesCommentsCtr,
 } = require("../../controller");
 
@@ -58,6 +59,9 @@ router.post("/removeComment", adminAuth, adminRemoveCommentCtr);
 
 // 恢复前台删除的文章评论
 router.post("/restoreComment", adminAuth, adminRestoreCommentCtr);
+
+// 根据封面图获取文章
+router.post("/findArticleByCoverImage", adminFindArticleByCoverImageCtr);
 
 // 获取评论列表
 router.post("/getArticlesComments", adminAuth, adminGetArticlesCommentsCtr);

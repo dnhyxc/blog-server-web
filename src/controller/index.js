@@ -55,6 +55,7 @@ const {
   getLikenessArticlesCtr,
   checkArticleLikeStatusCtr,
   findMostLikeAndNewArticlesCtr,
+  findArticleByCoverImageCtr,
 } = articleController;
 
 const { uploadFileCtr, removeFileCtr, downLoadFileCtr } = uploadController;
@@ -222,6 +223,7 @@ const {
   adminDeleteCommentCtr,
   adminRemoveCommentCtr,
   adminRestoreCommentCtr,
+  adminFindArticleByCoverImageCtr,
   adminGetArticlesCommentsCtr,
 } = adminArticleController;
 
@@ -307,6 +309,7 @@ module.exports = {
   getLikenessArticlesCtr,
   checkArticleLikeStatusCtr,
   findMostLikeAndNewArticlesCtr,
+  findArticleByCoverImageCtr,
   verifyTokenCtr,
   getVerifyCodeCtr,
   createDraftCtr,
@@ -414,6 +417,7 @@ module.exports = {
   adminDeleteCommentCtr,
   adminRemoveCommentCtr,
   adminRestoreCommentCtr,
+  adminFindArticleByCoverImageCtr,
   adminGetArticlesCommentsCtr,
   // 主题设置控制器
   adminCreateConfigCtr,

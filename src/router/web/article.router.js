@@ -15,6 +15,7 @@ const {
   getLikenessArticlesCtr,
   checkArticleLikeStatusCtr,
   findMostLikeAndNewArticlesCtr,
+  findArticleByCoverImageCtr,
 } = require("../../controller");
 
 const { auth } = require("../../middleware");
@@ -65,5 +66,8 @@ router.post("/checkArticleLikeStatus", checkArticleLikeStatusCtr);
 
 // 获取最新及最多点赞的文章
 router.post("/findMostLikeAndNewArticles", findMostLikeAndNewArticlesCtr);
+
+// 根据封面图获取文章
+router.post("/findArticleByCoverImage", findArticleByCoverImageCtr);
 
 module.exports = router;

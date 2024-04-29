@@ -1,6 +1,7 @@
 const {
   adminCreateArticle,
   adminUpdateArticle,
+  findArticleByCoverImage,
   adminDeleteArticles,
   adminFindArticles,
   adminFindArticleById,
@@ -318,6 +319,24 @@ class ArticleController {
       };
     } catch (error) {
       console.error("adminGetArticlesCommentsCtr", error);
+      ctx.app.emit("error", databaseError, ctx);
+    }
+  }
+
+
+  // 根据封面图获取文章
+  async adminFindArticleByCoverImageCtr(ctx, next) {
+    try {
+      const params = ctx.request.body;
+      const res = await findArticleByCoverImage(params);
+      ctx.body = {
+        code: 200,
+        success: true,
+        message: "获取成功",
+        data: res,
+      };
+    } catch (error) {
+      console.error("adminFindArticleByCoverImageCtr", error);
       ctx.app.emit("error", databaseError, ctx);
     }
   }
