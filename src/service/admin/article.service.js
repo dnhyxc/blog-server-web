@@ -170,7 +170,7 @@ class articleServer {
 
   // 根据文章id查找评论
   async adminFindCommentById(articleId) {
-    const comment = await Comments.find({ articleId });
+    const comment = await Comments.find({ articleId }).sort({ date: -1 });
     return comment;
   }
 
