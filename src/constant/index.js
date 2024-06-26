@@ -56,6 +56,13 @@ const userNotFind = {
   data: "",
 };
 
+const userIsDelete = {
+  code: "10015",
+  success: false,
+  message: "用户已被停用",
+  data: "",
+};
+
 const userPhoneError = {
   code: "10006",
   success: false,
@@ -242,6 +249,7 @@ module.exports = {
   userRegisterError,
   userLoginError,
   userPwdError,
+  userIsDelete,
   userPhoneError,
   userNotFind,
   ArticleNotFind,

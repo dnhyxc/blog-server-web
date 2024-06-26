@@ -7,6 +7,7 @@ const {
   DetailTokenExpiredError,
   databaseError,
   userNotFind,
+  userIsDelete,
 } = require("../constant");
 
 const auth = async (ctx, next) => {
@@ -21,7 +22,9 @@ const auth = async (ctx, next) => {
     if (!res) {
       return ctx.app.emit("error", userNotFind, ctx);
     }
-
+    if (res?.isDelete) {
+      return ctx.app.emit("error", userIsDelete, ctx);
+    }
     const user = {
       id: userId,
       username,
