@@ -169,6 +169,11 @@ const {
   deleteCatchContacts,
 } = require("./web/contacts.service");
 
+const {
+  adminVerifyCode,
+  adminCheckVerifyCode,
+  adminDeleteVerifyCode,
+} = require("./admin/verifyCode.service");
 // 后台数据库接口
 const {
   adminFindOneUser,
@@ -366,6 +371,9 @@ module.exports = {
   deleteCatchContacts,
 
   // 后台
+  adminVerifyCode,
+  adminCheckVerifyCode,
+  adminDeleteVerifyCode,
   adminFindOneUser,
   adminFindUserById,
   adminCreateUserServer,

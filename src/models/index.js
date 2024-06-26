@@ -26,6 +26,7 @@ const Tools = require("./admin/tools.model");
 const ToolSort = require("./admin/toolSort.model");
 const Themes = require("./admin/theme.model");
 const Menus = require("./admin/menu.model");
+const AdminVerifyCodes = require("./admin/verifyCode.model");
 
 module.exports = {
   User,
@@ -56,4 +57,5 @@ module.exports = {
   ToolSort,
   Themes,
   Menus,
+  AdminVerifyCodes
 };

@@ -19,9 +19,27 @@ const {
   bindAccount,
   findBindUsers,
   findAuthorInfo,
+  adminVerifyCode,
+  adminCheckVerifyCode,
 } = require("../../service");
 
 class UserController {
+  // 随机返回验证码
+  async adminGetVerifyCodeCtr(ctx, next) {
+    try {
+      const params = ctx.request.body;
+      const res = await adminVerifyCode(params);
+      ctx.body = {
+        code: 200,
+        success: true,
+        message: "获取验证码成功",
+        data: res,
+      };
+    } catch (error) {
+      console.error("adminGetVerifyCodeCtr", error);
+      ctx.app.emit("error", databaseError, ctx);
+    }
+  }
   async adminRegisterCtr(ctx, next) {
     try {
       const { username, password } = ctx.request.body;
@@ -41,20 +59,30 @@ class UserController {
   async adminLoginCtr(ctx, next) {
     // 1. 获取用户信息（在token的playload中，记录id，username）
     try {
-      const { username } = ctx.request.body;
-      const { password, ...props } =
-        (await adminFindOneUser({ username })) || {};
-      delete props?._doc.password;
-      delete props?._doc._id;
-      ctx.body = {
-        code: 201,
-        success: true,
-        message: "登录成功",
-        data: {
-          ...props?._doc,
-          token: jwt.sign(props, JWT_SECRET, { expiresIn: "1d" }),
-        },
-      };
+      const { username, codeId, code } = ctx.request.body;
+      // 检验验证码
+      const res = await adminCheckVerifyCode({ codeId, code });
+      if (res) {
+        const { password, ...props } =
+          (await adminFindOneUser({ username })) || {};
+        delete props?._doc.password;
+        delete props?._doc._id;
+        ctx.body = {
+          code: 201,
+          success: true,
+          message: "登录成功",
+          data: {
+            ...props?._doc,
+            token: jwt.sign(props, JWT_SECRET, { expiresIn: "1d" }),
+          },
+        };
+      } else {
+        ctx.body = {
+          code: 406,
+          success: false,
+          message: "验证码错误",
+        };
+      }
     } catch (error) {
       console.error("loginCtr", error);
       ctx.app.emit("error", databaseError, ctx);

@@ -18,6 +18,7 @@ const {
   adminFindAuthorInfoCtr,
   adminResetPwdCtr,
   adminFindMenusCtr,
+  adminGetVerifyCodeCtr,
 } = require("../../controller");
 const {
   userValidator,
@@ -42,6 +43,9 @@ router.post(
   bcryptPassword, // 密码加密中间件
   adminRegisterCtr
 );
+
+// 获取验证码
+router.post("/verifyCode", adminGetVerifyCodeCtr);
 
 // 登录接口
 router.post("/login", userValidator, verifyAdminLogin, adminLoginCtr);

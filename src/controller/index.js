@@ -206,6 +206,7 @@ const {
   findBindUsersCtr,
   adminFindAuthorInfoCtr,
   adminResetPwdCtr,
+  adminGetVerifyCodeCtr,
 } = adminUserController;
 
 // 后台文章控制器
@@ -403,6 +404,7 @@ module.exports = {
   findBindUsersCtr,
   adminFindAuthorInfoCtr,
   adminResetPwdCtr,
+  adminGetVerifyCodeCtr,
   // 后台文章控制器
   adminCreateArticleCtr,
   adminUpdateArticleCtr,
